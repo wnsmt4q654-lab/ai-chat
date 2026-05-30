@@ -389,16 +389,16 @@ function sendMsg(text) {
   var M = MODELS[currentModel];
   var div = document.createElement("div");
   div.className = "msg ai";
-  div.id = "streamMsg";
+  var contentEl = document.createElement("div");
+  contentEl.className = "msg-content";
   div.innerHTML = '<div class="msg-avatar">' + M.avatar + '</div>' +
-    '<div class="msg-body"><div class="msg-role">' + M.name + '</div>' +
-    '<div class="msg-content" id="streamContent"></div></div>';
+    '<div class="msg-body"><div class="msg-role">' + M.name + '</div></div>';
+  div.querySelector(".msg-body").appendChild(contentEl);
   dom.messages.appendChild(div);
   scrollBottom();
   dom.typing.style.display = "none";
 
   var fullContent = "";
-  var streamContent = document.getElementById("streamContent");
 
   var apiMsgs = messages.slice();
   if (MODELS[currentModel].sysPrompt) {
@@ -419,7 +419,13 @@ function sendMsg(text) {
       reader.read().then(function(result) {
         if (result.done) {
           messages.push({role:"assistant", content:fullContent || "(空响应)"});
-          finalize(fullContent);
+          contentEl.innerHTML = renderMD(fullContent);
+          hl();
+          var body = div.querySelector(".msg-body");
+          var act = document.createElement("div");
+          act.className = "msg-actions";
+          act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
+          body.appendChild(act);
           saveMsgs();
           streaming = false;
           dom.btnSend.disabled = false;
@@ -441,7 +447,7 @@ function sendMsg(text) {
             var t = d.content || "";
             if (t) {
               fullContent += t;
-              streamContent.textContent = fullContent;
+              contentEl.textContent = fullContent;
               scrollBottom();
             }
           } catch(e) {}
@@ -449,7 +455,7 @@ function sendMsg(text) {
         pump();
       }).catch(function(e) {
         showErr(e.message);
-        var el = document.getElementById("streamMsg"); if (el) el.remove();
+        div.remove();
         streaming = false;
         dom.btnSend.disabled = false;
       });
@@ -457,24 +463,10 @@ function sendMsg(text) {
     pump();
   }).catch(function(e) {
     showErr(e.message);
-    var el = document.getElementById("streamMsg"); if (el) el.remove();
+    div.remove();
     streaming = false;
     dom.btnSend.disabled = false;
   });
-
-  function finalize(content) {
-    var el = document.getElementById("streamMsg");
-    if (!el) return;
-    el.removeAttribute("id");
-    var ce = el.querySelector(".msg-content");
-    ce.innerHTML = renderMD(content);
-    hl();
-    var body = el.querySelector(".msg-body");
-    var act = document.createElement("div");
-    act.className = "msg-actions";
-    act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
-    body.appendChild(act);
-  }
 }
 
 function showErr(msg) {
