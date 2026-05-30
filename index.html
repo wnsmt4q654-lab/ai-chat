@@ -45,10 +45,10 @@
     .model-card:active{transform:scale(.97);border-color:var(--accent);box-shadow:0 8px 30px rgba(99,102,241,0.12)}
     .model-card-avatar{
       width:56px;height:56px;border-radius:18px;display:flex;align-items:center;justify-content:center;
-      font-size:28px;flex-shrink:0;background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.1);overflow:hidden;
+      font-size:28px;flex-shrink:0;background-size:cover;background-position:center;
+      border:1px solid rgba(99,102,241,0.1);
     }
-    .model-card-avatar img{pointer-events:none}
-    .model-card:nth-child(2) .model-card-avatar{background:rgba(236,72,153,0.08);border-color:rgba(236,72,153,0.15)}
+    .model-card:nth-child(2) .model-card-avatar{border-color:rgba(236,72,153,0.15)}
     .model-card-info{flex:1;min-width:0}
     .model-card-name{font-size:17px;font-weight:700;letter-spacing:-0.2px;margin-bottom:2px}
     .model-card-model{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
@@ -193,14 +193,14 @@
     <div class="model-cards">
       <!-- Default Model -->
       <div class="model-card" data-model="swai">
-        <div class="model-card-avatar"><img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover;border-radius:18px" /></div>
+        <div class="model-card-avatar" style="background-image:url(bot-avatar.png)"></div>
         <div class="model-card-info">
           <div class="model-card-name">Swai v1.0</div>
         </div>
       </div>
       <!-- Ahy Model -->
       <div class="model-card" data-model="wanghan">
-        <div class="model-card-avatar"><img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:18px" /></div>
+        <div class="model-card-avatar" style="background-image:url(ahy-avatar.jpg)"></div>
         <div class="model-card-info">
           <div class="model-card-name">Ahy</div>
         </div>
@@ -377,7 +377,7 @@
       swai: {
         id: "swai",
         name: "Swai v1.0",
-        avatar: '<img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%" />',
+        avatar: '<div style="width:100%;height:100%;background:url(bot-avatar.png) center/cover;border-radius:50%"></div>',
         modelLabel: "",
         desc: "",
         systemPrompt: "",
@@ -387,7 +387,7 @@
       wanghan: {
         id: "wanghan",
         name: "Ahy",
-        avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%" />',
+        avatar: '<div style="width:100%;height:100%;background:url(ahy-avatar.jpg) center/cover;border-radius:50%"></div>',
         modelLabel: "",
         desc: "",
         systemPrompt: WANGHAN_PROMPT,
