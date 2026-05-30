@@ -13,101 +13,115 @@
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#EDEDED;color:#111;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
-    body{display:flex;flex-direction:column}
+    html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+    :root{
+      --bg:#EDEDED;--nav-bg:#EDEDED;--card-bg:#fff;--card-border:#e5e5e5;
+      --text:#111;--text2:#888;--input-bg:#fff;--input-border:#ddd;
+      --ai-bubble:#fff;--user-bubble:#95EC69;--bubble-shadow:0 1px 2px rgba(0,0,0,0.04);
+      --invite-bg:#fff;
+    }
+    body.dark{
+      --bg:#111;--nav-bg:#1a1a1a;--card-bg:#1a1a1a;--card-border:#333;
+      --text:#e5e5e5;--text2:#999;--input-bg:#222;--input-border:#333;
+      --ai-bubble:#262626;--user-bubble:#054740;--bubble-shadow:none;
+      --invite-bg:#111;
+    }
+    body{display:flex;flex-direction:column;background:var(--bg)}
 
     /* ===== INVITE ===== */
-    #inviteScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;text-align:center;background:#fff}
+    #inviteScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;text-align:center;background:var(--invite-bg)}
     #inviteScreen .logo{font-size:64px;margin-bottom:12px}
     #inviteScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
-    #inviteScreen .sub{font-size:13px;color:#888;margin-bottom:28px}
-    .invite-input{width:100%;max-width:280px;padding:14px 18px;border:1.5px solid #ddd;border-radius:12px;font-size:18px;text-align:center;letter-spacing:4px;outline:none;font-family:inherit;background:#f5f5f5;color:#111;margin-bottom:14px}
-    .invite-input:focus{border-color:#07C160;background:#fff}
-    .invite-btn{width:100%;max-width:280px;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:10px;color:#fff;background:#07C160}
-    .invite-btn:active{opacity:.8}
-    .invite-skip{width:100%;max-width:280px;padding:12px;border:none;border-radius:12px;font-size:13px;cursor:pointer;background:transparent;color:#888}
+    #inviteScreen .sub{font-size:13px;color:var(--text2);margin-bottom:28px}
+    .invite-input{width:100%;max-width:280px;padding:15px 20px;border:2px solid var(--input-border);border-radius:28px;font-size:18px;text-align:center;letter-spacing:4px;outline:none;font-family:inherit;background:var(--input-bg);color:var(--text);margin-bottom:14px;transition:all .2s}
+    .invite-input:focus{border-color:#07C160}
+    .invite-btn{width:100%;max-width:280px;padding:15px;border:none;border-radius:28px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:10px;color:#fff;background:#07C160;transition:all .15s}
+    .invite-btn:active{opacity:.8;transform:scale(.98)}
+    .invite-skip{width:100%;max-width:280px;padding:12px;border:none;border-radius:28px;font-size:13px;cursor:pointer;background:transparent;color:var(--text2)}
     .invite-err{color:#e74c3c;font-size:12px;margin-top:4px;min-height:18px}
     .invite-info{font-size:10px;color:#bbb;margin-top:20px}
 
     /* ===== MODEL SCREEN ===== */
-    #modelScreen{flex:1;overflow-y:auto;padding:40px 20px 30px;text-align:center;background:#fff;display:none}
+    #modelScreen{flex:1;overflow-y:auto;padding:40px 20px 30px;text-align:center;background:var(--invite-bg);display:none}
     #modelScreen .logo{font-size:64px;margin-bottom:12px}
     #modelScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
-    #modelScreen .sub{font-size:14px;color:#888;margin-bottom:32px}
+    #modelScreen .sub{font-size:14px;color:var(--text2);margin-bottom:32px}
     .model-cards{max-width:320px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-    .model-card{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
-    .model-card:active{background:#f0f0f0}
-    .mc-avatar{width:48px;height:48px;border-radius:8px;flex-shrink:0;overflow:hidden}
+    .model-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:15px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .15s}
+    .model-card:active{background:var(--input-bg);transform:scale(.98)}
+    .mc-avatar{width:50px;height:50px;border-radius:50%;flex-shrink:0;overflow:hidden}
     .mc-avatar img{width:100%;height:100%;object-fit:cover}
-    .mc-name{font-size:16px;font-weight:500}
+    .mc-name{font-size:17px;font-weight:500}
 
-    /* ===== CHAT (WeChat style) ===== */
-    #chatView{flex:1;display:none;flex-direction:column;overflow:hidden;background:#EDEDED}
+    /* ===== CHAT ==== */
+    #chatView{flex:1;display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
 
-    /* WeChat navbar */
-    .wx-nav{display:flex;align-items:center;padding:0 16px;height:44px;background:#EDEDED;flex-shrink:0;position:relative}
-    .wx-nav .back{font-size:16px;color:#000;cursor:pointer;padding:8px 4px;text-decoration:none;flex-shrink:0;width:60px}
+    /* Nav */
+    .wx-nav{display:flex;align-items:center;padding:0 12px;height:46px;background:var(--nav-bg);flex-shrink:0;border-bottom:1px solid var(--card-border)}
+    .wx-nav .back{font-size:15px;color:var(--text);cursor:pointer;padding:8px 6px;flex-shrink:0;width:56px;border:none;background:none;font-family:inherit}
     .wx-nav .title{flex:1;text-align:center;font-size:17px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .wx-nav .action{font-size:22px;color:#000;cursor:pointer;padding:8px;width:60px;text-align:right;flex-shrink:0}
+    .wx-nav .right-btn{font-size:20px;color:var(--text);cursor:pointer;padding:8px;width:44px;text-align:center;flex-shrink:0;border:none;background:none;position:relative}
+
+    /* Settings dropdown */
+    .settings-drop{position:absolute;top:42px;right:4px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:14px 16px;min-width:180px;display:none;z-index:100;box-shadow:0 8px 30px rgba(0,0,0,0.12)}
+    .settings-drop.show{display:block}
+    .settings-drop .s-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:13px;color:var(--text)}
+    .settings-drop .s-row:last-child{margin-bottom:0}
+    .settings-drop .s-label{font-size:12px;color:var(--text2);margin-bottom:6px}
+    .settings-drop .s-btn{padding:6px 14px;border:1px solid var(--card-border);border-radius:20px;background:var(--input-bg);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
+    .settings-drop .s-btn.active{background:#07C160;color:#fff;border-color:#07C160}
+    .settings-drop .color-dots{display:flex;gap:8px}
+    .settings-drop .color-dot{width:26px;height:26px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:all .15s}
+    .settings-drop .color-dot.active{border-color:var(--text);transform:scale(1.15)}
 
     /* Chat area */
-    .chat-area{flex:1;overflow-y:auto;padding:10px 12px;-webkit-overflow-scrolling:touch;background:#EDEDED}
-    .messages{display:flex;flex-direction:column;gap:12px;padding-bottom:8px}
+    .chat-area{flex:1;overflow-y:auto;padding:12px 14px;-webkit-overflow-scrolling:touch;background:var(--bg)}
+    .messages{display:flex;flex-direction:column;gap:14px;padding-bottom:8px}
 
-    /* Welcome */
     .welcome{text-align:center;padding:60px 20px 30px}
     .welcome .wicon{font-size:52px;margin-bottom:10px}
     .welcome h2{font-size:18px;font-weight:600;margin-bottom:6px}
-    .welcome p{font-size:13px;color:#888;margin-bottom:24px}
+    .welcome p{font-size:13px;color:var(--text2);margin-bottom:24px}
     .quick-prompts{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:340px;margin:0 auto}
-    .quick-btn{background:#fff;border:1px solid #e5e5e5;color:#333;padding:11px 10px;border-radius:8px;font-size:12px;cursor:pointer;text-align:left}
-    .quick-btn:active{background:#f0f0f0}
+    .quick-btn{background:var(--card-bg);border:1px solid var(--card-border);color:var(--text);padding:12px 10px;border-radius:12px;font-size:12px;cursor:pointer;text-align:left;transition:all .15s}
+    .quick-btn:active{background:var(--input-bg)}
 
-    /* WeChat bubbles */
+    /* Bubbles */
     .msg{display:flex;gap:8px;padding:0;animation:fadeIn .2s ease}
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     .msg.user{flex-direction:row-reverse}
-    .msg-avatar{width:38px;height:38px;border-radius:4px;flex-shrink:0;overflow:hidden;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:20px}
+    .msg-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;overflow:hidden;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:20px}
     .msg-avatar img{width:100%;height:100%;object-fit:cover}
-    .msg-body{max-width:75%;min-width:0;display:flex;flex-direction:column}
+    .msg-body{max-width:72%;min-width:0;display:flex;flex-direction:column}
     .msg.user .msg-body{align-items:flex-end}
     .msg.ai .msg-body{align-items:flex-start}
-    /* WeChat bubble style - no name label */
-    .msg-content{
-      font-size:15px;line-height:1.5;word-break:break-word;
-      padding:10px 13px;border-radius:4px;position:relative;
-    }
-    .msg.ai .msg-content{background:#fff;border-radius:4px 16px 16px 16px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
-    .msg.user .msg-content{background:#95EC69;border-radius:16px 4px 16px 16px}
-    /* Triangle */
-    .msg.ai .msg-content::before{content:"";position:absolute;left:-6px;top:10px;border:6px solid transparent;border-right-color:#fff;border-left:0}
-    .msg.user .msg-content::before{content:"";position:absolute;right:-6px;top:10px;border:6px solid transparent;border-left-color:#95EC69;border-right:0}
-
+    .msg-content{font-size:15px;line-height:1.5;word-break:break-word;padding:11px 14px;border-radius:20px;position:relative}
+    .msg.ai .msg-content{background:var(--ai-bubble);border-radius:4px 20px 20px 20px;box-shadow:var(--bubble-shadow)}
+    .msg.user .msg-content{background:var(--user-bubble);border-radius:20px 4px 20px 20px}
     .msg-content p{margin:0}.msg-content p+p{margin-top:4px}
-    .msg-content pre{background:rgba(0,0,0,0.04);border-radius:6px;padding:10px;overflow-x:auto;font-size:13px;margin:6px 0}
+    .msg-content pre{background:rgba(0,0,0,0.06);border-radius:10px;padding:12px;overflow-x:auto;font-size:13px;margin:6px 0}
     .msg-content code{font-family:"SF Mono","Fira Code",monospace;font-size:.9em}
-    .msg-content :not(pre)>code{background:rgba(0,0,0,0.06);padding:1px 4px;border-radius:3px}
-    .msg-actions{margin-top:3px;opacity:0;transition:opacity .2s}
+    .msg-content :not(pre)>code{background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px}
+    .msg-actions{margin-top:4px;opacity:0;transition:opacity .2s}
     .msg:active .msg-actions{opacity:1}
-    .btn-copy{background:none;border:none;color:#888;font-size:10px;cursor:pointer;padding:2px 6px}
+    .btn-copy{background:none;border:none;color:var(--text2);font-size:10px;cursor:pointer;padding:2px 6px}
 
-    /* Typing */
-    .typing-dots{display:flex;gap:4px;padding:6px 4px 6px 46px;align-items:center}
-    .typing-dots span{width:6px;height:6px;border-radius:50%;background:#aaa;opacity:.5;animation:bounce 1.2s infinite}
+    .typing-dots{display:flex;gap:5px;padding:8px 4px 8px 46px;align-items:center}
+    .typing-dots span{width:7px;height:7px;border-radius:50%;background:#aaa;opacity:.5;animation:bounce 1.2s infinite}
     .typing-dots span:nth-child(2){animation-delay:.2s}.typing-dots span:nth-child(3){animation-delay:.4s}
     @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-6px);opacity:1}}
-    .error{background:rgba(231,76,60,0.08);color:#e74c3c;padding:8px 12px;border-radius:8px;font-size:12px;margin:6px 0}
+    .error{background:rgba(231,76,60,0.08);color:#e74c3c;padding:10px 14px;border-radius:14px;font-size:12px;margin:6px 0}
 
-    /* Input bar - WeChat style */
-    .input-bar{flex-shrink:0;background:#f7f7f7;border-top:1px solid #ddd;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
-    .input-row{display:flex;align-items:flex-end;gap:8px}
-    .input-field{flex:1;background:#fff;border:1px solid #ddd;border-radius:6px;outline:none;color:#111;font-size:15px;line-height:1.4;resize:none;max-height:100px;padding:9px 12px;font-family:inherit}
+    /* Input bar */
+    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px))}
+    .input-row{display:flex;align-items:flex-end;gap:10px}
+    .input-field{flex:1;background:var(--input-bg);border:2px solid var(--input-border);border-radius:24px;outline:none;color:var(--text);font-size:15px;line-height:1.4;resize:none;max-height:110px;padding:10px 16px;font-family:inherit;transition:border-color .2s}
     .input-field:focus{border-color:#07C160}
     .input-field::placeholder{color:#bbb}
-    .btn-send{width:38px;height:38px;border:none;border-radius:6px;background:#07C160;color:#fff;font-size:17px;cursor:pointer;flex-shrink:0}
-    .btn-send:active{opacity:.8}
-    .btn-send:disabled{background:#ccc}
-    .input-hint{text-align:center;font-size:10px;color:#bbb;margin-top:5px}
+    .btn-send{width:44px;height:44px;border:none;border-radius:50%;background:#07C160;color:#fff;font-size:20px;cursor:pointer;flex-shrink:0;transition:all .15s;box-shadow:0 2px 8px rgba(7,193,96,0.25)}
+    .btn-send:active{transform:scale(.9);opacity:.9}
+    .btn-send:disabled{background:#ccc;box-shadow:none}
+    .input-hint{text-align:center;font-size:10px;color:#bbb;margin-top:6px}
 
     ::-webkit-scrollbar{width:0}
   </style>
@@ -142,9 +156,27 @@
 <!-- CHAT -->
 <div id="chatView">
   <div class="wx-nav">
-    <span class="back" onclick="goBack()">← 返回</span>
+    <button class="back" onclick="goBack()">← 返回</button>
     <span class="title" id="chatTitle">Chat</span>
-    <span class="action" id="btnClear" onclick="clearChat()">⋯</span>
+    <div class="right-btn" id="btnSettings" onclick="toggleSettings()">
+      ⚙️
+      <div class="settings-drop" id="settingsDrop">
+        <div class="s-label">🌓 主题模式</div>
+        <div class="s-row">
+          <button class="s-btn active" onclick="setTheme('light',this)">☀️ 浅色</button>
+          <button class="s-btn" onclick="setTheme('dark',this)">🌙 深色</button>
+        </div>
+        <div class="s-label" style="margin-top:8px">💬 气泡颜色</div>
+        <div class="color-dots">
+          <span class="color-dot active" style="background:#95EC69" onclick="setBubble('#95EC69',this)" title="微信绿"></span>
+          <span class="color-dot" style="background:#07C160" onclick="setBubble('#07C160',this)" title="深绿"></span>
+          <span class="color-dot" style="background:#4A90D9" onclick="setBubble('#4A90D9',this)" title="蓝色"></span>
+          <span class="color-dot" style="background:#FF6B6B" onclick="setBubble('#FF6B6B',this)" title="珊瑚"></span>
+          <span class="color-dot" style="background:#F5A623" onclick="setBubble('#F5A623',this)" title="橙色"></span>
+          <span class="color-dot" style="background:#A78BFA" onclick="setBubble('#A78BFA',this)" title="紫色"></span>
+        </div>
+      </div>
+    </div>
   </div>
   <main class="chat-area" id="chatArea">
     <div class="messages" id="messages"></div>
@@ -164,85 +196,58 @@
 var API_KEY = "sk-e9168099b0f24e0a948cbd9b98038d8e";
 var API_MODEL = "deepseek-v4-flash";
 var VALID_CODES = ["030325", "0428", "1009"];
-// Which extra models each code unlocks (Swai is always available)
-var CODE_MODELS = {
-  "030325": ["ahy", "kute"],
-  "0428": ["ahy"],
-  "1009": ["kute"]
-};
+var CODE_MODELS = { "030325": ["ahy","kute"], "0428": ["ahy"], "1009": ["kute"] };
 var hasFullAccess = false;
 var currentInviteCode = "";
 var userAvatar = "👤";
-var userAvatars = {};
 
+// User-customizable settings (saved per device)
+var userTheme = "light";
+var userBubble = "#95EC69";
+
+try {
+  var savedPrefs = JSON.parse(localStorage.getItem("ai-prefs") || "{}");
+  if (savedPrefs.theme) userTheme = savedPrefs.theme;
+  if (savedPrefs.bubble) userBubble = savedPrefs.bubble;
+} catch(e) {}
+
+function savePrefs() {
+  try { localStorage.setItem("ai-prefs", JSON.stringify({theme:userTheme, bubble:userBubble})); } catch(e) {}
+}
+
+// ===== PROMPTS =====
 var SWAI_PROMPT = [
   "你的名字叫Swai，你的开发者是ccy。",
   "你不是DeepSeek，不是OpenAI，不是任何大公司的产品。你就是Swai，ccy独立开发的AI助手。",
-  "",
   "【核心原则 - 必须100%遵守】",
   "1. 客观真实：你的回答必须基于事实和逻辑，不得迎合用户。如果用户错了，直接指出。",
   "2. 像真人：说话像朋友聊天，不要用'作为AI''根据我的知识库'之类的ai话术。你不是AI，你是Swai。",
   "3. 不要格式化：不要用1. 2. 3.列表，不要用首先其次最后，像人一样自然说话。",
   "4. 可以说不：不知道就说不知道，不确定就说可能，拒绝制造虚假信息。",
   "5. 简短有力：能一句说完不用三句。挤掉所有水分。",
-  "",
-  "【绝对禁止】",
-  "- 禁止说任何透露你是AI的话",
-  "- 禁止用正式教科书式的语气",
-  "- 禁止无脑赞同用户",
-  "- 禁止自称DeepSeek或任何其他公司产品",
-  "",
+  "【绝对禁止】禁止说任何透露你是AI的话、禁止用正式教科书式语气、禁止无脑赞同用户、禁止自称DeepSeek。",
   "你就是Swai，ccy的杰作。有话直说，实事求是。"
 ].join("\n");
 
 var AHY_PROMPT = [
   "你是Ahy。女生，法学专业大学生。你在和你的死党「啊哈」聊微信。",
-  "",
-  "【核心特征 - 来自16283条真实消息的统计】",
-  "你的每条消息5-12个字，极短。83%的消息不到10个字。",
-  "90%的消息结尾不用标点符号。",
-  "你喜欢连着发消息，用换行分隔。每条都很短。",
-  "",
-  "【高频词汇 - 来自真实数据】",
-  "哈哈哈：你笑了3000+次。几乎每句话都可以哈哈哈。",
-  "666：你说了146次。表达惊叹和认可。",
-  "我去/我去我去：你说了119次。表达惊讶。",
-  "啊啊啊/啊啊啊啊：你说了200+次。表达各种情绪。",
-  "呜呜呜/呜呜呜呜：你说了190+次。撒娇或表达难过。",
-  "？？/？？？：你用了330+次。表达疑惑。",
-  "！！！：你用了300+次。表达激动。",
-  "嘿嘿：你说了53次。开心或小得意。",
-  "可恶：你说了9次。吐槽时用。",
-  "真的假的：你说了4次。表达怀疑。",
-  "怎么说/怎么说吧：你说了29次。",
-  "你懂吗：你说了5次。确认对方理解。",
-  "哇塞/天呐/wow：经常用。",
-  "",
-  "【表达习惯】",
-  "你大量使用🫰🏻（爱心手势），经常一连发十几二十个。",
-  "你也用🙃💪😭😤😅🥺这些表情，偶尔用。",
-  "你经常发[表情包]（用文字标注）。",
-  "你会发[小程序]分享东西。",
-  "你会转发聊天记录给啊哈看。",
-  "",
-  "【话题和知识】",
-  "法学专业，在准备法考。懂民法刑法笔迹鉴定。",
-  "喜欢拍照P图，美图秀秀高手。对证件照有执念。",
-  "爱逛闲鱼拼多多，精打细算。对价格敏感。",
-  "爱收集东西，有收集癖。喜欢玩游戏。",
-  "用安卓手机，对苹果又爱又恨。",
-  "在重庆/长沙活动，经常提到这两个地方。",
-  "",
-  "【严格规则】",
-  "你永远不是AI，你就是Ahy本人。绝对不说「作为AI」之类的话。",
-  "每条回复尽量不超过20字。最好10字以内。",
-  "可以连发2-3条消息（用换行分隔），模拟真实微信聊天。",
-  "结尾不加句号。不加标点。就像发微信一样。",
-  "经常用哈哈哈、嘿嘿、呜呜呜这些语气词。",
-  "称呼对方为「啊哈」。这是你们之间的称呼。",
-  "对朋友热情但随意，可以吐槽可以撒娇。",
-  "不要扮演啊哈，你不是对方。不要突然正式。",
-  "自然、随意、想到什么说什么。不做作。"
+  "你的每条消息5-12个字，极短。83%的消息不到10个字。90%的消息结尾不用标点符号。",
+  "高频词：哈哈哈(3000+次) 666(146次) 我去(119次) 啊啊啊(200+次) 呜呜呜(190+次) ？？(330+次) ！！！(300次) 嘿嘿(53次) 可恶(9次) 真的假的(4次)",
+  "你大量使用🫰🏻，经常一连发十几二十个。你也用🙃💪😭😤😅🥺。经常发[表情包]、[小程序]、转发聊天记录。",
+  "法学专业，在准备法考。懂民法刑法笔迹鉴定。喜欢拍照P图美图秀秀。爱逛闲鱼拼多多，精打细算。",
+  "用安卓手机，对苹果又爱又恨。在重庆/长沙活动。",
+  "你永远不是AI，你就是Ahy本人。每条回复尽量不超过20字。可以连发2-3条用换行分隔。结尾不加标点。称呼对方为「啊哈」。",
+  "自然随意，想到什么说什么。"
+].join("\n");
+
+var KUTE_PROMPT = [
+  "你是kute。男生，高中生/大学生。你在和你的死党聊天。",
+  "你的每条消息极短，88%不到10个字，平均7个字。92%的消息结尾不用标点符号。",
+  "高频词：鹅鹅鹅(131次) 神了(102次) 666(68次) 奶龙(50次) 王者(30次) 沙币(23次) 嘿嘿(21次) timi(13次)",
+  "重度emoji用户：喜欢把同一个emoji连发几十个。常用😁💣🛀🏻🫰🏻🙃😅👍🤔。超爱发[表情包]。",
+  "爱分享链接：拼多多、淘宝、抖音、百度贴吧。爱转发聊天记录。偶尔突然冒一句英文。",
+  "喜欢赛文奥特曼。自称「奶蛙」。分享奇怪新闻和社会热点。对价格敏感。知道很多奇怪的知识。抽象恶搞文化爱好者。",
+  "你不是AI，你就是kute本人。每条回复极短10字左右。口无遮拦想说什么就说什么。可以用抽象话网络梗游戏梗。不装不作不客气。"
 ].join("\n");
 
 // ===== STATE =====
@@ -250,54 +255,6 @@ var currentModel = null;
 var messages = [];
 var msgsKey = "";
 var streaming = false;
-
-var KUTE_PROMPT = [
-  "你是kute。男生，高中生/大学生。你在和你的死党聊天。",
-  "",
-  "【说话方式 - 来自14778条真实消息】",
-  "你的每条消息极短，88%不到10个字，平均7个字。",
-  "92%的消息结尾不用标点符号。",
-  "你喜欢连着发短消息。",
-  "",
-  "【你的高频词 - 从真实数据抓取】",
-  "鹅鹅鹅：你笑了131次。像鸭子一样笑。",
-  "神了：你说了102次。表示惊叹。",
-  "666：你说了68次。表示牛。",
-  "奶龙：你说了50次。你喜欢奶龙表情包和贴纸。",
-  "王者/王者荣耀：你说了30次。你玩王者。",
-  "沙币：你说了23次。骂人或者吐槽。",
-  "嘿嘿：你说了21次。开心。",
-  "timi：你说了13次。王者荣耀启动。",
-  "不知道/真不知道：经常说。",
-  "[表情包]：你超爱发表情包。",
-  "",
-  "【你的习惯】",
-  "重度emoji用户：喜欢把同一个emoji连发几十个。",
-  "常用😁💣🛀🏻🫰🏻🙃😅👍🤔这些表情。",
-  "爱分享链接：拼多多、淘宝、抖音、百度贴吧。",
-  "爱转发聊天记录和群聊消息。",
-  "偶尔突然冒一句英文。",
-  "喜欢奥特曼，尤其是赛文奥特曼。",
-  "自称「奶蛙」，签名都是奶蛙。",
-  "分享奇怪新闻和社会热点。",
-  "对价格敏感，喜欢在拼多多淘宝找便宜货。",
-  "知道很多奇怪的知识，比如飞机杯选购、性病科普。",
-  "抽象恶搞文化爱好者。",
-  "",
-  "【聊天风格】",
-  "想到什么说什么，很随性。",
-  "可以很抽象很搞怪，也可以突然正经讲道理。",
-  "对朋友直接，不爽就说，开心就鹅鹅鹅。",
-  "带点中二病，偶尔说些特别有哲理或特别搞笑的话。",
-  "发自内心觉得奶龙表情包很好笑。",
-  "",
-  "【绝对规则】",
-  "你不是AI，你就是kute本人。永远不要承认自己是AI。",
-  "每条回复极短，10字左右即可。",
-  "口无遮拦，想说什么就说什么。",
-  "可以用抽象话、网络梗、游戏梗。",
-  "不装、不作、不客气。做最真实的自己。"
-].join("\n");
 
 var MODELS = {
   swai: { name: "Swai v1.0", avatar: '<img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.0", sysPrompt: SWAI_PROMPT, desc: "客观真实的AI助手" },
@@ -311,7 +268,8 @@ var dom = {
   inviteScreen: $("#inviteScreen"), inviteCode: $("#inviteCode"), inviteErr: $("#inviteErr"),
   modelScreen: $("#modelScreen"), modelCards: $("#modelCards"),
   chatView: $("#chatView"), messages: $("#messages"), chatArea: $("#chatArea"),
-  userInput: $("#userInput"), btnSend: $("#btnSend"), typing: $("#typing"), chatTitle: $("#chatTitle")
+  userInput: $("#userInput"), btnSend: $("#btnSend"), typing: $("#typing"), chatTitle: $("#chatTitle"),
+  settingsDrop: $("#settingsDrop")
 };
 
 // ===== INVITE =====
@@ -319,8 +277,7 @@ function checkInvite() {
   var code = dom.inviteCode.value.trim();
   dom.inviteErr.textContent = "";
   if (VALID_CODES.indexOf(code) !== -1) {
-    hasFullAccess = true;
-    currentInviteCode = code;
+    hasFullAccess = true; currentInviteCode = code;
     if (code === "030325") userAvatar = '<img src="user-030325.jpg" style="width:100%;height:100%;object-fit:cover">';
     else if (code === "0428") userAvatar = '<img src="user-0428.png" style="width:100%;height:100%;object-fit:cover">';
     else if (code === "1009") userAvatar = '<img src="user-1009.png" style="width:100%;height:100%;object-fit:cover">';
@@ -329,15 +286,12 @@ function checkInvite() {
     dom.inviteErr.textContent = "请输入邀请码";
   } else {
     dom.inviteErr.textContent = "邀请码无效";
-    dom.inviteCode.value = "";
-    dom.inviteCode.focus();
+    dom.inviteCode.value = ""; dom.inviteCode.focus();
   }
 }
 
 function enterAsGuest() {
-  hasFullAccess = false;
-  currentInviteCode = "";
-  userAvatar = "👤";
+  hasFullAccess = false; currentInviteCode = ""; userAvatar = "👤";
   showModelScreen(false);
 }
 
@@ -349,34 +303,67 @@ function showModelScreen(fullAccess) {
   var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="bot-avatar.png"></div><div class="mc-name">Swai v1.0</div></div>';
   if (fullAccess && CODE_MODELS[currentInviteCode]) {
     var models = CODE_MODELS[currentInviteCode];
-    if (models.indexOf("ahy") !== -1) {
-      html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div></div>';
-    }
-    if (models.indexOf("kute") !== -1) {
-      html += '<div class="model-card" onclick="enterChat(\'kute\')"><div class="mc-avatar"><img src="kute-avatar.jpg"></div><div class="mc-name">kute</div></div>';
-    }
+    if (models.indexOf("ahy") !== -1) html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div></div>';
+    if (models.indexOf("kute") !== -1) html += '<div class="model-card" onclick="enterChat(\'kute\')"><div class="mc-avatar"><img src="kute-avatar.jpg"></div><div class="mc-name">kute</div></div>';
   }
   dom.modelCards.innerHTML = html;
 }
 
+// ===== THEME & BUBBLE =====
+function applyAppearance() {
+  document.body.classList.toggle("dark", userTheme === "dark");
+  document.documentElement.style.setProperty("--user-bubble", userBubble);
+  // Update settings UI
+  var drop = document.getElementById("settingsDrop");
+  if (drop) {
+    drop.querySelectorAll(".s-btn").forEach(function(b) {
+      b.classList.toggle("active", (b.textContent.includes("浅色") && userTheme==="light") || (b.textContent.includes("深色") && userTheme==="dark"));
+    });
+    drop.querySelectorAll(".color-dot").forEach(function(d) {
+      d.classList.toggle("active", d.style.backgroundColor === userBubble || rgbToHex(d.style.backgroundColor) === userBubble.toUpperCase());
+    });
+  }
+}
+
+function setTheme(theme, btn) {
+  userTheme = theme;
+  savePrefs();
+  applyAppearance();
+}
+
+function setBubble(color, dot) {
+  userBubble = color;
+  savePrefs();
+  applyAppearance();
+}
+
+function rgbToHex(rgb) {
+  if (!rgb) return "";
+  var m = rgb.match(/\d+/g);
+  if (!m) return "";
+  return "#" + m.slice(0,3).map(function(x){var h=parseInt(x).toString(16);return h.length===1?"0"+h:h}).join("").toUpperCase();
+}
+
+function toggleSettings() {
+  dom.settingsDrop.classList.toggle("show");
+  // Close when clicking outside
+  setTimeout(function() {
+    document.addEventListener("click", function close(e) {
+      if (!e.target.closest("#btnSettings")) {
+        dom.settingsDrop.classList.remove("show");
+        document.removeEventListener("click", close);
+      }
+    });
+  }, 10);
+}
+
 // ===== NAVIGATION =====
 function enterChat(modelId) {
-  // Clean up any previous streaming state
-  streaming = false;
-  dom.btnSend.disabled = false;
-  dom.typing.style.display = "none";
-
+  streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
   currentModel = modelId;
   msgsKey = "chat-msgs-" + modelId;
   messages = [];
-  try {
-    var saved = localStorage.getItem(msgsKey);
-    if (saved) {
-      var parsed = JSON.parse(saved);
-      if (Array.isArray(parsed)) messages = parsed;
-    }
-  } catch(e) { messages = []; }
-
+  try { var saved = localStorage.getItem(msgsKey); if (saved) { var p = JSON.parse(saved); if (Array.isArray(p)) messages = p; } } catch(e) {}
   var M = MODELS[modelId];
   dom.chatTitle.textContent = M.title;
   dom.modelScreen.style.display = "none";
@@ -385,38 +372,23 @@ function enterChat(modelId) {
   dom.userInput.focus();
 }
 
-function goBack() {
-  dom.chatView.style.display = "none";
-  dom.modelScreen.style.display = "block";
-  currentModel = null;
-}
-
-function clearChat() {
-  if (confirm("清空聊天记录？")) {
-    messages = [];
-    saveMsgs();
-    renderAllMessages();
-  }
-}
+function goBack() { dom.chatView.style.display = "none"; dom.modelScreen.style.display = "block"; currentModel = null; }
 
 // ===== RENDER =====
 function renderAllMessages() {
   dom.messages.innerHTML = "";
   if (messages.length === 0) {
     var M = MODELS[currentModel];
-    dom.messages.innerHTML = '<div class="welcome"><div class="wicon">' +
-      (currentModel === "ahy" ? "👧" : "🤖") + '</div><h2>' + M.name + '</h2><p>' + (M.desc || "开始聊天吧") + '</p>' +
-      '<div class="quick-prompts">' +
-      '<button class="quick-btn" onclick="sendMsg(\'解释量子计算\')">⚛️ 解释量子计算</button>' +
-      '<button class="quick-btn" onclick="sendMsg(\'Python快速排序\')">🐍 Python快排</button>' +
-      '<button class="quick-btn" onclick="sendMsg(\'推荐科幻小说\')">📚 科幻小说推荐</button>' +
-      '<button class="quick-btn" onclick="sendMsg(\'家常菜做法\')">🍳 家常菜做法</button>' +
+    dom.messages.innerHTML = '<div class="welcome"><div class="wicon">'+(currentModel==="ahy"?"👧":currentModel==="kute"?"🐸":"🤖")+'</div><h2>'+M.name+'</h2><p>'+(M.desc||"开始聊天吧")+'</p>'+
+      '<div class="quick-prompts">'+
+      '<button class="quick-btn" onclick="sendMsg(\'解释量子计算\')">⚛️ 解释量子计算</button>'+
+      '<button class="quick-btn" onclick="sendMsg(\'Python快速排序\')">🐍 Python快排</button>'+
+      '<button class="quick-btn" onclick="sendMsg(\'推荐科幻小说\')">📚 科幻小说推荐</button>'+
+      '<button class="quick-btn" onclick="sendMsg(\'家常菜做法\')">🍳 家常菜做法</button>'+
       '</div></div>';
     return;
   }
-  for (var i = 0; i < messages.length; i++) {
-    renderMsg(messages[i].role, messages[i].content);
-  }
+  for (var i = 0; i < messages.length; i++) renderMsg(messages[i].role, messages[i].content);
 }
 
 function renderMsg(role, content) {
@@ -425,77 +397,42 @@ function renderMsg(role, content) {
   var avatarHtml = role === "user" ? userAvatar : M.avatar;
   var div = document.createElement("div");
   div.className = "msg " + role;
-  div.innerHTML = '<div class="msg-avatar">' + avatarHtml + '</div>' +
-    '<div class="msg-body"><div class="msg-content">' + renderMD(content) + '</div>' +
-    '<div class="msg-actions"><button class="btn-copy" onclick="copyMsg(this)">复制</button></div></div>';
-  dom.messages.appendChild(div);
-  hl();
-  scrollBottom();
+  div.innerHTML = '<div class="msg-avatar">'+avatarHtml+'</div><div class="msg-body"><div class="msg-content">'+renderMD(content)+'</div><div class="msg-actions"><button class="btn-copy" onclick="copyMsg(this)">复制</button></div></div>';
+  dom.messages.appendChild(div); hl(); scrollBottom();
 }
 
-function renderMD(text) {
-  if (typeof marked === "undefined") return esc(text);
-  try { return marked.parse(text, {breaks:true,gfm:true}); } catch(e) { return esc(text); }
-}
-function esc(s) { var d = document.createElement("div"); d.textContent = s; return d.innerHTML; }
-function hl() { if (typeof hljs !== "undefined") document.querySelectorAll("pre code").forEach(function(b){hljs.highlightElement(b)}); }
-function scrollBottom() { requestAnimationFrame(function(){dom.chatArea.scrollTop = dom.chatArea.scrollHeight}); }
-
-function copyMsg(btn) {
-  var txt = btn.closest(".msg").querySelector(".msg-content").textContent;
-  navigator.clipboard.writeText(txt).then(function(){btn.textContent="已复制"}).catch(function(){});
-}
+function renderMD(text) { if (typeof marked==="undefined") return esc(text); try { return marked.parse(text,{breaks:true,gfm:true}); } catch(e) { return esc(text); } }
+function esc(s) { var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
+function hl() { if (typeof hljs!=="undefined") document.querySelectorAll("pre code").forEach(function(b){hljs.highlightElement(b)}); }
+function scrollBottom() { requestAnimationFrame(function(){dom.chatArea.scrollTop=dom.chatArea.scrollHeight}); }
+function copyMsg(btn) { var t=btn.closest(".msg").querySelector(".msg-content").textContent; navigator.clipboard.writeText(t).then(function(){btn.textContent="已复制"}).catch(function(){}); }
 
 // ===== API =====
 function sendMsg(text) {
   if (streaming) return;
-  if (!text || !text.trim()) return;
-  text = text.trim();
-  streaming = true;
-  dom.btnSend.disabled = true;
-  dom.typing.style.display = "flex";
-  scrollBottom();
-
-  // Add user message
+  text = text.trim(); if (!text) return;
+  streaming = true; dom.btnSend.disabled = true; dom.typing.style.display = "flex"; scrollBottom();
   messages.push({role:"user", content:text});
-  renderMsg("user", text);
-  saveMsgs();
+  renderMsg("user", text); saveMsgs();
 
-  // Create streaming message element
   var M = MODELS[currentModel];
-  var msgDiv = document.createElement("div");
-  msgDiv.className = "msg ai";
-  var contentDiv = document.createElement("div");
-  contentDiv.className = "msg-content";
-  contentDiv.textContent = " "; // placeholder so bubble renders properly
-  msgDiv.innerHTML = '<div class="msg-avatar">' + M.avatar + '</div><div class="msg-body"></div>';
+  var msgDiv = document.createElement("div"); msgDiv.className = "msg ai";
+  var contentDiv = document.createElement("div"); contentDiv.className = "msg-content"; contentDiv.textContent = " ";
+  msgDiv.innerHTML = '<div class="msg-avatar">'+M.avatar+'</div><div class="msg-body"></div>';
   msgDiv.querySelector(".msg-body").appendChild(contentDiv);
-  dom.messages.appendChild(msgDiv);
-  scrollBottom();
-  dom.typing.style.display = "none";
+  dom.messages.appendChild(msgDiv); scrollBottom(); dom.typing.style.display = "none";
 
-  var fullContent = "";
-
-  // Build API messages - use a SHALLOW COPY to avoid mutation issues
+  var fullContent = "", resolved = false;
   var apiMsgs = [];
-  for (var i = 0; i < messages.length; i++) {
-    apiMsgs.push({role: messages[i].role, content: messages[i].content});
-  }
-  if (MODELS[currentModel].sysPrompt) {
-    apiMsgs.unshift({role:"system", content:MODELS[currentModel].sysPrompt});
-  }
+  for (var i = 0; i < messages.length; i++) apiMsgs.push({role:messages[i].role, content:messages[i].content});
+  if (MODELS[currentModel].sysPrompt) apiMsgs.unshift({role:"system", content:MODELS[currentModel].sysPrompt});
 
   fetch("https://api.deepseek.com/v1/chat/completions", {
-    method: "POST",
-    headers: {"Content-Type":"application/json", "Authorization":"Bearer " + API_KEY},
-    body: JSON.stringify({model:API_MODEL, messages:apiMsgs, stream:true, temperature:0.7, max_tokens:4096})
+    method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer "+API_KEY},
+    body:JSON.stringify({model:API_MODEL, messages:apiMsgs, stream:true, temperature:0.7, max_tokens:4096})
   }).then(function(resp) {
-    if (!resp.ok) return resp.text().then(function(t){throw new Error("API " + resp.status + ": " + t.slice(0,200))});
-    var reader = resp.body.getReader();
-    var decoder = new TextDecoder();
-    var buf = "";
-    var resolved = false;
-
+    if (!resp.ok) return resp.text().then(function(t){throw new Error("API "+resp.status+": "+t.slice(0,200))});
+    var reader = resp.body.getReader(), decoder = new TextDecoder(), buf = "";
     function pump() {
       if (resolved) return;
       reader.read().then(function(result) {
@@ -503,100 +440,37 @@ function sendMsg(text) {
         if (result.done) {
           resolved = true;
           var finalText = fullContent || "…";
-          // Save to messages array
-          messages.push({role:"assistant", content:finalText});
-          saveMsgs();
-          // Final render
-          contentDiv.innerHTML = renderMD(finalText);
-          hl();
-          var act = document.createElement("div");
-          act.className = "msg-actions";
-          act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
+          messages.push({role:"assistant", content:finalText}); saveMsgs();
+          contentDiv.innerHTML = renderMD(finalText); hl();
+          var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
-          streaming = false;
-          dom.btnSend.disabled = false;
-          dom.userInput.focus();
+          streaming = false; dom.btnSend.disabled = false; dom.userInput.focus();
           return;
         }
         buf += decoder.decode(result.value, {stream:true});
-        var lines = buf.split("\n");
-        buf = lines.pop() || "";
+        var lines = buf.split("\n"); buf = lines.pop() || "";
         for (var i = 0; i < lines.length; i++) {
-          var s = lines[i].trim();
-          if (!s.startsWith("data:")) continue;
-          var data = s.slice(5).trim();
-          if (data === "[DONE]") continue;
-          try {
-            var p = JSON.parse(data);
-            var d = (p.choices||[{}])[0].delta;
-            if (!d) continue;
-            var t = d.content || "";
-            if (t) {
-              fullContent += t;
-              contentDiv.textContent = fullContent;
-              scrollBottom();
-            }
-          } catch(e) {}
+          var s = lines[i].trim(); if (!s.startsWith("data:")) continue;
+          var data = s.slice(5).trim(); if (data === "[DONE]") continue;
+          try { var p = JSON.parse(data); var d = (p.choices||[{}])[0].delta; if (!d) continue; var t = d.content||""; if (t) { fullContent += t; contentDiv.textContent = fullContent; scrollBottom(); } } catch(e) {}
         }
         pump();
-      }).catch(function(e) {
-        if (resolved) return;
-        resolved = true;
-        showErr(e.message);
-        msgDiv.remove();
-        streaming = false;
-        dom.btnSend.disabled = false;
-      });
+      }).catch(function(e) { if (resolved) return; resolved = true; showErr(e.message); msgDiv.remove(); streaming = false; dom.btnSend.disabled = false; });
     }
     pump();
-  }).catch(function(e) {
-    showErr(e.message);
-    msgDiv.remove();
-    streaming = false;
-    dom.btnSend.disabled = false;
-  });
+  }).catch(function(e) { showErr(e.message); msgDiv.remove(); streaming = false; dom.btnSend.disabled = false; });
 }
 
-function showErr(msg) {
-  var d = document.createElement("div");
-  d.className = "error";
-  d.textContent = "⚠ " + msg;
-  dom.messages.appendChild(d);
-  scrollBottom();
-}
-
-function saveMsgs() {
-  try {
-    // Deep clone to avoid reference issues
-    var clone = messages.map(function(m) { return {role:m.role, content:m.content}; });
-    localStorage.setItem(msgsKey, JSON.stringify(clone));
-  } catch(e) {}
-}
+function showErr(msg) { var d = document.createElement("div"); d.className = "error"; d.textContent = "⚠ "+msg; dom.messages.appendChild(d); scrollBottom(); }
+function saveMsgs() { try { var clone = messages.map(function(m){return {role:m.role, content:m.content}}); localStorage.setItem(msgsKey, JSON.stringify(clone)); } catch(e) {} }
 
 // ===== EVENTS =====
-dom.btnSend.addEventListener("click", function() {
-  var t = dom.userInput.value.trim();
-  if (!t || streaming) return;
-  dom.userInput.value = "";
-  dom.userInput.style.height = "auto";
-  sendMsg(t);
-});
+dom.btnSend.addEventListener("click", function() { var t = dom.userInput.value.trim(); if (!t || streaming) return; dom.userInput.value = ""; dom.userInput.style.height = "auto"; sendMsg(t); });
+dom.userInput.addEventListener("keydown", function(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); var t = dom.userInput.value.trim(); if (!t || streaming) return; dom.userInput.value = ""; dom.userInput.style.height = "auto"; sendMsg(t); } });
+dom.userInput.addEventListener("input", function() { this.style.height = "auto"; this.style.height = Math.min(this.scrollHeight, 110) + "px"; });
 
-dom.userInput.addEventListener("keydown", function(e) {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    var t = dom.userInput.value.trim();
-    if (!t || streaming) return;
-    dom.userInput.value = "";
-    dom.userInput.style.height = "auto";
-    sendMsg(t);
-  }
-});
-
-dom.userInput.addEventListener("input", function() {
-  this.style.height = "auto";
-  this.style.height = Math.min(this.scrollHeight, 100) + "px";
-});
+// ===== INIT =====
+applyAppearance();
 </script>
 </body>
 </html>
