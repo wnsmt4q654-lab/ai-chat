@@ -1,0 +1,26 @@
+{
+  "theme": "light",
+  "accent": "#6366f1",
+  "title": "AI Chat · DeepSeek V4 Flash",
+  "topbarTitle": "DeepSeek Chat",
+  "welcomeTitle": "DeepSeek V4 Flash",
+  "welcomeSub": "快速、智能的 AI 助手，随时随地为你解答",
+  "welcomeIcon": "🤖",
+  "footerHint": "DeepSeek V4 Flash · 内容由 AI 生成，仅供参考",
+  "model": "deepseek-v4-flash",
+  "temperature": 0.7,
+  "maxTokens": 4096,
+  "systemPrompt": "",
+  "quickPrompts": [
+    "解释一下量子计算的基本原理",
+    "帮我写一段 Python 快速排序代码",
+    "推荐3本好看的科幻小说",
+    "怎样做一道简单的家常菜？"
+  ],
+  "userAvatar": "👤",
+  "userName": "你",
+  "aiAvatar": "🤖",
+  "aiName": "DeepSeek",
+  "apiKey": "sk-e9168099b0f24e0a948cbd9b98038d8e",
+  "showThinking": true
+}

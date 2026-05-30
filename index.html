@@ -449,7 +449,17 @@
         </div>
       </div>
 
-      <button class="btn-primary" id="btnSaveSettings">💾 保存设置并应用</button>
+      <!-- Global Publish -->
+      <div class="settings-group" style="background:rgba(99,102,241,0.04);border:1.5px solid rgba(99,102,241,0.15);border-radius:16px;padding:16px">
+        <span class="settings-label">🌐 发布到所有用户</span>
+        <p style="font-size:12px;color:var(--text-dim);margin-bottom:10px;line-height:1.5">
+          个人设置仅在本设备生效。<br>点击下方按钮导出配置，发给管理员即可更新所有人的默认值。
+        </p>
+        <button class="btn-primary" id="btnExportGlobal" style="font-size:13px;padding:11px">📋 复制全局配置 JSON</button>
+        <textarea id="cfgGlobalJson" readonly style="width:100%;height:80px;margin-top:8px;background:rgba(0,0,0,0.03);border:1.5px solid var(--glass-border);border-radius:12px;font-size:11px;font-family:monospace;padding:8px;color:var(--text-dim);resize:none;display:none" onclick="this.select()"></textarea>
+      </div>
+
+      <button class="btn-primary" id="btnSaveSettings">💾 保存个人设置</button>
       <button class="btn-danger" id="btnResetSettings">↺ 恢复默认设置</button>
     </div>
   </aside>
@@ -488,12 +498,25 @@
     };
 
     // ===== LOAD SETTINGS =====
+    let GLOBAL_DEFAULTS = { ...DEFAULTS };
+
+    async function loadGlobalConfig() {
+      try {
+        const resp = await fetch("config.json");
+        if (resp.ok) {
+          const global = await resp.json();
+          GLOBAL_DEFAULTS = { ...DEFAULTS, ...global };
+          console.log("✅ 已加载全局配置");
+        }
+      } catch(e) { /* use hardcoded defaults */ }
+    }
+
     function loadSettings() {
       try {
         const raw = localStorage.getItem("ai-chat-settings");
-        if (raw) return { ...DEFAULTS, ...JSON.parse(raw) };
+        if (raw) return { ...GLOBAL_DEFAULTS, ...JSON.parse(raw) };
       } catch(e) {}
-      return { ...DEFAULTS };
+      return { ...GLOBAL_DEFAULTS };
     }
 
     let SETTINGS = loadSettings();
@@ -1005,6 +1028,24 @@
       inp.type = inp.type === "password" ? "text" : "password";
     });
 
+    // Export global config
+    document.getElementById("btnExportGlobal").addEventListener("click", () => {
+      readSettingsFromForm();
+      // Build export object (exclude adminPassword for security)
+      const global = { ...SETTINGS };
+      delete global.adminPassword;
+      const json = JSON.stringify(global, null, 2);
+      const ta = document.getElementById("cfgGlobalJson");
+      ta.style.display = "block";
+      ta.value = json;
+      ta.select();
+      navigator.clipboard.writeText(json).then(() => {
+        showToast("📋 全局配置已复制！发送给管理员更新");
+      }).catch(() => {
+        showToast("📋 请手动复制下方 JSON，发送给管理员");
+      });
+    });
+
     // Save
     document.getElementById("btnSaveSettings").addEventListener("click", () => {
       readSettingsFromForm();
@@ -1074,9 +1115,14 @@
     });
 
     // ===== INIT =====
-    applySettings();
-    renderMessages();
-    dom.userInput.focus();
+    async function init() {
+      await loadGlobalConfig();
+      SETTINGS = loadSettings();
+      applySettings();
+      renderMessages();
+      dom.userInput.focus();
+    }
+    init();
   </script>
 </body>
 </html>
