@@ -153,6 +153,8 @@ var API_KEY = "sk-e9168099b0f24e0a948cbd9b98038d8e";
 var API_MODEL = "deepseek-v4-flash";
 var VALID_CODES = ["030325", "0428"];
 var hasFullAccess = false;
+var currentInviteCode = "";
+var userAvatar = "url(user-avatar.jpg)";
 
 // ===== AHY SYSTEM PROMPT - 100% based on real chat data =====
 // Analysis of 16,283 messages from real WeChat logs:
@@ -245,6 +247,9 @@ function checkInvite() {
 
   if (VALID_CODES.indexOf(code) !== -1) {
     hasFullAccess = true;
+    currentInviteCode = code;
+    if (code === "030325") userAvatar = "url(user-030325.jpg)";
+    else if (code === "0428") userAvatar = "url(user-0428.png)";
     showModelScreen(true);
   } else if (code.length === 0) {
     dom.inviteErr.textContent = "请输入邀请码";
@@ -257,6 +262,8 @@ function checkInvite() {
 
 function enterAsGuest() {
   hasFullAccess = false;
+  currentInviteCode = "";
+  userAvatar = "url(user-avatar.jpg)";
   showModelScreen(false);
 }
 
@@ -326,7 +333,7 @@ function renderMessages() {
 function appendMsg(role, content) {
   var w = dom.messages.querySelector(".welcome"); if (w) w.remove();
   var M = MODELS[currentModel];
-  var avatar = role === "user" ? "url(user-avatar.jpg)" : M.avatar;
+  var avatar = role === "user" ? userAvatar : M.avatar;
   var name = role === "user" ? "你" : M.name;
   var div = document.createElement("div");
   div.className = "msg " + role;
