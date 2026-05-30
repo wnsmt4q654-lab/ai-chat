@@ -220,25 +220,22 @@ var MODELS = {
   ahy: { name: "Ahy", avatar: "url(ahy-avatar.jpg)", title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" }
 };
 
-// ===== DOM =====
+// ===== DOM (init immediately, don't wait) =====
 function $(s){return document.querySelector(s)}
 var dom = {};
-
-function initDom() {
-  dom.inviteScreen = $("#inviteScreen");
-  dom.inviteCode = $("#inviteCode");
-  dom.inviteErr = $("#inviteErr");
-  dom.modelScreen = $("#modelScreen");
-  dom.modelCards = $("#modelCards");
-  dom.chatView = $("#chatView");
-  dom.messages = $("#messages");
-  dom.chatArea = $("#chatArea");
-  dom.userInput = $("#userInput");
-  dom.btnSend = $("#btnSend");
-  dom.btnClear = $("#btnClear");
-  dom.typing = $("#typing");
-  dom.chatTitle = $("#chatTitle");
-}
+dom.inviteScreen = $("#inviteScreen");
+dom.inviteCode = $("#inviteCode");
+dom.inviteErr = $("#inviteErr");
+dom.modelScreen = $("#modelScreen");
+dom.modelCards = $("#modelCards");
+dom.chatView = $("#chatView");
+dom.messages = $("#messages");
+dom.chatArea = $("#chatArea");
+dom.userInput = $("#userInput");
+dom.btnSend = $("#btnSend");
+dom.btnClear = $("#btnClear");
+dom.typing = $("#typing");
+dom.chatTitle = $("#chatTitle");
 
 // ===== INVITE CODE =====
 function checkInvite() {
@@ -267,12 +264,9 @@ function enterAsGuest() {
   showModelScreen(false);
 }
 
-// Also allow Enter key
-document.addEventListener("DOMContentLoaded", function() {
-  initDom();
-  dom.inviteCode.addEventListener("keydown", function(e) {
-    if (e.key === "Enter") checkInvite();
-  });
+// Also allow Enter key on invite input
+dom.inviteCode.addEventListener("keydown", function(e) {
+  if (e.key === "Enter") checkInvite();
 });
 
 function showModelScreen(fullAccess) {
@@ -500,10 +494,7 @@ function saveMsgs() {
 }
 
 // ===== EVENTS =====
-document.addEventListener("DOMContentLoaded", function() {
-  if (!dom.btnSend) initDom();
-
-  dom.btnSend.addEventListener("click", function() {
+dom.btnSend.addEventListener("click", function() {
     var t = dom.userInput.value.trim();
     if (!t || streaming) return;
     dom.userInput.value = "";
@@ -534,7 +525,6 @@ document.addEventListener("DOMContentLoaded", function() {
       renderMessages();
     }
   });
-});
 </script>
 </body>
 </html>
