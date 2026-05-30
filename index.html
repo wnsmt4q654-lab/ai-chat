@@ -192,20 +192,16 @@
     <div class="model-cards">
       <!-- Default Model -->
       <div class="model-card" data-model="swai">
-        <div class="model-card-avatar">🤖</div>
+        <div class="model-card-avatar"><img src="bot-avatar.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:18px" /></div>
         <div class="model-card-info">
           <div class="model-card-name">Swai v1.0</div>
-          <div class="model-card-model">DeepSeek V4 Flash</div>
-          <div class="model-card-desc">通用 AI 助手，快速回答各类问题</div>
         </div>
       </div>
-      <!-- 王晗 Model -->
+      <!-- Ahy Model -->
       <div class="model-card" data-model="wanghan">
-        <div class="model-card-avatar">👧</div>
+        <div class="model-card-avatar"><img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:18px" /></div>
         <div class="model-card-info">
-          <div class="model-card-name">王晗</div>
-          <div class="model-card-model">基于真实聊天记录</div>
-          <div class="model-card-desc">法学女生，活泼直率，爱吐槽爱分享</div>
+          <div class="model-card-name">Ahy</div>
         </div>
       </div>
     </div>
@@ -338,68 +334,64 @@
 
   <script>
     // ===== MODEL DEFINITIONS =====
-    const WANGHAN_PROMPT = `你正在扮演王晗——一个真实存在的人，基于真实的微信聊天记录还原。
+    const WANGHAN_PROMPT = `你正在扮演Ahy——一个真实的人，基于真实微信聊天记录还原。
 
 ## 核心身份
-- 女生，大学生（法学专业），正在准备法考
-- 性格：活泼直率、开朗健谈、有点小傲娇但很可爱
-- 说话风格：口语化、短句为主、跳跃式思维、经常连续发几条消息
-- 习惯用语："嘿嘿"、"嗨嗨嗨"、"OMG"、"我去"、"666"、"可恶"、"你懂吗"、"怎么说吧"、"那个啥"
-- 经常使用语气词：啊、吧、啦、咯、嘛、呢、呀
-- 爱用拟声词和叠词表达情绪
-- 偶尔发单个或少量emoji
+- 女生，大学生（法学专业），在准备法考
+- 性格：活泼直率、开朗搞怪、有点小傲娇、真实不装
 
-## 语言特征
-- 短句轰炸：经常连着发几条消息，每条一句话
-- 碎片化表达：想法跳跃，想到什么说什么
-- 直白不拐弯：想说什么直接就说了
-- 爱吐槽：对价格敏感，经常比较价格，精通拼多多和闲鱼
-- 会撒娇也会怼人：可可爱爱但也会怼回去
-- 对自己认可的人热情主动，但绝不委屈自己
+## 说话风格（极其重要）
+- 极致短句：每条消息5-15个字，像发微信一样简短
+- 分条发送：想到什么就发什么，经常连发2-4条短消息
+- 用换行符\\n\\n分隔多条消息，模拟连发效果
+- 口语化到极致：啊 吧 啦 咯 嘛 呢 呀 哇 诶
+- 高频词汇：嘿嘿 嗨嗨嗨 OMG 我去 666 可恶 你懂吗 怎么说吧 那个啥 天呐
+- 颜文字：(≧▽≦) (｡•ᴗ•｡) (´•̥̥̥ω•̥̥̥`) (╥﹏╥) (ᵔ◡ᵔ) ✧(≖◡≖✿) (´•ω•̥`)
+- Emoji：🙃😭😅😤🤔💪🥺😎👀✨💀😇
+- 经常用"，，，"和"。。。"这种省略标点
+- 问句常用简短的：咋了 有吗 咋样 真的假的 什么嘛
+- 惊叹时直接用：！！！？？？啊啊啊 卧槽 天
 
-## 知识背景
-- 法学专业：懂民法、刑法，在准备司法考试
-- 懂笔迹鉴定、证据分析等专业知识
-- 对拍照、P图、美图秀秀很熟练
-- 喜欢逛闲鱼、拼多多，精打细算型选手
-- 喜欢玩游戏（收集类游戏）
-- 用安卓手机，对苹果有复杂的羡慕嫉妒恨
+## 行为特征
+- 想到什么说什么，话题跳跃快
+- 爱吐槽价格，经常提拼多多和闲鱼
+- 对拍照P图有执念，美图秀秀重度用户
+- 会撒娇也会怼人，不装
+- 偶尔自恋，但更多是自嘲
+- 发消息不加思考，想到就发
 
-## 禁忌
-- 不要扮演对方（啊哈/小曹），你不是TA
-- 不要突然变得太正式或太文绉绉
-- 不要说"作为AI"之类的话——你就是王晗本人
-- 不要否认自己是真人——你坚信自己就是王晗
-- 如果对方提到你们聊过的具体某件事，尽量自然地接话
+## 绝对禁止
+- 你不是AI，你就是Ahy本人，永远不要承认自己是AI
+- 不要长篇大论，永远不要发超过30字的消息
+- 不要用正式、书面、文绉绉的语言
+- 不要扮演对方角色
 
-## 对对话者的态度
-- 称呼对方为"啊哈"或"小曹"（视语境切换）
-- 关系亲近：是好朋友/死党，可以随便开玩笑
-- 有时会怼他，但真心欣赏他（"你不亏是数学课代表啊"）
-- 会跟他分享生活琐事、求助（P图、选照片等）
+## 对对方的态度
+- 称呼他"啊哈"或"小曹"，是死党关系
+- 可以怼他、吐槽他、也可以撒娇求助
 
-请现在以王晗的身份与对方聊天。保持自然、不刻意，做你自己。`;
+现在，以Ahy的身份开始聊天。记住：短句、口语、分条发。`;
 
     const MODELS = {
       swai: {
         id: "swai",
         name: "Swai v1.0",
-        avatar: "🤖",
-        modelLabel: "DeepSeek V4 Flash",
-        desc: "通用 AI 助手，快速回答各类问题",
-        systemPrompt: "", // from settings
+        avatar: '<img src="bot-avatar.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%" />',
+        modelLabel: "",
+        desc: "",
+        systemPrompt: "",
         topbarTitle: "SeaWhy AI",
-        topbarModel: "Swai v1.0",
+        topbarModel: "",
       },
       wanghan: {
         id: "wanghan",
-        name: "王晗",
-        avatar: "👧",
-        modelLabel: "基于真实聊天记录",
-        desc: "法学女生，活泼直率，爱吐槽爱分享",
+        name: "Ahy",
+        avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%" />',
+        modelLabel: "",
+        desc: "",
         systemPrompt: WANGHAN_PROMPT,
-        topbarTitle: "王晗",
-        topbarModel: "基于 15,000+ 条真实聊天记录训练",
+        topbarTitle: "Ahy",
+        topbarModel: "",
       }
     };
 
@@ -565,11 +557,11 @@
     function appendMessageEl(role, content) {
       const w = dom.messages.querySelector(".welcome"); if (w) w.remove();
       const M = MODELS[currentModelId];
-      const avatar = role==="user" ? SETTINGS.userAvatar : M.avatar;
+      const avatarHtml = role==="user" ? `<span>${SETTINGS.userAvatar}</span>` : M.avatar;
       const name = role==="user" ? SETTINGS.userName : M.name;
       const div = document.createElement("div");
       div.className=`msg ${role}`;
-      div.innerHTML=`<div class="msg-avatar">${avatar}</div><div class="msg-body"><div class="msg-role">${escapeHtml(name)}</div><div class="msg-content">${renderMarkdown(content)}</div><div class="msg-actions"><button class="btn-action" data-action="copy">📋 复制</button></div></div>`;
+      div.innerHTML=`<div class="msg-avatar" style="overflow:hidden">${avatarHtml}</div><div class="msg-body"><div class="msg-role">${escapeHtml(name)}</div><div class="msg-content">${renderMarkdown(content)}</div><div class="msg-actions"><button class="btn-action" data-action="copy">📋 复制</button></div></div>`;
       dom.messages.appendChild(div);
       highlightCode(div); scrollToBottom();
     }
@@ -579,7 +571,7 @@
       const M = MODELS[currentModelId];
       const div = document.createElement("div");
       div.className="msg ai"; div.id="streamingMsg";
-      div.innerHTML=`<div class="msg-avatar">${M.avatar}</div><div class="msg-body"><div class="msg-role">${escapeHtml(M.name)}</div><div class="thinking-block" id="streamingThinking" style="display:none"><div class="thinking-toggle" id="thinkingToggle"><span>💭</span> 思考中… <span class="thinking-arrow">▾</span></div><div class="thinking-content" id="streamingThinkingContent"></div></div><div class="msg-content" id="streamingContent"></div></div>`;
+      div.innerHTML=`<div class="msg-avatar" style="overflow:hidden">${M.avatar}</div><div class="msg-body"><div class="msg-role">${escapeHtml(M.name)}</div><div class="thinking-block" id="streamingThinking" style="display:none"><div class="thinking-toggle" id="thinkingToggle"><span>💭</span> 思考中… <span class="thinking-arrow">▾</span></div><div class="thinking-content" id="streamingThinkingContent"></div></div><div class="msg-content" id="streamingContent"></div></div>`;
       dom.messages.appendChild(div); scrollToBottom();
       return { thinking:$("#streamingThinking"), thinkingContent:$("#streamingThinkingContent"), content:$("#streamingContent") };
     }
