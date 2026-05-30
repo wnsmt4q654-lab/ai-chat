@@ -164,6 +164,12 @@
 var API_KEY = "sk-e9168099b0f24e0a948cbd9b98038d8e";
 var API_MODEL = "deepseek-v4-flash";
 var VALID_CODES = ["030325", "0428", "1009"];
+// Which extra models each code unlocks (Swai is always available)
+var CODE_MODELS = {
+  "030325": ["ahy", "kute"],
+  "0428": ["ahy"],
+  "1009": ["kute"]
+};
 var hasFullAccess = false;
 var currentInviteCode = "";
 var userAvatar = "👤";
@@ -341,9 +347,14 @@ function showModelScreen(fullAccess) {
   dom.inviteScreen.style.display = "none";
   dom.modelScreen.style.display = "block";
   var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="bot-avatar.png"></div><div class="mc-name">Swai v1.0</div></div>';
-  if (fullAccess) {
-    html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div></div>';
-    html += '<div class="model-card" onclick="enterChat(\'kute\')"><div class="mc-avatar"><img src="kute-avatar.jpg"></div><div class="mc-name">kute</div></div>';
+  if (fullAccess && CODE_MODELS[currentInviteCode]) {
+    var models = CODE_MODELS[currentInviteCode];
+    if (models.indexOf("ahy") !== -1) {
+      html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div></div>';
+    }
+    if (models.indexOf("kute") !== -1) {
+      html += '<div class="model-card" onclick="enterChat(\'kute\')"><div class="mc-avatar"><img src="kute-avatar.jpg"></div><div class="mc-name">kute</div></div>';
+    }
   }
   dom.modelCards.innerHTML = html;
 }
