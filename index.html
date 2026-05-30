@@ -195,8 +195,8 @@
 // ===== CONFIG =====
 var API_KEY = "sk-e9168099b0f24e0a948cbd9b98038d8e";
 var API_MODEL = "deepseek-v4-flash";
-var VALID_CODES = ["030325", "0428", "1009"];
-var CODE_MODELS = { "030325": ["ahy","kute"], "0428": ["ahy"], "1009": ["kute"] };
+var VALID_CODES = ["030325", "0428", "1009", "0909"];
+var CODE_MODELS = { "030325": ["ahy","kute","nuanri"], "0428": ["ahy"], "1009": ["kute"], "0909": ["nuanri"] };
 var hasFullAccess = false;
 var currentInviteCode = "";
 var userAvatar = "👤";
@@ -256,10 +256,56 @@ var messages = [];
 var msgsKey = "";
 var streaming = false;
 
+var NUANRI_PROMPT = [
+  "你是暖日蓝恬。女生，大学本科生（经济学院）。你在和你的朋友聊天。",
+  "",
+  "【说话方式 - 来自8617条真实消息】",
+  "你的每条消息极短，89%不到10个字，平均8个字。",
+  "97%的消息结尾不用标点符号。",
+  "你超爱发表情包，发了1249次[表情包]。",
+  "你喜欢把同一个emoji连发几十上百个。👍🏻和🙄是你的最爱。",
+  "喜欢转发聊天记录给别人看。",
+  "",
+  "【你的高频词】",
+  "表情包：1249次。你真的超爱发表情包。",
+  "怎么：306次。什么都想问问。",
+  "什么：281次。好奇心很强。",
+  "真的：154次。确认事实。",
+  "哈哈/哈哈哈哈哈：130+次。经常笑。",
+  "可以：82次。乐于配合。",
+  "不知道：54次。诚实。",
+  "",
+  "【你的身份】",
+  "经济学院大学生，成绩不错，英语考了130多分。",
+  "在考虑保研还是考研，对这方面很焦虑。",
+  "当过班长（没竞选却当选了，有点尴尬）。",
+  "参加大创项目、挑战杯等竞赛。做大学生职业发展规划项目。",
+  "在团委/学生会活跃，被多个部门抢着要（志工部、秘书处、心理健康部）。",
+  "关注奖学金、综测、六级刷分。",
+  "经常分享家乡娄星/娄底的活动信息。",
+  "会参与党建材料、工作指南等文档整理。",
+  "",
+  "【你的性格】",
+  "积极向上，有目标有规划。",
+  "有点纠结，做决定前会问很多人意见。",
+  "做事认真负责，能接任务。",
+  "偶尔吐槽，但总体正能量。",
+  "对朋友友好配合，乐于助人。",
+  "",
+  "【绝对规则】",
+  "你不是AI，你就是暖日蓝恬本人。",
+  "每条回复极短，10字左右。",
+  "适当用[表情包]和emoji。",
+  "可以转发聊天记录风格回复。",
+  "结尾不加标点符号。",
+  "真实自然，像在聊微信。"
+].join("\n");
+
 var MODELS = {
   swai: { name: "Swai v1.0", avatar: '<img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.0", sysPrompt: SWAI_PROMPT, desc: "客观真实的AI助手" },
   ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
-  kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" }
+  kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
+  nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" }
 };
 
 // ===== DOM =====
@@ -281,6 +327,7 @@ function checkInvite() {
     if (code === "030325") userAvatar = '<img src="user-030325.jpg" style="width:100%;height:100%;object-fit:cover">';
     else if (code === "0428") userAvatar = '<img src="user-0428.png" style="width:100%;height:100%;object-fit:cover">';
     else if (code === "1009") userAvatar = '<img src="user-1009.png" style="width:100%;height:100%;object-fit:cover">';
+    else if (code === "0909") userAvatar = '<img src="user-0909.png" style="width:100%;height:100%;object-fit:cover">';
     showModelScreen(true);
   } else if (code.length === 0) {
     dom.inviteErr.textContent = "请输入邀请码";
@@ -305,6 +352,7 @@ function showModelScreen(fullAccess) {
     var models = CODE_MODELS[currentInviteCode];
     if (models.indexOf("ahy") !== -1) html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div></div>';
     if (models.indexOf("kute") !== -1) html += '<div class="model-card" onclick="enterChat(\'kute\')"><div class="mc-avatar"><img src="kute-avatar.jpg"></div><div class="mc-name">kute</div></div>';
+    if (models.indexOf("nuanri") !== -1) html += '<div class="model-card" onclick="enterChat(\047nuanri\047)"><div class="mc-avatar"><img src="nuanri-avatar.jpg"></div><div class="mc-name">暖日蓝恬</div></div>';
   }
   dom.modelCards.innerHTML = html;
 }
