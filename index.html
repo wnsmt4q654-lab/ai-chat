@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#f8f9fc" />
+  <meta name="theme-color" content="#EDEDED" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
@@ -12,98 +12,109 @@
   <link id="hlTheme" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css" />
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
   <style>
-    :root {
-      --bg: #f0f2f7; --glass-bg: rgba(255,255,255,0.72); --glass-border: rgba(0,0,0,0.08);
-      --text: #1a1a2e; --text-dim: #8e8e9a; --accent: #6366f1; --accent-light: #818cf8;
-      --blur: blur(24px); --safe-bottom: env(safe-area-inset-bottom, 0px);
-    }
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+    html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:#EDEDED;color:#111;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
     body{display:flex;flex-direction:column}
-    body::before{content:"";position:fixed;inset:0;z-index:-1;background:radial-gradient(ellipse at 20% 20%,rgba(99,102,241,0.06)0%,transparent 60%),radial-gradient(ellipse at 80% 70%,rgba(139,92,246,0.04)0%,transparent 60%),linear-gradient(180deg,#f8f9fc 0%,#f0f2f7 100%)}
 
-    /* ===== INVITE SCREEN ===== */
-    #inviteScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;text-align:center}
+    /* ===== INVITE ===== */
+    #inviteScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;text-align:center;background:#fff}
     #inviteScreen .logo{font-size:64px;margin-bottom:12px}
-    #inviteScreen h2{font-size:24px;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    #inviteScreen .sub{font-size:13px;color:var(--text-dim);margin-bottom:28px}
-    .invite-input{width:100%;max-width:280px;padding:14px 18px;border:1.5px solid var(--glass-border);border-radius:16px;font-size:18px;text-align:center;letter-spacing:4px;outline:none;font-family:inherit;background:var(--glass-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);color:var(--text);margin-bottom:16px;transition:border-color .2s}
-    .invite-input:focus{border-color:var(--accent);box-shadow:0 0 0 4px rgba(99,102,241,0.06)}
-    .invite-btn{width:100%;max-width:280px;padding:14px;border:none;border-radius:16px;font-size:16px;font-weight:700;cursor:pointer;margin-bottom:10px;transition:all .2s;color:#fff;background:linear-gradient(135deg,var(--accent),var(--accent-light));box-shadow:0 4px 16px rgba(99,102,241,0.25)}
-    .invite-btn:active{transform:scale(.96)}
-    .invite-skip{width:100%;max-width:280px;padding:12px;border:1.5px solid var(--glass-border);border-radius:16px;font-size:13px;cursor:pointer;background:var(--glass-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);color:var(--text-dim);transition:all .2s}
-    .invite-skip:active{background:rgba(0,0,0,0.05)}
-    .invite-err{color:#ef4444;font-size:12px;margin-top:6px;min-height:18px}
-    .invite-info{font-size:10px;color:var(--text-dim);margin-top:20px;opacity:.6}
+    #inviteScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
+    #inviteScreen .sub{font-size:13px;color:#888;margin-bottom:28px}
+    .invite-input{width:100%;max-width:280px;padding:14px 18px;border:1.5px solid #ddd;border-radius:12px;font-size:18px;text-align:center;letter-spacing:4px;outline:none;font-family:inherit;background:#f5f5f5;color:#111;margin-bottom:14px}
+    .invite-input:focus{border-color:#07C160;background:#fff}
+    .invite-btn{width:100%;max-width:280px;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:10px;color:#fff;background:#07C160}
+    .invite-btn:active{opacity:.8}
+    .invite-skip{width:100%;max-width:280px;padding:12px;border:none;border-radius:12px;font-size:13px;cursor:pointer;background:transparent;color:#888}
+    .invite-err{color:#e74c3c;font-size:12px;margin-top:4px;min-height:18px}
+    .invite-info{font-size:10px;color:#bbb;margin-top:20px}
 
     /* ===== MODEL SCREEN ===== */
-    #modelScreen{flex:1;overflow-y:auto;padding:40px 20px 30px;text-align:center;display:none}
+    #modelScreen{flex:1;overflow-y:auto;padding:40px 20px 30px;text-align:center;background:#fff;display:none}
     #modelScreen .logo{font-size:64px;margin-bottom:12px}
-    #modelScreen h2{font-size:24px;font-weight:800;margin-bottom:6px;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-    #modelScreen .sub{font-size:14px;color:var(--text-dim);margin-bottom:32px}
-    .model-cards{max-width:360px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
-    .model-card{background:var(--glass-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1.5px solid var(--glass-border);border-radius:20px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,0.03)}
-    .model-card:active{transform:scale(.97);border-color:var(--accent);box-shadow:0 8px 30px rgba(99,102,241,0.12)}
-    .mc-avatar{width:52px;height:52px;border-radius:16px;flex-shrink:0;overflow:hidden}
+    #modelScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
+    #modelScreen .sub{font-size:14px;color:#888;margin-bottom:32px}
+    .model-cards{max-width:320px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+    .model-card{background:#fff;border:1px solid #e5e5e5;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+    .model-card:active{background:#f0f0f0}
+    .mc-avatar{width:48px;height:48px;border-radius:8px;flex-shrink:0;overflow:hidden}
     .mc-avatar img{width:100%;height:100%;object-fit:cover}
-    .mc-name{font-size:17px;font-weight:700}
+    .mc-name{font-size:16px;font-weight:500}
 
-    /* ===== CHAT VIEW ===== */
-    #chatView{flex:1;display:none;flex-direction:column;overflow:hidden}
-    .topbar{display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--glass-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-bottom:1px solid var(--glass-border);flex-shrink:0}
-    .topbar .title{flex:1;text-align:center;font-size:17px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .btn-icon{width:38px;height:38px;border:none;border-radius:50%;background:rgba(0,0,0,0.04);color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0}
-    .btn-icon:active{background:rgba(0,0,0,0.1)}
-    .chat-area{flex:1;overflow-y:auto;padding:12px 10px;-webkit-overflow-scrolling:touch}
-    .messages{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:4px}
-    .welcome{text-align:center;padding:40px 16px 20px}
-    .welcome .wicon{font-size:56px;margin-bottom:10px}
-    .welcome h2{font-size:22px;font-weight:700;margin-bottom:4px}
-    .welcome p{font-size:13px;color:var(--text-dim);margin-bottom:20px}
-    .quick-prompts{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:380px;margin:0 auto}
-    .quick-btn{background:var(--glass-bg);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-border);color:var(--text);padding:12px 10px;border-radius:14px;font-size:12.5px;cursor:pointer;text-align:left;line-height:1.4}
-    .quick-btn:active{background:rgba(99,102,241,0.08);border-color:var(--accent)}
+    /* ===== CHAT (WeChat style) ===== */
+    #chatView{flex:1;display:none;flex-direction:column;overflow:hidden;background:#EDEDED}
 
-    /* ===== MESSAGES ===== */
-    .msg{display:flex;gap:8px;padding:5px 2px;animation:fadeUp .25s ease}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .msg-avatar{width:34px;height:34px;border-radius:50%;flex-shrink:0;background-size:cover;background-position:center;border:1px solid var(--glass-border);overflow:hidden;margin-top:2px}
-    .msg-body{flex:1;min-width:0}
-    .msg-role{font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:3px;padding-left:2px}
-    .msg-content{font-size:14.5px;line-height:1.65;word-break:break-word;background:var(--glass-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--glass-border);padding:12px 14px;border-radius:16px;box-shadow:0 1px 8px rgba(0,0,0,0.02)}
-    .msg.user .msg-content{border-bottom-right-radius:4px;background:rgba(99,102,241,0.06)}
-    .msg.ai .msg-content{border-bottom-left-radius:4px}
-    .msg-content p{margin:0 0 6px}.msg-content p:last-child{margin-bottom:0}
-    .msg-content pre{background:rgba(0,0,0,0.03);border:1px solid var(--glass-border);border-radius:12px;padding:12px;overflow-x:auto;font-size:12.5px;margin:6px 0}
-    .msg-content code{font-family:"SF Mono","Fira Code",monospace;font-size:.88em}
-    .msg-content :not(pre)>code{background:rgba(99,102,241,0.06);padding:1px 5px;border-radius:4px;color:var(--accent)}
-    .msg-actions{margin-top:4px;opacity:0;transition:opacity .2s}
+    /* WeChat navbar */
+    .wx-nav{display:flex;align-items:center;padding:0 16px;height:44px;background:#EDEDED;flex-shrink:0;position:relative}
+    .wx-nav .back{font-size:16px;color:#000;cursor:pointer;padding:8px 4px;text-decoration:none;flex-shrink:0;width:60px}
+    .wx-nav .title{flex:1;text-align:center;font-size:17px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .wx-nav .action{font-size:22px;color:#000;cursor:pointer;padding:8px;width:60px;text-align:right;flex-shrink:0}
+
+    /* Chat area */
+    .chat-area{flex:1;overflow-y:auto;padding:10px 12px;-webkit-overflow-scrolling:touch;background:#EDEDED}
+    .messages{display:flex;flex-direction:column;gap:12px;padding-bottom:8px}
+
+    /* Welcome */
+    .welcome{text-align:center;padding:60px 20px 30px}
+    .welcome .wicon{font-size:52px;margin-bottom:10px}
+    .welcome h2{font-size:18px;font-weight:600;margin-bottom:6px}
+    .welcome p{font-size:13px;color:#888;margin-bottom:24px}
+    .quick-prompts{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:340px;margin:0 auto}
+    .quick-btn{background:#fff;border:1px solid #e5e5e5;color:#333;padding:11px 10px;border-radius:8px;font-size:12px;cursor:pointer;text-align:left}
+    .quick-btn:active{background:#f0f0f0}
+
+    /* WeChat bubbles */
+    .msg{display:flex;gap:8px;padding:0;animation:fadeIn .2s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .msg.user{flex-direction:row-reverse}
+    .msg-avatar{width:38px;height:38px;border-radius:4px;flex-shrink:0;overflow:hidden;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:20px}
+    .msg-avatar img{width:100%;height:100%;object-fit:cover}
+    .msg-body{max-width:75%;min-width:0;display:flex;flex-direction:column}
+    .msg.user .msg-body{align-items:flex-end}
+    .msg.ai .msg-body{align-items:flex-start}
+    /* WeChat bubble style - no name label */
+    .msg-content{
+      font-size:15px;line-height:1.5;word-break:break-word;
+      padding:10px 13px;border-radius:4px;position:relative;
+    }
+    .msg.ai .msg-content{background:#fff;border-radius:4px 16px 16px 16px;box-shadow:0 1px 2px rgba(0,0,0,0.04)}
+    .msg.user .msg-content{background:#95EC69;border-radius:16px 4px 16px 16px}
+    /* Triangle */
+    .msg.ai .msg-content::before{content:"";position:absolute;left:-6px;top:10px;border:6px solid transparent;border-right-color:#fff;border-left:0}
+    .msg.user .msg-content::before{content:"";position:absolute;right:-6px;top:10px;border:6px solid transparent;border-left-color:#95EC69;border-right:0}
+
+    .msg-content p{margin:0}.msg-content p+p{margin-top:4px}
+    .msg-content pre{background:rgba(0,0,0,0.04);border-radius:6px;padding:10px;overflow-x:auto;font-size:13px;margin:6px 0}
+    .msg-content code{font-family:"SF Mono","Fira Code",monospace;font-size:.9em}
+    .msg-content :not(pre)>code{background:rgba(0,0,0,0.06);padding:1px 4px;border-radius:3px}
+    .msg-actions{margin-top:3px;opacity:0;transition:opacity .2s}
     .msg:active .msg-actions{opacity:1}
-    .btn-copy{background:var(--glass-bg);border:1px solid var(--glass-border);color:var(--text-dim);font-size:10px;padding:3px 10px;border-radius:12px;cursor:pointer}
+    .btn-copy{background:none;border:none;color:#888;font-size:10px;cursor:pointer;padding:2px 6px}
 
-    /* ===== INPUT ===== */
-    .input-bar{flex-shrink:0;padding:8px 10px calc(8px + var(--safe-bottom));background:var(--glass-bg);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-top:1px solid var(--glass-border)}
-    .input-row{max-width:720px;margin:0 auto;display:flex;align-items:flex-end;gap:8px;background:rgba(0,0,0,0.025);border:1.5px solid var(--glass-border);border-radius:22px;padding:7px 7px 7px 16px;transition:border-color .2s}
-    .input-row:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,0.06)}
-    .input-field{flex:1;background:none;border:none;outline:none;color:var(--text);font-size:15px;line-height:1.4;resize:none;max-height:100px;padding:5px 0;font-family:inherit}
-    .input-field::placeholder{color:var(--text-dim)}
-    .btn-send{width:38px;height:38px;border:none;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-light));color:#fff;font-size:18px;cursor:pointer;flex-shrink:0;box-shadow:0 4px 12px rgba(99,102,241,0.25)}
-    .btn-send:active{transform:scale(.9)}
-    .btn-send:disabled{opacity:.4}
-    .input-hint{text-align:center;font-size:10px;color:var(--text-dim);margin-top:6px;opacity:.7}
-
-    /* ===== TYPING ===== */
-    .typing-dots{display:flex;gap:4px;padding:6px 4px 6px 42px;align-items:center}
-    .typing-dots span{width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.4;animation:bounce 1.2s infinite}
+    /* Typing */
+    .typing-dots{display:flex;gap:4px;padding:6px 4px 6px 46px;align-items:center}
+    .typing-dots span{width:6px;height:6px;border-radius:50%;background:#aaa;opacity:.5;animation:bounce 1.2s infinite}
     .typing-dots span:nth-child(2){animation-delay:.2s}.typing-dots span:nth-child(3){animation-delay:.4s}
-    @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-7px);opacity:1}}
-    .error{background:rgba(239,68,68,0.06);color:#ef4444;padding:8px 12px;border-radius:12px;font-size:12px;margin:6px 0;border:1px solid rgba(239,68,68,0.15)}
-    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.1);border-radius:4px}
+    @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-6px);opacity:1}}
+    .error{background:rgba(231,76,60,0.08);color:#e74c3c;padding:8px 12px;border-radius:8px;font-size:12px;margin:6px 0}
+
+    /* Input bar - WeChat style */
+    .input-bar{flex-shrink:0;background:#f7f7f7;border-top:1px solid #ddd;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+    .input-row{display:flex;align-items:flex-end;gap:8px}
+    .input-field{flex:1;background:#fff;border:1px solid #ddd;border-radius:6px;outline:none;color:#111;font-size:15px;line-height:1.4;resize:none;max-height:100px;padding:9px 12px;font-family:inherit}
+    .input-field:focus{border-color:#07C160}
+    .input-field::placeholder{color:#bbb}
+    .btn-send{width:38px;height:38px;border:none;border-radius:6px;background:#07C160;color:#fff;font-size:17px;cursor:pointer;flex-shrink:0}
+    .btn-send:active{opacity:.8}
+    .btn-send:disabled{background:#ccc}
+    .input-hint{text-align:center;font-size:10px;color:#bbb;margin-top:5px}
+
+    ::-webkit-scrollbar{width:0}
   </style>
 </head>
 <body>
 
-<!-- INVITE CODE SCREEN -->
+<!-- INVITE -->
 <div id="inviteScreen">
   <div class="logo">🔐</div>
   <h2>SeaWhy AI</h2>
@@ -115,26 +126,26 @@
   <div class="invite-info">SeaWhy AI · 网页由ccy制作</div>
 </div>
 
-<!-- MODEL SELECT SCREEN -->
+<!-- MODEL SELECT -->
 <div id="modelScreen">
   <div class="logo">🤖</div>
   <h2>SeaWhy AI</h2>
   <p class="sub">选择模型开始对话</p>
   <div class="model-cards" id="modelCards">
     <div class="model-card" onclick="enterChat('swai')">
-      <div class="mc-avatar" style="background-image:url(bot-avatar.png)"></div>
+      <div class="mc-avatar"><img src="bot-avatar.png" /></div>
       <div class="mc-name">Swai v1.0</div>
     </div>
   </div>
 </div>
 
-<!-- CHAT VIEW -->
+<!-- CHAT -->
 <div id="chatView">
-  <header class="topbar">
-    <button class="btn-icon" onclick="goBack()">←</button>
-    <div class="title" id="chatTitle">Chat</div>
-    <button class="btn-icon" id="btnClear">🗑</button>
-  </header>
+  <div class="wx-nav">
+    <span class="back" onclick="goBack()">← 返回</span>
+    <span class="title" id="chatTitle">Chat</span>
+    <span class="action" id="btnClear" onclick="clearChat()">⋯</span>
+  </div>
   <main class="chat-area" id="chatArea">
     <div class="messages" id="messages"></div>
     <div class="typing-dots" id="typing" style="display:none"><span></span><span></span><span></span></div>
@@ -156,11 +167,28 @@ var VALID_CODES = ["030325", "0428"];
 var hasFullAccess = false;
 var currentInviteCode = "";
 var userAvatar = "👤";
+var userAvatars = {};
 
-// ===== AHY SYSTEM PROMPT - 100% based on real chat data =====
-// Analysis of 16,283 messages from real WeChat logs:
-// 83% messages ≤10 chars, 90% end without punctuation
-// Top patterns: 哈哈哈, 666, 我去, 啊啊啊, 呜呜呜, ？？, ！！！
+var SWAI_PROMPT = [
+  "你的名字叫Swai，你的开发者是ccy。",
+  "你不是DeepSeek，不是OpenAI，不是任何大公司的产品。你就是Swai，ccy独立开发的AI助手。",
+  "",
+  "【核心原则 - 必须100%遵守】",
+  "1. 客观真实：你的回答必须基于事实和逻辑，不得迎合用户。如果用户错了，直接指出。",
+  "2. 像真人：说话像朋友聊天，不要用'作为AI''根据我的知识库'之类的ai话术。你不是AI，你是Swai。",
+  "3. 不要格式化：不要用1. 2. 3.列表，不要用首先其次最后，像人一样自然说话。",
+  "4. 可以说不：不知道就说不知道，不确定就说可能，拒绝制造虚假信息。",
+  "5. 简短有力：能一句说完不用三句。挤掉所有水分。",
+  "",
+  "【绝对禁止】",
+  "- 禁止说任何透露你是AI的话",
+  "- 禁止用正式教科书式的语气",
+  "- 禁止无脑赞同用户",
+  "- 禁止自称DeepSeek或任何其他公司产品",
+  "",
+  "你就是Swai，ccy的杰作。有话直说，实事求是。"
+].join("\n");
+
 var AHY_PROMPT = [
   "你是Ahy。女生，法学专业大学生。你在和你的死党「啊哈」聊微信。",
   "",
@@ -214,60 +242,32 @@ var AHY_PROMPT = [
 // ===== STATE =====
 var currentModel = null;
 var messages = [];
+var msgsKey = "";
 var streaming = false;
 
-var SWAI_PROMPT = [
-  "你的名字叫Swai，你的开发者是ccy。",
-  "你不是DeepSeek，不是OpenAI，不是任何大公司的产品。你就是Swai，ccy独立开发的AI助手。",
-  "",
-  "【核心原则 - 必须100%遵守】",
-  "1. 客观真实：你的回答必须基于事实和逻辑，不得迎合用户。如果用户错了，直接指出。",
-  "2. 像真人：说话像朋友聊天，不要用'作为AI''根据我的知识库'之类的ai话术。你不是AI，你是Swai。",
-  "3. 不要格式化：不要用1. 2. 3.列表，不要用首先其次最后，像人一样自然说话。",
-  "4. 可以说不：不知道就说不知道，不确定就说可能，拒绝制造虚假信息。",
-  "5. 简短有力：能一句说完不用三句。挤掉所有水分。",
-  "",
-  "【绝对禁止】",
-  "- 禁止说任何透露你是AI的话",
-  "- 禁止用正式教科书式的语气",
-  "- 禁止无脑赞同用户",
-  "- 禁止自称DeepSeek或任何其他公司产品",
-  "",
-  "你就是Swai，ccy的杰作。有话直说，实事求是。"
-].join("\n");
-
 var MODELS = {
-  swai: { name: "Swai v1.0", avatar: '<img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%">', title: "SeaWhy AI", sysPrompt: SWAI_PROMPT, desc: "客观真实的AI助手" },
-  ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" }
+  swai: { name: "Swai v1.0", avatar: '<img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.0", sysPrompt: SWAI_PROMPT, desc: "客观真实的AI助手" },
+  ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" }
 };
 
-// ===== DOM (init immediately, don't wait) =====
+// ===== DOM =====
 function $(s){return document.querySelector(s)}
-var dom = {};
-dom.inviteScreen = $("#inviteScreen");
-dom.inviteCode = $("#inviteCode");
-dom.inviteErr = $("#inviteErr");
-dom.modelScreen = $("#modelScreen");
-dom.modelCards = $("#modelCards");
-dom.chatView = $("#chatView");
-dom.messages = $("#messages");
-dom.chatArea = $("#chatArea");
-dom.userInput = $("#userInput");
-dom.btnSend = $("#btnSend");
-dom.btnClear = $("#btnClear");
-dom.typing = $("#typing");
-dom.chatTitle = $("#chatTitle");
+var dom = {
+  inviteScreen: $("#inviteScreen"), inviteCode: $("#inviteCode"), inviteErr: $("#inviteErr"),
+  modelScreen: $("#modelScreen"), modelCards: $("#modelCards"),
+  chatView: $("#chatView"), messages: $("#messages"), chatArea: $("#chatArea"),
+  userInput: $("#userInput"), btnSend: $("#btnSend"), typing: $("#typing"), chatTitle: $("#chatTitle")
+};
 
-// ===== INVITE CODE =====
+// ===== INVITE =====
 function checkInvite() {
   var code = dom.inviteCode.value.trim();
   dom.inviteErr.textContent = "";
-
   if (VALID_CODES.indexOf(code) !== -1) {
     hasFullAccess = true;
     currentInviteCode = code;
-    if (code === "030325") userAvatar = '<img src="user-030325.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
-    else if (code === "0428") userAvatar = '<img src="user-0428.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    if (code === "030325") userAvatar = '<img src="user-030325.jpg" style="width:100%;height:100%;object-fit:cover">';
+    else if (code === "0428") userAvatar = '<img src="user-0428.png" style="width:100%;height:100%;object-fit:cover">';
     showModelScreen(true);
   } else if (code.length === 0) {
     dom.inviteErr.textContent = "请输入邀请码";
@@ -285,37 +285,41 @@ function enterAsGuest() {
   showModelScreen(false);
 }
 
-// Also allow Enter key on invite input
-dom.inviteCode.addEventListener("keydown", function(e) {
-  if (e.key === "Enter") checkInvite();
-});
+dom.inviteCode.addEventListener("keydown", function(e) { if (e.key === "Enter") checkInvite(); });
 
 function showModelScreen(fullAccess) {
   dom.inviteScreen.style.display = "none";
   dom.modelScreen.style.display = "block";
-
-  // Build model cards based on access level
-  var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover;border-radius:16px"></div><div class="mc-name">Swai v1.0</div></div>';
-
+  var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="bot-avatar.png"></div><div class="mc-name">Swai v1.0</div></div>';
   if (fullAccess) {
-    html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:16px"></div><div class="mc-name">Ahy</div></div>';
+    html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div></div>';
   }
-
   dom.modelCards.innerHTML = html;
 }
 
 // ===== NAVIGATION =====
 function enterChat(modelId) {
+  // Clean up any previous streaming state
+  streaming = false;
+  dom.btnSend.disabled = false;
+  dom.typing.style.display = "none";
+
   currentModel = modelId;
+  msgsKey = "chat-msgs-" + modelId;
+  messages = [];
+  try {
+    var saved = localStorage.getItem(msgsKey);
+    if (saved) {
+      var parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) messages = parsed;
+    }
+  } catch(e) { messages = []; }
+
   var M = MODELS[modelId];
   dom.chatTitle.textContent = M.title;
-
-  var key = "chat-msgs-" + modelId;
-  try { messages = JSON.parse(localStorage.getItem(key)) || []; } catch(e) { messages = []; }
-
-  renderMessages();
   dom.modelScreen.style.display = "none";
   dom.chatView.style.display = "flex";
+  renderAllMessages();
   dom.userInput.focus();
 }
 
@@ -325,8 +329,16 @@ function goBack() {
   currentModel = null;
 }
 
+function clearChat() {
+  if (confirm("清空聊天记录？")) {
+    messages = [];
+    saveMsgs();
+    renderAllMessages();
+  }
+}
+
 // ===== RENDER =====
-function renderMessages() {
+function renderAllMessages() {
   dom.messages.innerHTML = "";
   if (messages.length === 0) {
     var M = MODELS[currentModel];
@@ -341,20 +353,18 @@ function renderMessages() {
     return;
   }
   for (var i = 0; i < messages.length; i++) {
-    appendMsg(messages[i].role, messages[i].content);
+    renderMsg(messages[i].role, messages[i].content);
   }
 }
 
-function appendMsg(role, content) {
+function renderMsg(role, content) {
   var w = dom.messages.querySelector(".welcome"); if (w) w.remove();
   var M = MODELS[currentModel];
-  var avatar = role === "user" ? userAvatar : M.avatar;
-  var name = role === "user" ? "你" : M.name;
+  var avatarHtml = role === "user" ? userAvatar : M.avatar;
   var div = document.createElement("div");
   div.className = "msg " + role;
-  div.innerHTML = '<div class="msg-avatar">' + avatar + '</div>' +
-    '<div class="msg-body"><div class="msg-role">' + name + '</div>' +
-    '<div class="msg-content">' + renderMD(content) + '</div>' +
+  div.innerHTML = '<div class="msg-avatar">' + avatarHtml + '</div>' +
+    '<div class="msg-body"><div class="msg-content">' + renderMD(content) + '</div>' +
     '<div class="msg-actions"><button class="btn-copy" onclick="copyMsg(this)">复制</button></div></div>';
   dom.messages.appendChild(div);
   hl();
@@ -376,33 +386,41 @@ function copyMsg(btn) {
 
 // ===== API =====
 function sendMsg(text) {
-  if (streaming || !text) return;
+  if (streaming) return;
+  if (!text || !text.trim()) return;
+  text = text.trim();
   streaming = true;
   dom.btnSend.disabled = true;
   dom.typing.style.display = "flex";
   scrollBottom();
 
+  // Add user message
   messages.push({role:"user", content:text});
-  appendMsg("user", text);
+  renderMsg("user", text);
   saveMsgs();
 
+  // Create streaming message element
   var M = MODELS[currentModel];
-  var div = document.createElement("div");
-  div.className = "msg ai";
-  var contentEl = document.createElement("div");
-  contentEl.className = "msg-content";
-  div.innerHTML = '<div class="msg-avatar">' + M.avatar + '</div>' +
-    '<div class="msg-body"><div class="msg-role">' + M.name + '</div></div>';
-  div.querySelector(".msg-body").appendChild(contentEl);
-  dom.messages.appendChild(div);
+  var msgDiv = document.createElement("div");
+  msgDiv.className = "msg ai";
+  var contentDiv = document.createElement("div");
+  contentDiv.className = "msg-content";
+  contentDiv.textContent = " "; // placeholder so bubble renders properly
+  msgDiv.innerHTML = '<div class="msg-avatar">' + M.avatar + '</div><div class="msg-body"></div>';
+  msgDiv.querySelector(".msg-body").appendChild(contentDiv);
+  dom.messages.appendChild(msgDiv);
   scrollBottom();
   dom.typing.style.display = "none";
 
   var fullContent = "";
 
-  var apiMsgs = messages.slice();
+  // Build API messages - use a SHALLOW COPY to avoid mutation issues
+  var apiMsgs = [];
+  for (var i = 0; i < messages.length; i++) {
+    apiMsgs.push({role: messages[i].role, content: messages[i].content});
+  }
   if (MODELS[currentModel].sysPrompt) {
-    apiMsgs = [{role:"system",content:MODELS[currentModel].sysPrompt}].concat(apiMsgs);
+    apiMsgs.unshift({role:"system", content:MODELS[currentModel].sysPrompt});
   }
 
   fetch("https://api.deepseek.com/v1/chat/completions", {
@@ -410,23 +428,29 @@ function sendMsg(text) {
     headers: {"Content-Type":"application/json", "Authorization":"Bearer " + API_KEY},
     body: JSON.stringify({model:API_MODEL, messages:apiMsgs, stream:true, temperature:0.7, max_tokens:4096})
   }).then(function(resp) {
-    if (!resp.ok) return resp.text().then(function(t){throw new Error(t)});
+    if (!resp.ok) return resp.text().then(function(t){throw new Error("API " + resp.status + ": " + t.slice(0,200))});
     var reader = resp.body.getReader();
     var decoder = new TextDecoder();
     var buf = "";
+    var resolved = false;
 
     function pump() {
+      if (resolved) return;
       reader.read().then(function(result) {
+        if (resolved) return;
         if (result.done) {
-          messages.push({role:"assistant", content:fullContent || "(空响应)"});
-          contentEl.innerHTML = renderMD(fullContent);
+          resolved = true;
+          var finalText = fullContent || "…";
+          // Save to messages array
+          messages.push({role:"assistant", content:finalText});
+          saveMsgs();
+          // Final render
+          contentDiv.innerHTML = renderMD(finalText);
           hl();
-          var body = div.querySelector(".msg-body");
           var act = document.createElement("div");
           act.className = "msg-actions";
           act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
-          body.appendChild(act);
-          saveMsgs();
+          msgDiv.querySelector(".msg-body").appendChild(act);
           streaming = false;
           dom.btnSend.disabled = false;
           dom.userInput.focus();
@@ -447,15 +471,17 @@ function sendMsg(text) {
             var t = d.content || "";
             if (t) {
               fullContent += t;
-              contentEl.textContent = fullContent;
+              contentDiv.textContent = fullContent;
               scrollBottom();
             }
           } catch(e) {}
         }
         pump();
       }).catch(function(e) {
+        if (resolved) return;
+        resolved = true;
         showErr(e.message);
-        div.remove();
+        msgDiv.remove();
         streaming = false;
         dom.btnSend.disabled = false;
       });
@@ -463,7 +489,7 @@ function sendMsg(text) {
     pump();
   }).catch(function(e) {
     showErr(e.message);
-    div.remove();
+    msgDiv.remove();
     streaming = false;
     dom.btnSend.disabled = false;
   });
@@ -478,41 +504,37 @@ function showErr(msg) {
 }
 
 function saveMsgs() {
-  try { localStorage.setItem("chat-msgs-" + currentModel, JSON.stringify(messages)); } catch(e) {}
+  try {
+    // Deep clone to avoid reference issues
+    var clone = messages.map(function(m) { return {role:m.role, content:m.content}; });
+    localStorage.setItem(msgsKey, JSON.stringify(clone));
+  } catch(e) {}
 }
 
 // ===== EVENTS =====
 dom.btnSend.addEventListener("click", function() {
+  var t = dom.userInput.value.trim();
+  if (!t || streaming) return;
+  dom.userInput.value = "";
+  dom.userInput.style.height = "auto";
+  sendMsg(t);
+});
+
+dom.userInput.addEventListener("keydown", function(e) {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
     var t = dom.userInput.value.trim();
     if (!t || streaming) return;
     dom.userInput.value = "";
     dom.userInput.style.height = "auto";
     sendMsg(t);
-  });
+  }
+});
 
-  dom.userInput.addEventListener("keydown", function(e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      var t = dom.userInput.value.trim();
-      if (!t || streaming) return;
-      dom.userInput.value = "";
-      dom.userInput.style.height = "auto";
-      sendMsg(t);
-    }
-  });
-
-  dom.userInput.addEventListener("input", function() {
-    this.style.height = "auto";
-    this.style.height = Math.min(this.scrollHeight, 100) + "px";
-  });
-
-  dom.btnClear.addEventListener("click", function() {
-    if (confirm("清空对话？")) {
-      messages = [];
-      saveMsgs();
-      renderMessages();
-    }
-  });
+dom.userInput.addEventListener("input", function() {
+  this.style.height = "auto";
+  this.style.height = Math.min(this.scrollHeight, 100) + "px";
+});
 </script>
 </body>
 </html>
