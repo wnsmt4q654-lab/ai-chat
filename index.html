@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0f23" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>AI Chat · DeepSeek V4 Flash</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-dark.min.css" />
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f0f23; --bg-card: #1a1a2e; --bg-input: #16213e; --text: #e4e4f0;
+      --text-dim: #8888a8; --accent: #6366f1; --accent-light: #818cf8;
+      --user-bubble: #2d2d5e; --ai-bubble: #1a1a2e; --border: #2a2a4a;
+      --danger: #ef4444; --radius: 16px; --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+    body{display:flex;flex-direction:column}
+    .topbar{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg-card);border-bottom:1px solid var(--border);flex-shrink:0;z-index:10}
+    .topbar-title{flex:1;font-size:16px;font-weight:600;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .btn-icon{width:38px;height:38px;border:none;border-radius:50%;background:transparent;color:var(--text);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;flex-shrink:0}
+    .btn-icon:active{background:var(--border)}
+    .chat-area{flex:1;overflow-y:auto;overflow-x:hidden;padding:12px 8px;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+    .messages{max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:4px}
+    .welcome{text-align:center;padding:40px 16px 20px}
+    .welcome-icon{font-size:56px;margin-bottom:12px}
+    .welcome h2{font-size:22px;font-weight:700;margin-bottom:6px}
+    .welcome p{font-size:14px;color:var(--text-dim);margin-bottom:24px}
+    .quick-prompts{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:400px;margin:0 auto}
+    .quick-btn{background:var(--bg-card);border:1px solid var(--border);color:var(--text);padding:12px 10px;border-radius:12px;font-size:13px;cursor:pointer;transition:background .15s,border-color .15s;text-align:left;line-height:1.4}
+    .quick-btn:active{background:var(--border);border-color:var(--accent)}
+    .msg{display:flex;gap:8px;padding:8px 4px;animation:fadeUp .25s ease}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .msg-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px}
+    .msg.user .msg-avatar{background:var(--accent)}
+    .msg.ai .msg-avatar{background:#1e3a5f}
+    .msg-body{flex:1;min-width:0}
+    .msg-role{font-size:11px;font-weight:600;color:var(--text-dim);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+    .msg-content{font-size:14.5px;line-height:1.65;word-break:break-word;overflow-wrap:break-word}
+    .thinking-block{margin-bottom:10px;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+    .thinking-toggle{display:flex;align-items:center;gap:6px;padding:8px 12px;font-size:12px;color:var(--text-dim);cursor:pointer;user-select:none;background:rgba(255,255,255,.03)}
+    .thinking-toggle:active{background:rgba(255,255,255,.06)}
+    .thinking-arrow{margin-left:auto;font-size:12px}
+    .thinking-content{padding:8px 12px;font-size:12.5px;color:var(--text-dim);line-height:1.55;white-space:pre-wrap;word-break:break-word;border-top:1px solid var(--border);max-height:200px;overflow-y:auto}
+    .msg-content p{margin:0 0 8px}.msg-content p:last-child{margin-bottom:0}
+    .msg-content ul,.msg-content ol{padding-left:20px;margin:6px 0}
+    .msg-content li{margin:2px 0}
+    .msg-content h1,.msg-content h2,.msg-content h3{font-weight:600}
+    .msg-content h1{font-size:1.3em}.msg-content h2{font-size:1.15em}.msg-content h3{font-size:1.05em}
+    .msg-content pre{background:#0d0d1a;border:1px solid var(--border);border-radius:10px;padding:12px;overflow-x:auto;margin:8px 0;font-size:12.5px;-webkit-overflow-scrolling:touch}
+    .msg-content code{font-family:"SF Mono","Fira Code","JetBrains Mono",monospace;font-size:.9em}
+    .msg-content :not(pre)>code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:5px}
+    .msg-content blockquote{border-left:3px solid var(--accent);padding-left:12px;margin:8px 0;color:var(--text-dim)}
+    .msg-content table{border-collapse:collapse;width:100%;margin:8px 0;font-size:13px}
+    .msg-content th,.msg-content td{border:1px solid var(--border);padding:6px 10px;text-align:left}
+    .msg-content th{background:var(--bg-card)}
+    .msg-content a{color:var(--accent-light);text-decoration:underline}
+    .msg-actions{display:flex;gap:6px;margin-top:6px;opacity:0;transition:opacity .15s}
+    .msg:hover .msg-actions,.msg:active .msg-actions{opacity:1}
+    .btn-action{background:transparent;border:1px solid var(--border);color:var(--text-dim);font-size:11px;padding:4px 10px;border-radius:14px;cursor:pointer;transition:background .15s,color .15s}
+    .btn-action:active{background:var(--border);color:var(--text)}
+    .typing-indicator{max-width:720px;margin:0 auto;display:flex;gap:5px;padding:8px 4px 8px 40px;align-items:center}
+    .typing-dot{width:7px;height:7px;border-radius:50%;background:var(--text-dim);animation:bounce 1.2s infinite}
+    .typing-dot:nth-child(2){animation-delay:.2s}.typing-dot:nth-child(3){animation-delay:.4s}
+    @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-8px);opacity:1}}
+    .input-bar{flex-shrink:0;padding:8px 10px calc(8px + var(--safe-bottom));background:var(--bg-card);border-top:1px solid var(--border)}
+    .input-row{max-width:720px;margin:0 auto;display:flex;align-items:flex-end;gap:8px;background:var(--bg-input);border:1px solid var(--border);border-radius:20px;padding:6px 6px 6px 16px;transition:border-color .15s}
+    .input-row:focus-within{border-color:var(--accent)}
+    .input-field{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-size:15px;line-height:1.4;resize:none;max-height:120px;padding:6px 0;font-family:inherit}
+    .input-field::placeholder{color:var(--text-dim)}
+    .btn-send{width:36px;height:36px;border:none;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s,transform .1s}
+    .btn-send:active{transform:scale(.92)}
+    .btn-send:disabled{background:var(--border);color:var(--text-dim);cursor:not-allowed}
+    .input-hint{text-align:center;font-size:10px;color:var(--text-dim);margin-top:6px}
+    .error-banner{background:rgba(239,68,68,.15);color:#fca5a5;padding:8px 14px;border-radius:10px;font-size:13px;margin:8px 0}
+    ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+    @media (min-width:768px){.msg-content{font-size:15px}}
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <button class="btn-icon" id="btnClear" aria-label="清空对话">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+    </button>
+    <h1 class="topbar-title">DeepSeek Chat</h1>
+    <button class="btn-icon" id="btnNewChat" aria-label="新对话">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    </button>
+  </header>
+
+  <main class="chat-area" id="chatArea">
+    <div class="messages" id="messages">
+      <div class="welcome">
+        <div class="welcome-icon">🤖</div>
+        <h2>DeepSeek V4 Flash</h2>
+        <p>快速、智能的 AI 助手，随时随地为你解答</p>
+        <div class="quick-prompts">
+          <button class="quick-btn" data-prompt="解释一下量子计算的基本原理">⚛️ 量子计算原理</button>
+          <button class="quick-btn" data-prompt="帮我写一段 Python 快速排序代码">🐍 Python 快排</button>
+          <button class="quick-btn" data-prompt="推荐3本好看的科幻小说">📚 科幻小说推荐</button>
+          <button class="quick-btn" data-prompt="怎样做一道简单的家常菜？">🍳 家常菜做法</button>
+        </div>
+      </div>
+    </div>
+    <div class="typing-indicator" id="typingIndicator" style="display:none">
+      <div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>
+    </div>
+  </main>
+
+  <footer class="input-bar">
+    <div class="input-row">
+      <textarea id="userInput" class="input-field" placeholder="输入消息…" rows="1" autofocus></textarea>
+      <button class="btn-send" id="btnSend" aria-label="发送">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+      </button>
+    </div>
+    <p class="input-hint">DeepSeek V4 Flash · 内容由 AI 生成，仅供参考</p>
+  </footer>
+
+  <script>
+    // ===== CONFIGURATION =====
+    const DEEPSEEK_API_KEY = "sk-e9168099b0f24e0a948cbd9b98038d8e";
+    const DEEPSEEK_MODEL = "deepseek-v4-flash";
+    const DEEPSEEK_BASE = "https://api.deepseek.com";
+
+    // ===== DOM =====
+    const $ = s => document.querySelector(s);
+    const dom = {
+      messages: $("#messages"), chatArea: $("#chatArea"), userInput: $("#userInput"),
+      btnSend: $("#btnSend"), btnClear: $("#btnClear"), btnNewChat: $("#btnNewChat"),
+      typing: $("#typingIndicator"),
+    };
+
+    // ===== STATE =====
+    const STATE = { messages: [], streaming: false };
+    try {
+      const saved = localStorage.getItem("ai-chat-msgs");
+      if (saved) STATE.messages = JSON.parse(saved);
+    } catch(e) {}
+
+    function save() {
+      try { localStorage.setItem("ai-chat-msgs", JSON.stringify(STATE.messages)); } catch(e) {}
+    }
+
+    // ===== RENDER =====
+    function renderMessages() {
+      dom.messages.innerHTML = "";
+      if (STATE.messages.length === 0) {
+        dom.messages.innerHTML = `
+          <div class="welcome"><div class="welcome-icon">🤖</div>
+          <h2>DeepSeek V4 Flash</h2><p>快速、智能的 AI 助手，随时随地为你解答</p>
+          <div class="quick-prompts">
+            <button class="quick-btn" data-prompt="解释一下量子计算的基本原理">⚛️ 量子计算原理</button>
+            <button class="quick-btn" data-prompt="帮我写一段 Python 快速排序代码">🐍 Python 快排</button>
+            <button class="quick-btn" data-prompt="推荐3本好看的科幻小说">📚 科幻小说推荐</button>
+            <button class="quick-btn" data-prompt="怎样做一道简单的家常菜？">🍳 家常菜做法</button>
+          </div></div>`;
+        bindQuickPrompts();
+        return;
+      }
+      for (const msg of STATE.messages) {
+        appendMessageEl(msg.role, msg.content);
+      }
+    }
+
+    function appendMessageEl(role, content) {
+      const w = dom.messages.querySelector(".welcome");
+      if (w) w.remove();
+      const div = document.createElement("div");
+      div.className = `msg ${role}`;
+      div.innerHTML = `<div class="msg-avatar">${role==="user"?"👤":"🤖"}</div>
+        <div class="msg-body"><div class="msg-role">${role==="user"?"你":"DeepSeek"}</div>
+        <div class="msg-content">${renderMarkdown(content)}</div>
+        <div class="msg-actions"><button class="btn-action" data-action="copy">📋 复制</button></div></div>`;
+      dom.messages.appendChild(div);
+      highlightCode(div);
+      scrollToBottom();
+    }
+
+    function appendStreamingEl() {
+      const w = dom.messages.querySelector(".welcome");
+      if (w) w.remove();
+      const div = document.createElement("div");
+      div.className = "msg ai";
+      div.id = "streamingMsg";
+      div.innerHTML = `<div class="msg-avatar">🤖</div><div class="msg-body">
+        <div class="msg-role">DeepSeek</div>
+        <div class="thinking-block" id="streamingThinking" style="display:none">
+          <div class="thinking-toggle" id="thinkingToggle"><span>💭</span> 思考中… <span class="thinking-arrow">▾</span></div>
+          <div class="thinking-content" id="streamingThinkingContent"></div></div>
+        <div class="msg-content" id="streamingContent"></div></div>`;
+      dom.messages.appendChild(div);
+      scrollToBottom();
+      return {
+        thinking: $("#streamingThinking"),
+        thinkingContent: $("#streamingThinkingContent"),
+        content: $("#streamingContent"),
+      };
+    }
+
+    function finalizeStreamingEl(fullContent, hasThinking) {
+      const el = $("#streamingMsg");
+      if (!el) return;
+      el.removeAttribute("id");
+      const tb = el.querySelector(".thinking-block");
+      const tc = el.querySelector(".thinking-content");
+      const tt = el.querySelector("#thinkingToggle");
+      if (tt) tt.removeAttribute("id");
+      if (tc) tc.removeAttribute("id");
+      if (hasThinking && tb && tt) {
+        tb.style.display = "block";
+        tt.innerHTML = '<span>💭</span> 思考过程 <span class="thinking-arrow">▸</span>';
+        tt.addEventListener("click", () => {
+          const c = tt.nextElementSibling;
+          const a = tt.querySelector(".thinking-arrow");
+          if (c.style.display === "none") { c.style.display = "block"; a.textContent = "▾"; }
+          else { c.style.display = "none"; a.textContent = "▸"; }
+        });
+        if (tc) tc.style.display = "none";
+      } else if (tb) { tb.remove(); }
+      const ce = el.querySelector(".msg-content");
+      if (ce) { ce.removeAttribute("id"); ce.innerHTML = renderMarkdown(fullContent); highlightCode(el); }
+      const body = el.querySelector(".msg-body");
+      if (body) {
+        const actions = document.createElement("div");
+        actions.className = "msg-actions";
+        actions.innerHTML = '<button class="btn-action" data-action="copy">📋 复制</button>';
+        body.appendChild(actions);
+      }
+    }
+
+    function renderMarkdown(text) {
+      if (typeof marked === "undefined") return escapeHtml(text);
+      try { marked.setOptions({ breaks: true, gfm: true }); return marked.parse(text); }
+      catch { return escapeHtml(text); }
+    }
+
+    function escapeHtml(str) { const d = document.createElement("div"); d.textContent = str; return d.innerHTML; }
+
+    function highlightCode(el) {
+      if (typeof hljs === "undefined") return;
+      el.querySelectorAll("pre code").forEach(b => { hljs.highlightElement(b); });
+    }
+
+    function scrollToBottom() {
+      requestAnimationFrame(() => { dom.chatArea.scrollTop = dom.chatArea.scrollHeight; });
+    }
+
+    function bindQuickPrompts() {
+      document.querySelectorAll(".quick-btn").forEach(btn => {
+        btn.addEventListener("click", () => { const p = btn.dataset.prompt; if (p) sendMessage(p); });
+      });
+    }
+
+    function showError(msg) {
+      const banner = document.createElement("div");
+      banner.className = "error-banner";
+      banner.textContent = "⚠️ " + msg;
+      dom.messages.appendChild(banner);
+      scrollToBottom();
+    }
+
+    // ===== API CALL =====
+    async function sendMessage(userContent) {
+      if (STATE.streaming) return;
+      STATE.streaming = true;
+      dom.btnSend.disabled = true;
+      dom.typing.style.display = "flex";
+      scrollToBottom();
+
+      STATE.messages.push({ role: "user", content: userContent });
+      appendMessageEl("user", userContent);
+      save();
+
+      const refs = appendStreamingEl();
+      dom.typing.style.display = "none";
+      let fullContent = "", fullThinking = "", hasThinking = false;
+
+      try {
+        const resp = await fetch(`${DEEPSEEK_BASE}/v1/chat/completions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: `Bearer ${DEEPSEEK_API_KEY}` },
+          body: JSON.stringify({ model: DEEPSEEK_MODEL, messages: STATE.messages, stream: true, temperature: 0.7, max_tokens: 4096 }),
+        });
+
+        if (!resp.ok) {
+          const err = await resp.text();
+          throw new Error(`API 错误 (${resp.status}): ${err}`);
+        }
+
+        const reader = resp.body.getReader();
+        const decoder = new TextDecoder();
+        let buf = "";
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          buf += decoder.decode(value, { stream: true });
+          const lines = buf.split("\n");
+          buf = lines.pop() || "";
+          for (const line of lines) {
+            const s = line.trim();
+            if (!s.startsWith("data:")) continue;
+            const data = s.slice(5).trim();
+            if (data === "[DONE]") continue;
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.error) { showError(parsed.error.message || JSON.stringify(parsed.error)); break; }
+              const delta = parsed.choices?.[0]?.delta;
+              if (!delta) continue;
+              const text = delta.content || delta.reasoning_content || "";
+              if (text) {
+                if (delta.reasoning_content) {
+                  hasThinking = true;
+                  fullThinking += text;
+                  if (refs.thinking) refs.thinking.style.display = "block";
+                  if (refs.thinkingContent) refs.thinkingContent.textContent = fullThinking;
+                } else {
+                  fullContent += text;
+                  if (refs.content) refs.content.textContent = fullContent;
+                }
+                scrollToBottom();
+              }
+            } catch {}
+          }
+        }
+        STATE.messages.push({ role: "assistant", content: fullContent || "(空响应)" });
+        finalizeStreamingEl(fullContent || "(空响应)", hasThinking);
+        save();
+      } catch (err) {
+        showError(err.message);
+        const el = $("#streamingMsg"); if (el) el.remove();
+      }
+      STATE.streaming = false;
+      dom.btnSend.disabled = false;
+      dom.typing.style.display = "none";
+      dom.userInput.focus();
+    }
+
+    // ===== EVENTS =====
+    dom.btnSend.addEventListener("click", () => {
+      const text = dom.userInput.value.trim();
+      if (!text || STATE.streaming) return;
+      dom.userInput.value = ""; dom.userInput.style.height = "auto";
+      sendMessage(text);
+    });
+
+    dom.userInput.addEventListener("keydown", e => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        const text = dom.userInput.value.trim();
+        if (!text || STATE.streaming) return;
+        dom.userInput.value = ""; dom.userInput.style.height = "auto";
+        sendMessage(text);
+      }
+    });
+
+    dom.userInput.addEventListener("input", () => {
+      dom.userInput.style.height = "auto";
+      dom.userInput.style.height = Math.min(dom.userInput.scrollHeight, 120) + "px";
+    });
+
+    dom.btnNewChat.addEventListener("click", () => {
+      STATE.messages = []; save(); renderMessages(); dom.userInput.focus();
+    });
+
+    dom.btnClear.addEventListener("click", () => {
+      if (confirm("确定清空对话记录吗？")) {
+        STATE.messages = []; save(); renderMessages(); dom.userInput.focus();
+      }
+    });
+
+    dom.messages.addEventListener("click", e => {
+      const btn = e.target.closest("[data-action]");
+      if (!btn || btn.dataset.action !== "copy") return;
+      const msgEl = btn.closest(".msg");
+      const contentEl = msgEl?.querySelector(".msg-content");
+      if (contentEl) {
+        const text = contentEl.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = "✅ 已复制";
+          setTimeout(() => { btn.textContent = "📋 复制"; }, 1500);
+        }).catch(() => {
+          btn.textContent = "❌ 失败";
+          setTimeout(() => { btn.textContent = "📋 复制"; }, 1500);
+        });
+      }
+    });
+
+    // ===== INIT =====
+    renderMessages();
+    bindQuickPrompts();
+    dom.userInput.focus();
+  </script>
+</body>
+</html>
