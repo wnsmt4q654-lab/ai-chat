@@ -449,14 +449,31 @@
         </div>
       </div>
 
+      <!-- GitHub Token (for publishing) -->
+      <div class="settings-group">
+        <span class="settings-label">🔐 GitHub Token（用于发布）</span>
+        <p style="font-size:11px;color:var(--text-dim);margin-bottom:8px;line-height:1.4">
+          生成地址: github.com/settings/tokens → 勾选 <b>repo</b> 权限
+        </p>
+        <div class="api-key-row">
+          <input class="settings-input" id="cfgGithubToken" placeholder="ghp_..." type="password" />
+          <button class="btn-icon" id="btnToggleGHToken" style="flex-shrink:0" title="显示">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="settings-row" style="margin-top:6px">
+          <input class="settings-input" id="cfgGithubRepo" placeholder="仓库名 (如: wnsmt4q654-lab/ai-chat)" style="font-size:12px" />
+        </div>
+      </div>
+
       <!-- Global Publish -->
       <div class="settings-group" style="background:rgba(99,102,241,0.04);border:1.5px solid rgba(99,102,241,0.15);border-radius:16px;padding:16px">
         <span class="settings-label">🌐 发布到所有用户</span>
         <p style="font-size:12px;color:var(--text-dim);margin-bottom:10px;line-height:1.5">
-          个人设置仅在本设备生效。<br>点击下方按钮导出配置，发给管理员即可更新所有人的默认值。
+          修改设置后，点击下方按钮直接推送到 GitHub。<br>所有用户刷新即可看到更新 ✨
         </p>
-        <button class="btn-primary" id="btnExportGlobal" style="font-size:13px;padding:11px">📋 复制全局配置 JSON</button>
-        <textarea id="cfgGlobalJson" readonly style="width:100%;height:80px;margin-top:8px;background:rgba(0,0,0,0.03);border:1.5px solid var(--glass-border);border-radius:12px;font-size:11px;font-family:monospace;padding:8px;color:var(--text-dim);resize:none;display:none" onclick="this.select()"></textarea>
+        <button class="btn-primary" id="btnPublishGlobal" style="font-size:13px;padding:11px">🚀 一键发布到所有用户</button>
+        <div id="publishStatus" style="font-size:12px;text-align:center;margin-top:8px;min-height:18px"></div>
       </div>
 
       <button class="btn-primary" id="btnSaveSettings">💾 保存个人设置</button>
@@ -495,6 +512,8 @@
       apiKey: "sk-e9168099b0f24e0a948cbd9b98038d8e",
       showThinking: true,
       adminPassword: "admin123",
+      githubToken: "",
+      githubRepo: "wnsmt4q654-lab/ai-chat",
     };
 
     // ===== LOAD SETTINGS =====
@@ -638,6 +657,8 @@
       document.getElementById("cfgAiName").value = S.aiName;
       document.getElementById("cfgApiKey").value = S.apiKey;
       document.getElementById("cfgAdminPassword").value = "";
+      document.getElementById("cfgGithubToken").value = S.githubToken || "";
+      document.getElementById("cfgGithubRepo").value = S.githubRepo || "";
     }
 
     function readSettingsFromForm() {
@@ -662,6 +683,8 @@
       SETTINGS.aiAvatar = document.getElementById("cfgAiAvatar").value.trim() || DEFAULTS.aiAvatar;
       SETTINGS.aiName = document.getElementById("cfgAiName").value.trim() || DEFAULTS.aiName;
       SETTINGS.apiKey = document.getElementById("cfgApiKey").value.trim() || DEFAULTS.apiKey;
+      SETTINGS.githubToken = document.getElementById("cfgGithubToken").value.trim();
+      SETTINGS.githubRepo = document.getElementById("cfgGithubRepo").value.trim() || DEFAULTS.githubRepo;
       const newPw = document.getElementById("cfgAdminPassword").value.trim();
       if (newPw) SETTINGS.adminPassword = newPw;
     }
@@ -1027,23 +1050,75 @@
       const inp = document.getElementById("cfgApiKey");
       inp.type = inp.type === "password" ? "text" : "password";
     });
+    document.getElementById("btnToggleGHToken").addEventListener("click", () => {
+      const inp = document.getElementById("cfgGithubToken");
+      inp.type = inp.type === "password" ? "text" : "password";
+    });
 
-    // Export global config
-    document.getElementById("btnExportGlobal").addEventListener("click", () => {
+    // Publish global config to GitHub
+    document.getElementById("btnPublishGlobal").addEventListener("click", async () => {
       readSettingsFromForm();
-      // Build export object (exclude adminPassword for security)
-      const global = { ...SETTINGS };
-      delete global.adminPassword;
-      const json = JSON.stringify(global, null, 2);
-      const ta = document.getElementById("cfgGlobalJson");
-      ta.style.display = "block";
-      ta.value = json;
-      ta.select();
-      navigator.clipboard.writeText(json).then(() => {
-        showToast("📋 全局配置已复制！发送给管理员更新");
-      }).catch(() => {
-        showToast("📋 请手动复制下方 JSON，发送给管理员");
-      });
+      const status = document.getElementById("publishStatus");
+
+      if (!SETTINGS.githubToken) {
+        status.innerHTML = '<span style="color:var(--danger)">⚠️ 请先填写 GitHub Token</span>';
+        return;
+      }
+      if (!SETTINGS.githubRepo || !SETTINGS.githubRepo.includes("/")) {
+        status.innerHTML = '<span style="color:var(--danger)">⚠️ 请填写正确的仓库名 (user/repo)</span>';
+        return;
+      }
+
+      status.textContent = "⏳ 正在发布...";
+      saveSettings();
+
+      // Build config object (exclude sensitive fields)
+      const config = { ...SETTINGS };
+      delete config.adminPassword;
+      delete config.githubToken;
+      delete config.githubRepo;
+
+      try {
+        // Step 1: Get current config.json SHA
+        const api = `https://api.github.com/repos/${SETTINGS.githubRepo}/contents/config.json`;
+        const headers = {
+          Authorization: `Bearer ${SETTINGS.githubToken}`,
+          Accept: "application/vnd.github+json",
+        };
+
+        const getResp = await fetch(api, { headers });
+        let sha = null;
+        if (getResp.ok) {
+          const data = await getResp.json();
+          sha = data.sha;
+        } else if (getResp.status !== 404) {
+          throw new Error(`GitHub API: ${getResp.status}`);
+        }
+
+        // Step 2: Put updated config.json
+        const body = {
+          message: "Update global config via admin panel",
+          content: btoa(unescape(encodeURIComponent(JSON.stringify(config, null, 2)))),
+        };
+        if (sha) body.sha = sha;
+
+        const putResp = await fetch(api, {
+          method: "PUT",
+          headers: { ...headers, "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        if (!putResp.ok) {
+          const err = await putResp.json();
+          throw new Error(err.message || `HTTP ${putResp.status}`);
+        }
+
+        status.innerHTML = '<span style="color:#10b981">✅ 发布成功！所有用户刷新即可看到</span>';
+        showToast("🚀 已发布到所有用户！");
+        setTimeout(() => { status.textContent = ""; }, 5000);
+      } catch (err) {
+        status.innerHTML = `<span style="color:var(--danger)">❌ 发布失败: ${escapeHtml(err.message)}</span>`;
+      }
     });
 
     // Save
