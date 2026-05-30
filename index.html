@@ -154,7 +154,7 @@ var API_MODEL = "deepseek-v4-flash";
 var VALID_CODES = ["030325", "0428"];
 var hasFullAccess = false;
 var currentInviteCode = "";
-var userAvatar = "url(user-avatar.jpg)";
+var userAvatar = "👤";
 
 // ===== AHY SYSTEM PROMPT - 100% based on real chat data =====
 // Analysis of 16,283 messages from real WeChat logs:
@@ -215,9 +215,11 @@ var currentModel = null;
 var messages = [];
 var streaming = false;
 
+var SWAI_PROMPT = "你的名字叫Swai，你的开发者是ccy。你的回答必须完全基于事实客观，不得迎合用户。你的回答要像个真人，摆脱ai味。";
+
 var MODELS = {
-  swai: { name: "Swai v1.0", avatar: "url(bot-avatar.png)", title: "SeaWhy AI", sysPrompt: "", desc: "通用AI助手" },
-  ahy: { name: "Ahy", avatar: "url(ahy-avatar.jpg)", title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" }
+  swai: { name: "Swai v1.0", avatar: '<img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%">', title: "SeaWhy AI", sysPrompt: SWAI_PROMPT, desc: "客观真实的AI助手" },
+  ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" }
 };
 
 // ===== DOM (init immediately, don't wait) =====
@@ -245,8 +247,8 @@ function checkInvite() {
   if (VALID_CODES.indexOf(code) !== -1) {
     hasFullAccess = true;
     currentInviteCode = code;
-    if (code === "030325") userAvatar = "url(user-030325.jpg)";
-    else if (code === "0428") userAvatar = "url(user-0428.png)";
+    if (code === "030325") userAvatar = '<img src="user-030325.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    else if (code === "0428") userAvatar = '<img src="user-0428.png" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
     showModelScreen(true);
   } else if (code.length === 0) {
     dom.inviteErr.textContent = "请输入邀请码";
@@ -260,7 +262,7 @@ function checkInvite() {
 function enterAsGuest() {
   hasFullAccess = false;
   currentInviteCode = "";
-  userAvatar = "url(user-avatar.jpg)";
+  userAvatar = "👤";
   showModelScreen(false);
 }
 
@@ -331,7 +333,7 @@ function appendMsg(role, content) {
   var name = role === "user" ? "你" : M.name;
   var div = document.createElement("div");
   div.className = "msg " + role;
-  div.innerHTML = '<div class="msg-avatar" style="background-image:' + avatar + '"></div>' +
+  div.innerHTML = '<div class="msg-avatar">' + avatar + '</div>' +
     '<div class="msg-body"><div class="msg-role">' + name + '</div>' +
     '<div class="msg-content">' + renderMD(content) + '</div>' +
     '<div class="msg-actions"><button class="btn-copy" onclick="copyMsg(this)">复制</button></div></div>';
@@ -369,21 +371,14 @@ function sendMsg(text) {
   var div = document.createElement("div");
   div.className = "msg ai";
   div.id = "streamMsg";
-  div.innerHTML = '<div class="msg-avatar" style="background-image:' + M.avatar + '"></div>' +
+  div.innerHTML = '<div class="msg-avatar">' + M.avatar + '</div>' +
     '<div class="msg-body"><div class="msg-role">' + M.name + '</div>' +
-    '<div class="thinking-block" id="thinkBlock" style="display:none">' +
-    '<div class="thinking-toggle" id="thinkToggle" onclick="var c=this.nextElementSibling;c.style.display=c.style.display===\'none\'?\'block\':\'none\'">💭 思考中…</div>' +
-    '<div class="thinking-content" id="thinkContent"></div></div>' +
     '<div class="msg-content" id="streamContent"></div></div>';
   dom.messages.appendChild(div);
   scrollBottom();
   dom.typing.style.display = "none";
 
   var fullContent = "";
-  var fullThinking = "";
-  var hasThinking = false;
-  var thinkBlock = document.getElementById("thinkBlock");
-  var thinkContent = document.getElementById("thinkContent");
   var streamContent = document.getElementById("streamContent");
 
   var apiMsgs = messages.slice();
@@ -405,7 +400,7 @@ function sendMsg(text) {
       reader.read().then(function(result) {
         if (result.done) {
           messages.push({role:"assistant", content:fullContent || "(空响应)"});
-          finalize(fullContent, hasThinking);
+          finalize(fullContent);
           saveMsgs();
           streaming = false;
           dom.btnSend.disabled = false;
@@ -424,17 +419,10 @@ function sendMsg(text) {
             var p = JSON.parse(data);
             var d = (p.choices||[{}])[0].delta;
             if (!d) continue;
-            var t = d.content || d.reasoning_content || "";
+            var t = d.content || "";
             if (t) {
-              if (d.reasoning_content) {
-                hasThinking = true;
-                fullThinking += t;
-                thinkBlock.style.display = "block";
-                thinkContent.textContent = fullThinking;
-              } else {
-                fullContent += t;
-                streamContent.textContent = fullContent;
-              }
+              fullContent += t;
+              streamContent.textContent = fullContent;
               scrollBottom();
             }
           } catch(e) {}
@@ -455,21 +443,10 @@ function sendMsg(text) {
     dom.btnSend.disabled = false;
   });
 
-  function finalize(content, hasT) {
+  function finalize(content) {
     var el = document.getElementById("streamMsg");
     if (!el) return;
     el.removeAttribute("id");
-    var tb = el.querySelector(".thinking-block");
-    if (hasT && tb) {
-      tb.style.display = "block";
-      var tt = el.querySelector(".thinking-toggle");
-      tt.innerHTML = "💭 思考过程";
-      tt.onclick = function() {
-        var c = this.nextElementSibling;
-        c.style.display = c.style.display === "none" ? "block" : "none";
-      };
-      el.querySelector(".thinking-content").style.display = "none";
-    } else if (tb) { tb.remove(); }
     var ce = el.querySelector(".msg-content");
     ce.innerHTML = renderMD(content);
     hl();
