@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#4A90D9" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="SeaWhy AI" />
   <link rel="apple-touch-icon" href="swai-icon.png" />
   <link rel="manifest" href="manifest.json" />
@@ -18,7 +18,8 @@
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+    html,body{height:100dvh;height:-webkit-fill-available;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-webkit-user-select:none;user-select:none}
+    body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
     :root{
       --bg:#f0f4f8;--nav-bg:rgba(255,255,255,0.72);--card-bg:rgba(255,255,255,0.78);--card-border:rgba(0,0,0,0.06);
       --text:#111;--text2:#888;--input-bg:rgba(255,255,255,0.85);--input-border:rgba(0,0,0,0.1);
@@ -128,7 +129,7 @@
     .error{background:rgba(231,76,60,0.08);color:#e74c3c;padding:10px 14px;border-radius:14px;font-size:12px;margin:6px 0}
 
     /* Input bar */
-    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
+    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:6px 10px;box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
     .input-tools{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;justify-content:center}
     .input-tool{display:flex;align-items:center;gap:3px;padding:4px 9px;border:none;border-radius:14px;background:rgba(0,0,0,0.04);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap;transition:all .15s}
     .input-tool:active{transform:scale(.95)}
@@ -250,7 +251,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.5.0</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.5.1</p>
   </footer>
 </div>
 
