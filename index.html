@@ -223,16 +223,16 @@
   <main class="chat-area" id="chatArea">
     <div class="messages" id="messages"></div>
     <div class="typing-dots" id="typing" style="display:none"><span></span><span></span><span></span></div>
-  </main>
-  <div class="quick-actions" id="quickActions" style="display:none">
-    <button class="qa-btn accent" id="btnToggleMode" onclick="toggleMode()">切换模式</button>
-    <button class="qa-btn" id="btnPro" onclick="togglePro()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>PRO</button>
-    <button class="qa-btn" id="btnSearchQA" onclick="toggleSearch()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>联网搜索</button>
-    <button class="qa-btn" onclick="sendQuick('joke')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>讲个笑话</button>
-    <button class="qa-btn" onclick="sendQuick('story')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>讲个故事</button>
-    <button class="qa-btn" onclick="sendQuick('word')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>背个单词</button>
   </div>
   <footer class="input-bar">
+    <div class="input-tools" id="inputTools" style="display:flex">
+      <button class="input-tool on" id="btnToggleMode" onclick="toggleMode()" title="切换模式"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
+      <button class="input-tool" id="btnPro" onclick="togglePro()" title="PRO模型"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
+      <button class="input-tool" id="btnSearchQA" onclick="toggleSearch()" title="联网搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="input-tool" onclick="sendQuick('joke')" title="讲个笑话"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
+      <button class="input-tool" onclick="sendQuick('story')" title="讲个故事"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>
+      <button class="input-tool" onclick="sendQuick('word')" title="背个单词"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></button>
+    </div>
     <div class="file-preview" id="filePreview"></div>
     <div class="input-row">
       <button class="btn-attach" id="btnAttach" title="上传图片或文件">
@@ -242,7 +242,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.4.0</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.4.1</p>
   </footer>
 </div>
 
@@ -518,8 +518,8 @@ function enterChat(modelId) {
   dom.chatTitle.textContent = M.title;
   dom.modelScreen.style.display = "none";
   dom.chatView.style.display = "flex";
-  var qa = document.getElementById("inputTools");
-  if (qa) { qa.style.display = modelId === "swai" ? "flex" : "none"; }
+  var tools = document.getElementById("inputTools");
+  if (tools) tools.style.display = "flex";
   if (modelId === "swai") dom.typing.classList.add("no-avatar");
   else dom.typing.classList.remove("no-avatar");
   updateModeBtn();
@@ -541,8 +541,8 @@ function goBack() {
   // for any in-flight abort handler to push into. Next enterChat just re-points
   // messages to the same cache slot.
   streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
-  var qa = document.getElementById("inputTools");
-  if (qa) qa.style.display = "none";
+  var tools = document.getElementById("inputTools");
+  if (tools) tools.style.display = "none";
 }
 
 // ===== RENDER =====
