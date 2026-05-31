@@ -264,7 +264,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.6.2</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.6.3</p>
   </footer>
 </div>
 
@@ -921,6 +921,10 @@ function sendMsg(text) {
   msgDiv.innerHTML = (showAiAvatar ? '<div class="msg-avatar">'+M.avatar+'</div>' : '') + '<div class="msg-body"></div>';
   msgDiv.querySelector(".msg-body").appendChild(contentDiv);
   dom.messages.appendChild(msgDiv); scrollBottom(); dom.typing.style.display = "none";
+  // Make AI bubble visible — it starts hidden (opacity:0) per CSS
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() { msgDiv.classList.add("show"); });
+  });
 
   var fullContent = "", resolved = false;
   var apiMsgs = [];
