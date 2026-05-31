@@ -30,6 +30,7 @@
 
     /* ===== INVITE ===== */
     #inviteScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;text-align:center;background:var(--invite-bg)}
+    #inviteScreen.hide{display:none!important}
     #inviteScreen .logo{font-size:64px;margin-bottom:12px}
     #inviteScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
     #inviteScreen .sub{font-size:13px;color:var(--text2);margin-bottom:28px}
@@ -43,7 +44,8 @@
     .invite-info{font-size:10px;color:#bbb;margin-top:20px}
 
     /* ===== MODEL SCREEN ===== */
-    #modelScreen{flex:1;overflow-y:auto;padding:40px 20px 30px;text-align:center;background:var(--invite-bg);display:none}
+    #modelScreen{flex:1;overflow-y:auto;padding:40px 20px 30px;text-align:center;background:var(--invite-bg);display:none!important}
+    #modelScreen.show{display:block!important}
     #modelScreen .logo{font-size:64px;margin-bottom:12px}
     #modelScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
     #modelScreen .sub{font-size:14px;color:var(--text2);margin-bottom:32px}
@@ -58,7 +60,8 @@
     .mc-badge.custom{background:rgba(0,0,0,0.05);color:var(--text2)}
 
     /* ===== CHAT ==== */
-    #chatView{flex:1;display:none;flex-direction:column;overflow:hidden;background:var(--bg)}
+    #chatView{flex:1;display:none!important;flex-direction:column;overflow:hidden;background:var(--bg)}
+    #chatView.show{display:flex!important}
 
     /* Nav */
     .wx-nav{display:flex;align-items:center;padding:0 12px;height:46px;background:var(--nav-bg);flex-shrink:0;border-bottom:1px solid var(--card-border)}
@@ -242,7 +245,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.4.3</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.4.4</p>
   </footer>
 </div>
 
@@ -440,8 +443,8 @@ function enterAsGuest() {
 dom.inviteCode.addEventListener("keydown", function(e) { if (e.key === "Enter") checkInvite(); });
 
 function showModelScreen(fullAccess) {
-  dom.inviteScreen.style.display = "none";
-  dom.modelScreen.style.display = "block";
+  dom.inviteScreen.classList.add("hide");
+  dom.modelScreen.classList.add("show");
   var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="swai-icon.png"></div><div class="mc-name">Swai v1.5</div><span class="mc-badge rec">推荐</span></div>';
   if (fullAccess && CODE_MODELS[currentInviteCode]) {
     var models = CODE_MODELS[currentInviteCode];
@@ -516,8 +519,8 @@ function enterChat(modelId) {
 
   var M = MODELS[modelId];
   dom.chatTitle.textContent = M.title;
-  dom.modelScreen.style.display = "none";
-  dom.chatView.style.display = "flex";
+  dom.modelScreen.classList.remove("show");
+  dom.chatView.classList.add("show");
   var tools = document.getElementById("inputTools");
   if (tools) tools.style.display = "flex";
   if (modelId === "swai") dom.typing.classList.add("no-avatar");
@@ -536,7 +539,7 @@ function enterChat(modelId) {
 function goBack() {
   saveMsgs();
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
-  dom.chatView.style.display = "none"; dom.modelScreen.style.display = "block";
+  dom.chatView.classList.remove("show"); dom.modelScreen.style.display = "block";
   // DON'T set messages=[] or currentModel=null — the live reference stays intact
   // for any in-flight abort handler to push into. Next enterChat just re-points
   // messages to the same cache slot.
