@@ -507,6 +507,8 @@ function enterChat(modelId) {
   dom.chatTitle.textContent = M.title;
   dom.modelScreen.style.display = "none";
   dom.chatView.style.display = "flex";
+  // DEBUG: show message count in title — remove once bug is confirmed fixed
+  console.log("ENTER CHAT: model="+modelId+" msgs="+messages.length, JSON.stringify(messages.map(function(m){return m.role})));
   var qa = document.getElementById("quickActions");
   if (qa) { qa.style.display = modelId === "swai" ? "flex" : "none"; }
   if (modelId === "swai") dom.typing.classList.add("no-avatar");
@@ -524,6 +526,7 @@ function enterChat(modelId) {
 }
 
 function goBack() {
+  console.log("GOBACK: model="+currentModel+" msgs="+messages.length+" streaming="+streaming);
   saveMsgs();
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
   dom.chatView.style.display = "none"; dom.modelScreen.style.display = "block";
@@ -724,7 +727,7 @@ function sendMsg(text) {
         if (result.done) {
           resolved = true; abortController = null;
           var finalText = fullContent || "…";
-          if (chatSessionId === sessionId) { chatArray.push({role:"assistant", content:finalText}); saveMsgsKey(capturedKey); }
+          if (chatSessionId === sessionId) { chatArray.push({role:"assistant", content:finalText}); saveMsgsKey(capturedKey); console.log("STREAM-DONE: saved AI response, totalMsgs="+chatArray.length); }
           contentDiv.innerHTML = renderMD(finalText); hl();
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
@@ -744,7 +747,7 @@ function sendMsg(text) {
         resolved = true; abortController = null;
         if (fullContent && chatSessionId === sessionId) {
           chatArray.push({role:"assistant", content:fullContent}); saveMsgsKey(capturedKey);
-          contentDiv.innerHTML = renderMD(fullContent); hl();
+          console.log("STREAM-ERR: saved partial AI content, len="+fullContent.length+" totalMsgs="+chatArray.length);
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
         } else if (!fullContent) {
