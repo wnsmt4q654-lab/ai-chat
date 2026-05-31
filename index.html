@@ -245,7 +245,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v17</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.3.0</p>
   </footer>
 </div>
 
@@ -495,7 +495,7 @@ function enterChat(modelId) {
   messages = messageCache[modelId];  // live reference
 
   var M = MODELS[modelId];
-  dom.chatTitle.textContent = M.title + " · " + messages.length + "条";
+  dom.chatTitle.textContent = M.title;
   dom.modelScreen.style.display = "none";
   dom.chatView.style.display = "flex";
   var qa = document.getElementById("quickActions");
@@ -740,7 +740,6 @@ function sendMsg(text) {
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
           streaming = false; dom.btnSend.disabled = false;
-          dom.chatTitle.textContent = MODELS[currentModel].title + " · " + messages.length + "条";
           return;
         }
         buf += decoder.decode(result.value, {stream:true});
@@ -889,14 +888,13 @@ function extractPDF(arrayBuffer, fileName) {
   });
 }
 function doExtractPDF(arrayBuffer, fileName) {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
+  try { pdfjsLib.GlobalWorkerOptions.workerSrc = ""; } catch(e) {}
   pdfjsLib.getDocument({data: arrayBuffer}).promise.then(function(pdf) {
-    var totalPages = pdf.numPages;
+    var totalPages = Math.min(pdf.numPages, 30);
     var pages = [];
-    var extracted = "";
     function loadPage(n) {
       if (n > totalPages) {
-        extracted = pages.join("\n---\n");
+        var extracted = pages.join("\n---\n");
         pendingFiles.push({name: fileName, data: extracted.substring(0, 30000), type: "text"});
         renderFilePreview();
         return;
@@ -904,10 +902,10 @@ function doExtractPDF(arrayBuffer, fileName) {
       pdf.getPage(n).then(function(page) {
         page.getTextContent().then(function(textContent) {
           var pageText = textContent.items.map(function(item){return item.str}).join(" ");
-          pages.push(pageText);
+          if (pageText.trim()) pages.push("[第"+n+"页] "+pageText);
           loadPage(n + 1);
-        });
-      }).catch(function() { loadPage(n + 1); });
+        }).catch(function(){ loadPage(n + 1); });
+      }).catch(function(){ loadPage(n + 1); });
     }
     loadPage(1);
   }).catch(function(e) {
