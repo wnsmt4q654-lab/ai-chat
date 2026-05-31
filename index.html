@@ -13,6 +13,7 @@
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
@@ -666,9 +667,13 @@ function sendMsg(text) {
       apiContent += "[文件: "+f.name+"]\n"+f.data;
     }
   }
-  if (hasImages) {
-    if (apiContent) apiContent += "\n\n";
-    apiContent += "[用户上传了图片，但当前模型不支持图片识别]";
+  // Include OCR text from images
+  for (var fi2 = 0; fi2 < filesToSend.length; fi2++) {
+    var f2 = filesToSend[fi2];
+    if (f2.type === "image" && f2.ocrText) {
+      if (apiContent) apiContent += "\n\n";
+      apiContent += "[图片OCR: "+f2.name+"]\n"+f2.ocrText;
+    }
   }
   messages.push({role:"user", content:displayContent, rawContent: hasTextFiles ? apiContent : null});
 
@@ -795,8 +800,12 @@ document.getElementById("fileInput").addEventListener("change", function(e) {
         } else if (isDOCX) {
           extractDOCX(ev.target.result, file.name);
         } else if (isImage) {
-          pendingFiles.push({name: file.name, data: ev.target.result, type: "image", mime: file.type});
+          // Run OCR on the image
+          var imgData = ev.target.result;
+          var placeholderIdx = pendingFiles.length;
+          pendingFiles.push({name: file.name, data: imgData, type: "image", mime: file.type, ocrStatus: "识别中…"});
           renderFilePreview();
+          runOCR(imgData, file.name, placeholderIdx);
         } else {
           // Plain text file
           var data = ev.target.result.split(",")[1];
@@ -851,6 +860,34 @@ function extractPDF(arrayBuffer, fileName) {
   });
 }
 
+// OCR image text extraction using Tesseract.js
+function runOCR(imgDataUrl, fileName, idx) {
+  if (typeof Tesseract === "undefined") {
+    pendingFiles[idx].ocrText = "[OCR引擎加载失败]";
+    pendingFiles[idx].ocrStatus = "失败";
+    renderFilePreview();
+    return;
+  }
+  Tesseract.recognize(imgDataUrl, "chi_sim+eng", {
+    logger: function(m) {
+      if (m.status === "recognizing text") {
+        var pct = Math.round(m.progress * 100);
+        pendingFiles[idx].ocrStatus = "识别中 " + pct + "%";
+        renderFilePreview();
+      }
+    }
+  }).then(function(result) {
+    var text = result.data.text.trim();
+    pendingFiles[idx].ocrText = text || "[图片中未识别到文字]";
+    pendingFiles[idx].ocrStatus = "已识别";
+    renderFilePreview();
+  }).catch(function(e) {
+    pendingFiles[idx].ocrText = "[OCR失败: " + e.message + "]";
+    pendingFiles[idx].ocrStatus = "失败";
+    renderFilePreview();
+  });
+}
+
 // DOCX text extraction using mammoth.js
 function extractDOCX(arrayBuffer, fileName) {
   if (typeof mammoth === "undefined") {
@@ -879,7 +916,9 @@ function renderFilePreview() {
     } else {
       html += '<span style="font-size:16px">📄</span>';
     }
-    html += '<span class="fc-name">'+escHtml(f.name)+'</span>';
+    html += '<span class="fc-name">'+escHtml(f.name);
+    if (f.ocrStatus) html += ' <span style="color:var(--accent);font-size:10px">'+escHtml(f.ocrStatus)+'</span>';
+    html += '</span>';
     html += '<span class="fc-del" onclick="removeFile('+i+')">×</span>';
     html += '</div>';
   }
