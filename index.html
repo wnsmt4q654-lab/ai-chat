@@ -17,7 +17,7 @@
     :root{
       --bg:#f0f4f8;--nav-bg:rgba(255,255,255,0.72);--card-bg:rgba(255,255,255,0.78);--card-border:rgba(0,0,0,0.06);
       --text:#111;--text2:#888;--input-bg:rgba(255,255,255,0.85);--input-border:rgba(0,0,0,0.1);
-      --ai-bubble:rgba(255,255,255,0.8);--user-bubble:#8BB8EA;--bubble-shadow:0 1px 4px rgba(0,0,0,0.05);
+      --ai-bubble:rgba(255,255,255,0.8);--user-bubble:#C5DFF8;--bubble-shadow:0 1px 4px rgba(0,0,0,0.05);
       --invite-bg:#f0f4f8;--accent:#4A90D9;--accent-light:rgba(74,144,217,0.12);
     }
     body.dark{
@@ -146,17 +146,13 @@
     .qa-btn{flex-shrink:0;padding:7px 14px;border:1px solid var(--card-border);border-radius:18px;background:var(--card-bg);color:var(--text);font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .18s}
     .qa-btn:active{background:var(--input-bg);transform:scale(.96)}
     .qa-btn.accent{background:var(--accent-light);color:var(--accent);border-color:transparent;font-weight:500}
+    .qa-btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
     .qa-btn.accent.on{background:var(--accent);color:#fff}
 
     /* Clear history btn */
     .s-btn.danger{color:#e74c3c;border-color:rgba(231,76,60,0.2)}
     .s-btn.danger:active{background:rgba(231,76,60,0.08)}
 
-    /* Search toggle */
-    .search-row{display:flex;justify-content:center;padding-top:8px}
-    .search-toggle{padding:6px 14px;border:1px solid var(--card-border);border-radius:16px;background:var(--card-bg);color:var(--text2);font-size:12px;cursor:pointer;font-family:inherit;transition:all .18s;display:flex;align-items:center;gap:4px}
-    .search-toggle:active{transform:scale(.96)}
-    .search-toggle.on{background:var(--accent);color:#fff;border-color:var(--accent)}
   </style>
 </head>
 <body>
@@ -207,7 +203,7 @@
         <div class="color-dots">
           <span class="color-dot" style="background:#95EC69" onclick="setBubble('#95EC69',this)" title="微信绿"></span>
           <span class="color-dot" style="background:#07C160" onclick="setBubble('#07C160',this)" title="深绿"></span>
-          <span class="color-dot active" style="background:#8BB8EA" onclick="setBubble('#8BB8EA',this)" title="浅蓝"></span>
+          <span class="color-dot active" style="background:#C5DFF8" onclick="setBubble('#C5DFF8',this)" title="浅蓝"></span>
           <span class="color-dot" style="background:#4A90D9" onclick="setBubble('#4A90D9',this)" title="蓝色"></span>
           <span class="color-dot" style="background:#FF6B6B" onclick="setBubble('#FF6B6B',this)" title="珊瑚"></span>
           <span class="color-dot" style="background:#F5A623" onclick="setBubble('#F5A623',this)" title="橙色"></span>
@@ -222,6 +218,7 @@
   </main>
   <div class="quick-actions" id="quickActions" style="display:none">
     <button class="qa-btn accent" id="btnToggleMode" onclick="toggleMode()">切换模式</button>
+    <button class="qa-btn" id="btnSearchQA" onclick="toggleSearch()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>联网搜索</button>
     <button class="qa-btn" onclick="sendQuick('joke')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>讲个笑话</button>
     <button class="qa-btn" onclick="sendQuick('story')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>讲个故事</button>
     <button class="qa-btn" onclick="sendQuick('word')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>背个单词</button>
@@ -230,12 +227,6 @@
     <div class="input-row">
       <textarea id="userInput" class="input-field" placeholder="输入消息…" rows="1"></textarea>
       <button class="btn-send" id="btnSend">↑</button>
-    </div>
-    <div class="search-row">
-      <button class="search-toggle" id="btnSearch" onclick="toggleSearch()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        联网搜索
-      </button>
     </div>
     <p class="input-hint">SeaWhy AI · 网页由ccy制作</p>
   </footer>
@@ -253,7 +244,7 @@ var userAvatar = "👤";
 
 // User-customizable settings (saved per device)
 var userTheme = "light";
-var userBubble = "#8BB8EA";
+var userBubble = "#C5DFF8";
 
 try {
   var savedPrefs = JSON.parse(localStorage.getItem("ai-prefs-v2") || "{}");
@@ -502,12 +493,10 @@ function enterChat(modelId) {
 }
 
 function goBack() {
-  chatSessionId++;  // invalidate any in-flight stream handlers
-  // Save to memory cache — this is the primary persistence mechanism
-  if (currentModel && messages.length > 0) {
-    messageCache[currentModel] = messages.slice();
-  }
-  saveMsgs();       // also persist to localStorage for page-refresh recovery
+  // NOTE: do NOT increment chatSessionId here — we want the in-flight
+  // stream abort-handler to still be able to save partial AI content.
+  // chatSessionId is only bumped in enterChat, after loading from cache.
+  saveMsgs();       // save current state (may update again when abort fires)
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
   dom.chatView.style.display = "none"; dom.modelScreen.style.display = "block"; currentModel = null;
   streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
@@ -595,12 +584,12 @@ function sendQuick(type) {
 
 function toggleSearch() {
   webSearch = !webSearch;
-  var btn = document.getElementById("btnSearch");
+  var btn = document.getElementById("btnSearchQA");
   if (btn) {
     btn.classList.toggle("on", webSearch);
     btn.innerHTML = webSearch
-      ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> 已开启搜索'
-      : '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> 联网搜索';
+      ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 已开启'
+      : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 联网搜索';
   }
 }
 
@@ -635,7 +624,7 @@ function sendMsg(text) {
   for (var i = 0; i < messages.length; i++) apiMsgs.push({role:messages[i].role, content:messages[i].content});
   var sysP = (currentModel === "swai" && swaiMode === "gentle") ? MODELS[currentModel].gentlePrompt : MODELS[currentModel].sysPrompt;
   if (webSearch && sysP) {
-    sysP += "\n\n[联网搜索模式已开启] 用户开启了联网搜索。如果遇到需要最新信息、实时数据的问题，请尽量给出当前可用的最佳答案。对于明确需要搜索的内容，可以告诉用户你无法直接联网，但可以提供你所知道的最新信息。";
+    sysP += "\n\n[知识增强模式] 用户需要更全面深入的回答。请调用你训练数据中最新的知识，尽可能给出准确、详尽、有时效性的回答。对于不确定的信息要诚实说明知识截止日期。";
   }
   if (sysP) apiMsgs.unshift({role:"system", content:sysP});
 
