@@ -61,7 +61,7 @@
     .mc-avatar img{width:100%;height:100%;object-fit:cover}
     .mc-info{flex:1;min-width:0}
     .mc-name{font-size:17px;font-weight:500}
-    .mc-desc{font-size:12px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mc-desc{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.4}
     .mc-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500;margin-left:auto;flex-shrink:0}
     .mc-badge.rec{background:var(--accent-light);color:var(--accent)}
     .mc-badge.premium{background:linear-gradient(135deg,rgba(245,166,35,0.2),rgba(212,160,23,0.12));color:#C7920A;border:1px solid rgba(212,160,23,0.25)}
@@ -272,7 +272,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.6.5</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.6.6</p>
   </footer>
 </div>
 
@@ -524,11 +524,11 @@ var NAIWA_MOOD_IMAGES = {
 };
 
 var MODELS = {
-  swai: { name: "Swai v1.5", avatar: '<img src="swai-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实 · 严谨/温柔双模式 · DeepSeek驱动" },
-  ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "法学女大学生 · 爱拍照P图 · 你的死党闺蜜 👧" },
-  kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "抽象高中生 · 奶龙十级学者 · 梗图大王 🐸" },
-  nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "经济学霸 · 团委活跃分子 · 正能量girl 🌸" },
-  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙", sysPrompt: NAIWA_PROMPT, desc: "全网最抽象的捧腹大笑AI · 脑腐文化终极形态 🐸" }
+  swai: { name: "Swai v1.5", avatar: '<img src="swai-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "严谨客观 · 温柔双模式 · DeepSeek" },
+  ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
+  kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
+  nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" },
+  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙", sysPrompt: NAIWA_PROMPT, desc: "脑腐文化 · 魔性大笑 · 解压神器" }
 };
 
 // ===== DOM =====
@@ -701,7 +701,8 @@ function goBack() {
 function renderAllMessages() {
   if (messages.length === 0) {
     var M = MODELS[currentModel];
-    var desc = M.desc || "开始聊天吧";
+    var isCustom = ["ahy","kute","nuanri"].indexOf(currentModel) !== -1;
+    var desc = isCustom ? "" : (M.desc || "开始聊天吧");
     if (currentModel === "swai" && swaiMode === "gentle") desc = "温柔体贴的AI助手 💕";
     var wicon = currentModel==="ahy"?"👧":currentModel==="kute"?"🐸":currentModel==="nuanri"?"🌸":'<img src="swai-avatar.jpg" style="width:56px;height:56px;border-radius:50%;object-fit:cover">';
     dom.messages.innerHTML = '<div class="welcome"><div class="wicon">'+wicon+'</div><h2>'+M.name+'</h2><p>'+desc+'</p>'+
