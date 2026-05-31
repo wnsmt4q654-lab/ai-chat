@@ -244,7 +244,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v14</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v15</p>
   </footer>
 </div>
 
@@ -486,22 +486,14 @@ function enterChat(modelId) {
   currentModel = modelId;
   msgsKey = "chat-msgs-" + modelId;
 
-  // Restore messages: memory cache → sessionStorage → localStorage → empty
+  // Trust the live cache (if it exists) — only load storage on first visit
   if (!messageCache[modelId]) {
-    messageCache[modelId] = [];
-    var saved = null;
-    // Try sessionStorage first (more reliable for session-scoped data)
-    try { saved = sessionStorage.getItem(msgsKey); } catch(e) {}
-    if (!saved) { try { saved = localStorage.getItem(msgsKey); } catch(e) {} }
-    if (saved) {
-      try { var p = JSON.parse(saved); if (Array.isArray(p) && p.length > 0) messageCache[modelId] = p; } catch(e) {}
-    }
+    messageCache[modelId] = loadMsgs(msgsKey);
   }
-  // messages is a LIVE REFERENCE — any push/splice immediately updates the cache
-  messages = messageCache[modelId];
+  messages = messageCache[modelId];  // live reference
 
   var M = MODELS[modelId];
-  dom.chatTitle.textContent = M.title;
+  dom.chatTitle.textContent = M.title + " · " + messages.length + "条";
   dom.modelScreen.style.display = "none";
   dom.chatView.style.display = "flex";
   var qa = document.getElementById("quickActions");
@@ -735,6 +727,7 @@ function sendMsg(text) {
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
           streaming = false; dom.btnSend.disabled = false;
+          dom.chatTitle.textContent = MODELS[currentModel].title + " · " + messages.length + "条";
           return;
         }
         buf += decoder.decode(result.value, {stream:true});
@@ -776,23 +769,35 @@ function sendMsg(text) {
 
 function showErr(msg) { var d = document.createElement("div"); d.className = "error"; d.textContent = "⚠ "+msg; dom.messages.appendChild(d); scrollBottom(); }
 function saveMsgs() {
-  if (msgsKey) saveMsgsKey(msgsKey);
+  if (!msgsKey || messages.length === 0) return;
+  try {
+    var clone = messages.map(function(m){return {role:m.role, content:m.content}});
+    var json = JSON.stringify(clone);
+    localStorage.setItem(msgsKey, json);
+    try { sessionStorage.setItem(msgsKey, json); } catch(e) {}
+  } catch(e) {}
 }
 
-// Save using a specific key — writes to BOTH localStorage and sessionStorage
-function saveMsgsKey(key) {
+function saveMsgsKey(key) {  // for async handlers with captured key
   if (!key) return;
+  var modelId = key.replace("chat-msgs-","");
+  var arr = messageCache[modelId] || messages;
+  if (!arr || arr.length === 0) return;
   try {
-    var modelId = key.replace("chat-msgs-", "");
-    var arr = messageCache[modelId];
-    if (!arr) arr = messages; // fallback to current messages
-    if (arr && arr.length > 0) {
-      var clone = arr.map(function(m){return {role:m.role, content:m.content}});
-      var json = JSON.stringify(clone);
-      localStorage.setItem(key, json);
-      try { sessionStorage.setItem(key, json); } catch(e) {}
-    }
-  } catch(e) { console.error("saveMsgsKey err:", e); }
+    var clone = arr.map(function(m){return {role:m.role, content:m.content}});
+    var json = JSON.stringify(clone);
+    localStorage.setItem(key, json);
+    try { sessionStorage.setItem(key, json); } catch(e) {}
+  } catch(e) {}
+}
+
+function loadMsgs(key) {
+  var arr = [];
+  try {
+    var s = sessionStorage.getItem(key) || localStorage.getItem(key);
+    if (s) { var p = JSON.parse(s); if (Array.isArray(p) && p.length > 0) arr = p; }
+  } catch(e) {}
+  return arr;
 }
 
 // ===== EVENTS =====
