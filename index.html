@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="SeaWhy AI" />
-  <link rel="apple-touch-icon" href="swai-icon.png" />
+  <link rel="apple-touch-icon" href="swai-icon.jpg" />
   <link rel="manifest" href="manifest.json" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
@@ -189,7 +189,7 @@
 
 <!-- INVITE -->
 <div id="inviteScreen">
-  <div class="logo"><img src="swai-icon.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
+  <div class="logo"><img src="swai-icon.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
   <h2>SeaWhy AI</h2>
   <p class="sub">请输入邀请码</p>
   <input type="text" class="invite-input" id="inviteCode" placeholder="******" maxlength="10" autofocus />
@@ -201,12 +201,12 @@
 
 <!-- MODEL SELECT -->
 <div id="modelScreen">
-  <div class="logo"><img src="swai-icon.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
+  <div class="logo"><img src="swai-icon.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
   <h2>SeaWhy AI</h2>
   <p class="sub">选择模型开始对话</p>
   <div class="model-cards" id="modelCards">
     <div class="model-card" onclick="enterChat('swai')">
-      <div class="mc-avatar"><img src="swai-icon.png" /></div>
+      <div class="mc-avatar"><img src="swai-icon.jpg" /></div>
       <div class="mc-name">Swai v1.5</div>
     </div>
   </div>
@@ -516,11 +516,11 @@ var NAIWA_MOOD_IMAGES = {
 };
 
 var MODELS = {
-  swai: { name: "Swai v1.5", avatar: '<img src="swai-icon.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实的AI助手" },
+  swai: { name: "Swai v1.5", avatar: '<img src="swai-icon.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实的AI助手" },
   ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
   kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
   nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" },
-  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙", sysPrompt: NAIWA_PROMPT, desc: "全网最抽象的捧腹大笑AI 🐸" }
+  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙", sysPrompt: NAIWA_PROMPT, desc: "全网最抽象的捧腹大笑AI 🐸" }
 };
 
 // ===== DOM =====
@@ -540,9 +540,9 @@ function checkInvite() {
   if (VALID_CODES.indexOf(code) !== -1) {
     hasFullAccess = true; currentInviteCode = code;
     if (code === "030325") userAvatar = '<img src="user-030325.jpg" style="width:100%;height:100%;object-fit:cover">';
-    else if (code === "0428") userAvatar = '<img src="user-0428.png" style="width:100%;height:100%;object-fit:cover">';
-    else if (code === "1009") userAvatar = '<img src="user-1009.png" style="width:100%;height:100%;object-fit:cover">';
-    else if (code === "0909") userAvatar = '<img src="user-0909.png" style="width:100%;height:100%;object-fit:cover">';
+    else if (code === "0428") userAvatar = '<img src="user-0428.jpg" style="width:100%;height:100%;object-fit:cover">';
+    else if (code === "1009") userAvatar = '<img src="user-1009.jpg" style="width:100%;height:100%;object-fit:cover">';
+    else if (code === "0909") userAvatar = '<img src="user-0909.jpg" style="width:100%;height:100%;object-fit:cover">';
     showModelScreen(true);
   } else if (code.length === 0) {
     dom.inviteErr.textContent = "请输入邀请码";
@@ -562,13 +562,13 @@ dom.inviteCode.addEventListener("keydown", function(e) { if (e.key === "Enter") 
 function showModelScreen(fullAccess) {
   dom.inviteScreen.classList.add("hide");
   dom.modelScreen.classList.add("show");
-  var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="swai-icon.png"></div><div class="mc-name">Swai v1.5</div><span class="mc-badge rec">推荐</span></div>';
+  var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="swai-icon.jpg"></div><div class="mc-name">Swai v1.5</div><span class="mc-badge rec">推荐</span></div>';
   if (fullAccess && CODE_MODELS[currentInviteCode]) {
     var models = CODE_MODELS[currentInviteCode];
     if (models.indexOf("ahy") !== -1) html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div><span class="mc-badge custom">个人定制</span></div>';
     if (models.indexOf("kute") !== -1) html += '<div class="model-card" onclick="enterChat(\'kute\')"><div class="mc-avatar"><img src="kute-avatar.jpg"></div><div class="mc-name">kute</div><span class="mc-badge custom">个人定制</span></div>';
     if (models.indexOf("nuanri") !== -1) html += '<div class="model-card" onclick="enterChat(\047nuanri\047)"><div class="mc-avatar"><img src="nuanri-avatar.jpg"></div><div class="mc-name">暖日蓝恬</div><span class="mc-badge custom">个人定制</span></div>';
-    if (models.indexOf("naiwa") !== -1) html += '<div class="model-card" onclick="enterChat(\047naiwa\047)"><div class="mc-avatar"><img src="naiwa-avatar.png"></div><div class="mc-name">奶蛙</div><span class="mc-badge" style="background:rgba(76,175,80,0.15);color:#4CAF50">抽象</span></div>';
+    if (models.indexOf("naiwa") !== -1) html += '<div class="model-card" onclick="enterChat(\047naiwa\047)"><div class="mc-avatar"><img src="naiwa-avatar.jpg"></div><div class="mc-name">奶蛙</div><span class="mc-badge" style="background:rgba(76,175,80,0.15);color:#4CAF50">抽象</span></div>';
   }
   dom.modelCards.innerHTML = html;
 }
@@ -678,7 +678,7 @@ function renderAllMessages() {
     var M = MODELS[currentModel];
     var desc = M.desc || "开始聊天吧";
     if (currentModel === "swai" && swaiMode === "gentle") desc = "温柔体贴的AI助手 💕";
-    var wicon = currentModel==="ahy"?"👧":currentModel==="kute"?"🐸":currentModel==="nuanri"?"🌸":'<img src="swai-icon.png" style="width:56px;height:56px;border-radius:50%;object-fit:cover">';
+    var wicon = currentModel==="ahy"?"👧":currentModel==="kute"?"🐸":currentModel==="nuanri"?"🌸":'<img src="swai-icon.jpg" style="width:56px;height:56px;border-radius:50%;object-fit:cover">';
     dom.messages.innerHTML = '<div class="welcome"><div class="wicon">'+wicon+'</div><h2>'+M.name+'</h2><p>'+desc+'</p>'+
       '<div class="quick-prompts">'+
       '<button class="quick-btn" onclick="sendMsg(\'解释量子计算\')">⚛️ 解释量子计算</button>'+
