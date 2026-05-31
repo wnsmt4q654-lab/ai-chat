@@ -250,7 +250,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.5.3</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.5.4</p>
   </footer>
 </div>
 
@@ -527,7 +527,13 @@ function enterChat(modelId) {
   dom.modelScreen.classList.remove("show");
   dom.chatView.classList.add("show");
   var tools = document.getElementById("inputTools");
-  if (tools) tools.style.display = "flex";
+  if (tools) {
+    tools.style.display = "flex";
+    var btns = tools.querySelectorAll(".input-tool");
+    for (var b = 0; b < btns.length; b++) {
+      if (b < 3) btns[b].style.display = modelId === "swai" ? "" : "none";
+    }
+  }
   if (modelId === "swai") dom.typing.classList.add("no-avatar");
   else dom.typing.classList.remove("no-avatar");
   updateModeBtn();
