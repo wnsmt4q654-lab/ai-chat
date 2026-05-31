@@ -489,13 +489,16 @@ function enterChat(modelId) {
   currentModel = modelId;
   msgsKey = "chat-msgs-" + modelId;
 
-  // Ensure cache slot exists — try localStorage first, then empty
+  // Restore messages: memory cache → sessionStorage → localStorage → empty
   if (!messageCache[modelId]) {
     messageCache[modelId] = [];
-    try {
-      var saved = localStorage.getItem(msgsKey);
-      if (saved) { var p = JSON.parse(saved); if (Array.isArray(p) && p.length > 0) messageCache[modelId] = p; }
-    } catch(e) {}
+    var saved = null;
+    // Try sessionStorage first (more reliable for session-scoped data)
+    try { saved = sessionStorage.getItem(msgsKey); } catch(e) {}
+    if (!saved) { try { saved = localStorage.getItem(msgsKey); } catch(e) {} }
+    if (saved) {
+      try { var p = JSON.parse(saved); if (Array.isArray(p) && p.length > 0) messageCache[modelId] = p; } catch(e) {}
+    }
   }
   // messages is a LIVE REFERENCE — any push/splice immediately updates the cache
   messages = messageCache[modelId];
@@ -510,6 +513,14 @@ function enterChat(modelId) {
   else dom.typing.classList.remove("no-avatar");
   updateModeBtn();
   renderAllMessages();
+  // Safety net: re-render after a tick to catch any late-arriving cache updates
+  var expectedCount = messages.length;
+  setTimeout(function() {
+    if (currentModel === modelId && messages.length !== expectedCount) {
+      console.log("re-render: expected="+expectedCount+" actual="+messages.length);
+      renderAllMessages();
+    }
+  }, 250);
 }
 
 function goBack() {
@@ -760,25 +771,21 @@ function sendMsg(text) {
 
 function showErr(msg) { var d = document.createElement("div"); d.className = "error"; d.textContent = "⚠ "+msg; dom.messages.appendChild(d); scrollBottom(); }
 function saveMsgs() {
-  if (msgsKey) {
-    try {
-      var clone = messages.map(function(m){return {role:m.role, content:m.content}});
-      localStorage.setItem(msgsKey, JSON.stringify(clone));
-    } catch(e) { console.error("saveMsgs err:", e); }
-  }
+  if (msgsKey) saveMsgsKey(msgsKey);
 }
 
-// Save using a specific key (for async handlers where msgsKey may have changed)
+// Save using a specific key — writes to BOTH localStorage and sessionStorage
 function saveMsgsKey(key) {
   if (!key) return;
   try {
     var modelId = key.replace("chat-msgs-", "");
     var arr = messageCache[modelId];
+    if (!arr) arr = messages; // fallback to current messages
     if (arr && arr.length > 0) {
       var clone = arr.map(function(m){return {role:m.role, content:m.content}});
-      localStorage.setItem(key, JSON.stringify(clone));
-    } else {
-      localStorage.removeItem(key);
+      var json = JSON.stringify(clone);
+      localStorage.setItem(key, json);
+      try { sessionStorage.setItem(key, json); } catch(e) {}
     }
   } catch(e) { console.error("saveMsgsKey err:", e); }
 }
@@ -941,15 +948,24 @@ function escAttr(s) { return s.replace(/&/g,"&amp;").replace(/"/g,"&quot;").repl
 function escHtml(s) { var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
 
 // ===== PERSISTENCE =====
-window.addEventListener("beforeunload", function() {
-  if (messages.length > 0 && msgsKey) { try { var clone = messages.map(function(m){return {role:m.role, content:m.content}}); localStorage.setItem(msgsKey, JSON.stringify(clone)); } catch(e) {} }
-});
-
-// Save messages when tab becomes hidden (mobile app switch etc.)
-document.addEventListener("visibilitychange", function() {
-  if (document.hidden && messages.length > 0 && msgsKey) {
-    try { var clone = messages.map(function(m){return {role:m.role, content:m.content}}); localStorage.setItem(msgsKey, JSON.stringify(clone)); } catch(e) {}
+function persistAll() {
+  // Save ALL chats to both storages
+  var models = Object.keys(messageCache);
+  for (var i = 0; i < models.length; i++) {
+    var key = "chat-msgs-" + models[i];
+    var arr = messageCache[models[i]];
+    if (arr && arr.length > 0) {
+      var clone = arr.map(function(m){return {role:m.role, content:m.content}});
+      var json = JSON.stringify(clone);
+      try { localStorage.setItem(key, json); } catch(e) {}
+      try { sessionStorage.setItem(key, json); } catch(e) {}
+    }
   }
+}
+
+window.addEventListener("beforeunload", function() { persistAll(); });
+document.addEventListener("visibilitychange", function() {
+  if (document.hidden) persistAll();
 });
 
 // ===== INIT =====
