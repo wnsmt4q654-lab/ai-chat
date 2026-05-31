@@ -100,7 +100,7 @@
 
     /* Bubbles */
     .msg{display:flex;gap:8px;padding:0;animation:msgIn .3s cubic-bezier(.34,1.56,.64,1)}
-    @keyframes msgIn{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes msgIn{from{opacity:0;transform:translateY(30px) scale(.7)}to{opacity:1;transform:translateY(0) scale(1)}}
     .msg.user{flex-direction:row-reverse}
     .msg-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;overflow:hidden;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:20px}
     .msg-avatar img{width:100%;height:100%;object-fit:cover}
@@ -271,8 +271,8 @@
 // ===== CONFIG =====
 var API_KEY = "sk-e9168099b0f24e0a948cbd9b98038d8e";
 var API_MODEL = "deepseek-v4-flash";
-var VALID_CODES = ["030325", "0428", "1009", "0909"];
-var CODE_MODELS = { "030325": ["ahy","kute","nuanri"], "0428": ["ahy"], "1009": ["kute"], "0909": ["nuanri"] };
+var VALID_CODES = ["030325", "0428", "1009", "0909", "7891"];
+var CODE_MODELS = { "030325": ["ahy","kute","nuanri","naiwa"], "0428": ["ahy"], "1009": ["kute"], "0909": ["nuanri"], "7891": ["naiwa"] };
 var hasFullAccess = false;
 var currentInviteCode = "";
 var userAvatar = "👤";
@@ -519,7 +519,7 @@ var MODELS = {
   ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
   kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
   nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" },
-  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙 🐸", sysPrompt: NAIWA_PROMPT, desc: "全网最抽象的捧腹大笑AI 🐸" }
+  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙", sysPrompt: NAIWA_PROMPT, desc: "全网最抽象的捧腹大笑AI 🐸" }
 };
 
 // ===== DOM =====
@@ -562,12 +562,12 @@ function showModelScreen(fullAccess) {
   dom.inviteScreen.classList.add("hide");
   dom.modelScreen.classList.add("show");
   var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="swai-icon.png"></div><div class="mc-name">Swai v1.5</div><span class="mc-badge rec">推荐</span></div>';
-  html += '<div class="model-card" onclick="enterChat(\'naiwa\')"><div class="mc-avatar"><img src="naiwa-avatar.png"></div><div class="mc-name">奶蛙 🐸</div><span class="mc-badge" style="background:rgba(76,175,80,0.15);color:#4CAF50">抽象</span></div>';
   if (fullAccess && CODE_MODELS[currentInviteCode]) {
     var models = CODE_MODELS[currentInviteCode];
     if (models.indexOf("ahy") !== -1) html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div><span class="mc-badge custom">个人定制</span></div>';
     if (models.indexOf("kute") !== -1) html += '<div class="model-card" onclick="enterChat(\'kute\')"><div class="mc-avatar"><img src="kute-avatar.jpg"></div><div class="mc-name">kute</div><span class="mc-badge custom">个人定制</span></div>';
     if (models.indexOf("nuanri") !== -1) html += '<div class="model-card" onclick="enterChat(\047nuanri\047)"><div class="mc-avatar"><img src="nuanri-avatar.jpg"></div><div class="mc-name">暖日蓝恬</div><span class="mc-badge custom">个人定制</span></div>';
+    if (models.indexOf("naiwa") !== -1) html += '<div class="model-card" onclick="enterChat(\047naiwa\047)"><div class="mc-avatar"><img src="naiwa-avatar.png"></div><div class="mc-name">奶蛙</div><span class="mc-badge" style="background:rgba(76,175,80,0.15);color:#4CAF50">抽象</span></div>';
   }
   dom.modelCards.innerHTML = html;
 }
