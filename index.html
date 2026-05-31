@@ -67,8 +67,8 @@
     .wx-nav .right-btn{font-size:20px;color:var(--text);cursor:pointer;padding:8px;width:44px;text-align:center;flex-shrink:0;border:none;background:none;position:relative}
 
     /* Settings dropdown */
-    .settings-drop{position:absolute;top:42px;right:4px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:14px 16px;min-width:180px;display:none;z-index:100;box-shadow:0 8px 30px rgba(0,0,0,0.12)}
-    .settings-drop.show{display:block}
+    .settings-drop{position:absolute;top:42px;right:4px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:14px 16px;min-width:180px;z-index:100;box-shadow:0 8px 30px rgba(0,0,0,0.12);opacity:0;transform:translateY(-8px) scale(.95);pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+    .settings-drop.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
     .settings-drop .s-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;font-size:13px;color:var(--text)}
     .settings-drop .s-row:last-child{margin-bottom:0}
     .settings-drop .s-label{font-size:12px;color:var(--text2);margin-bottom:6px}
@@ -91,8 +91,8 @@
     .quick-btn:active{background:var(--input-bg)}
 
     /* Bubbles */
-    .msg{display:flex;gap:8px;padding:0;animation:fadeIn .2s ease}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .msg{display:flex;gap:8px;padding:0;animation:msgIn .3s cubic-bezier(.34,1.56,.64,1)}
+    @keyframes msgIn{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
     .msg.user{flex-direction:row-reverse}
     .msg-avatar{width:38px;height:38px;border-radius:50%;flex-shrink:0;overflow:hidden;background:#ddd;display:flex;align-items:center;justify-content:center;font-size:20px}
     .msg-avatar img{width:100%;height:100%;object-fit:cover}
@@ -157,7 +157,7 @@
 
 <!-- INVITE -->
 <div id="inviteScreen">
-  <div class="logo"><img src="bot-avatar.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.2)"></div>
+  <div class="logo"><img src="swai-icon.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
   <h2>SeaWhy AI</h2>
   <p class="sub">请输入邀请码</p>
   <input type="text" class="invite-input" id="inviteCode" placeholder="******" maxlength="10" autofocus />
@@ -169,12 +169,12 @@
 
 <!-- MODEL SELECT -->
 <div id="modelScreen">
-  <div class="logo"><img src="bot-avatar.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.2)"></div>
+  <div class="logo"><img src="swai-icon.png" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
   <h2>SeaWhy AI</h2>
   <p class="sub">选择模型开始对话</p>
   <div class="model-cards" id="modelCards">
     <div class="model-card" onclick="enterChat('swai')">
-      <div class="mc-avatar"><img src="bot-avatar.png" /></div>
+      <div class="mc-avatar"><img src="swai-icon.png" /></div>
       <div class="mc-name">Swai v1.0</div>
     </div>
   </div>
@@ -214,10 +214,10 @@
     <div class="typing-dots" id="typing" style="display:none"><span></span><span></span><span></span></div>
   </main>
   <div class="quick-actions" id="quickActions" style="display:none">
-    <button class="qa-btn accent" id="btnToggleMode" onclick="toggleMode()">🔀 切换模式</button>
-    <button class="qa-btn" onclick="sendQuick('joke')">😂 讲个笑话</button>
-    <button class="qa-btn" onclick="sendQuick('story')">📖 讲个故事</button>
-    <button class="qa-btn" onclick="sendQuick('word')">📝 背个单词</button>
+    <button class="qa-btn accent" id="btnToggleMode" onclick="toggleMode()">切换模式</button>
+    <button class="qa-btn" onclick="sendQuick('joke')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>讲个笑话</button>
+    <button class="qa-btn" onclick="sendQuick('story')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>讲个故事</button>
+    <button class="qa-btn" onclick="sendQuick('word')"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>背个单词</button>
   </div>
   <footer class="input-bar">
     <div class="input-row">
@@ -243,13 +243,13 @@ var userTheme = "light";
 var userBubble = "#4A90D9";
 
 try {
-  var savedPrefs = JSON.parse(localStorage.getItem("ai-prefs") || "{}");
+  var savedPrefs = JSON.parse(localStorage.getItem("ai-prefs-v2") || "{}");
   if (savedPrefs.theme) userTheme = savedPrefs.theme;
   if (savedPrefs.bubble) userBubble = savedPrefs.bubble;
 } catch(e) {}
 
 function savePrefs() {
-  try { localStorage.setItem("ai-prefs", JSON.stringify({theme:userTheme, bubble:userBubble})); } catch(e) {}
+  try { localStorage.setItem("ai-prefs-v2", JSON.stringify({theme:userTheme, bubble:userBubble})); } catch(e) {}
 }
 
 // ===== PROMPTS =====
@@ -352,7 +352,7 @@ var NUANRI_PROMPT = [
 ].join("\n");
 
 var MODELS = {
-  swai: { name: "Swai v1.0", avatar: '<img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.0", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实的AI助手" },
+  swai: { name: "Swai v1.0", avatar: '<img src="swai-icon.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.0", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实的AI助手" },
   ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
   kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
   nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" }
@@ -397,7 +397,7 @@ dom.inviteCode.addEventListener("keydown", function(e) { if (e.key === "Enter") 
 function showModelScreen(fullAccess) {
   dom.inviteScreen.style.display = "none";
   dom.modelScreen.style.display = "block";
-  var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="bot-avatar.png"></div><div class="mc-name">Swai v1.0</div><span class="mc-badge rec">推荐</span></div>';
+  var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="swai-icon.png"></div><div class="mc-name">Swai v1.0</div><span class="mc-badge rec">推荐</span></div>';
   if (fullAccess && CODE_MODELS[currentInviteCode]) {
     var models = CODE_MODELS[currentInviteCode];
     if (models.indexOf("ahy") !== -1) html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div><span class="mc-badge custom">个人定制</span></div>';
@@ -466,7 +466,8 @@ function enterChat(modelId) {
   try {
     var saved = localStorage.getItem(msgsKey);
     if (saved) { var p = JSON.parse(saved); if (Array.isArray(p) && p.length > 0) messages = p; }
-  } catch(e) { messages = []; }
+  } catch(e) { console.error("loadMsgs err:", e); messages = []; }
+  console.log("enterChat model="+modelId+" loaded="+messages.length+" msgs");
   var M = MODELS[modelId];
   dom.chatTitle.textContent = M.title;
   dom.modelScreen.style.display = "none";
@@ -504,7 +505,9 @@ function renderAllMessages() {
       '</div></div>';
     return;
   }
-  for (var i = 0; i < messages.length; i++) renderMsg(messages[i].role, messages[i].content);
+  for (var i = 0; i < messages.length; i++) {
+    try { renderMsg(messages[i].role, messages[i].content); } catch(e) { console.error("renderMsg "+i+" err:", e); }
+  }
 }
 
 function renderMsg(role, content) {
@@ -527,12 +530,11 @@ function copyMsg(btn) { var t=btn.closest(".msg").querySelector(".msg-content").
 function updateModeBtn() {
   var btn = document.getElementById("btnToggleMode");
   if (!btn) return;
+  btn.classList.add("on");
   if (swaiMode === "gentle") {
-    btn.textContent = "💕 模式：温柔体贴";
-    btn.classList.add("on");
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:2px"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> 温柔体贴';
   } else {
-    btn.textContent = "🔀 切换模式";
-    btn.classList.remove("on");
+    btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg> 严谨客观';
   }
 }
 
@@ -658,7 +660,7 @@ function sendMsg(text) {
 }
 
 function showErr(msg) { var d = document.createElement("div"); d.className = "error"; d.textContent = "⚠ "+msg; dom.messages.appendChild(d); scrollBottom(); }
-function saveMsgs() { try { var clone = messages.map(function(m){return {role:m.role, content:m.content}}); localStorage.setItem(msgsKey, JSON.stringify(clone)); } catch(e) {} }
+function saveMsgs() { try { var clone = messages.map(function(m){return {role:m.role, content:m.content}}); localStorage.setItem(msgsKey, JSON.stringify(clone)); } catch(e) { console.error("saveMsgs err:", e); } }
 
 // ===== EVENTS =====
 dom.btnSend.addEventListener("click", function() { var t = dom.userInput.value.trim(); if (!t || streaming) return; dom.userInput.value = ""; dom.userInput.style.height = "auto"; sendMsg(t); });
