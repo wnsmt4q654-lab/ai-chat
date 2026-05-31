@@ -653,38 +653,22 @@ function sendMsg(text) {
     else displayContent = "📎 " + fileNames;
   }
 
-  // Build API content (multimodal for images)
-  var apiContent;
-  if (hasImages) {
-    apiContent = [];
-    if (text) apiContent.push({type:"text", text:text});
-    for (var fj = 0; fj < pendingFiles.length; fj++) {
-      var f = pendingFiles[fj];
-      if (f.type === "image") {
-        apiContent.push({type:"image_url", image_url:{url:f.data}});
-      } else {
-        // Text file: prepend content
-        apiContent.push({type:"text", text:"[文件: "+f.name+"]\n"+f.data});
-      }
+  // Build API content — images are NOT sent (DeepSeek lacks vision support)
+  var apiContent = text || "";
+  var hasTextFiles = false;
+  for (var fj = 0; fj < pendingFiles.length; fj++) {
+    var f = pendingFiles[fj];
+    if (f.type === "text") {
+      hasTextFiles = true;
+      if (apiContent) apiContent += "\n\n";
+      apiContent += "[文件: "+f.name+"]\n"+f.data;
     }
-    // If only files, add a default text
-    if (apiContent.length === 1 && apiContent[0].type === "image_url") {
-      apiContent.unshift({type:"text", text:"请描述这张图片"});
-    }
-    messages.push({role:"user", content:displayContent, rawContent:apiContent});
-  } else if (hasFiles) {
-    // Only text files
-    apiContent = text || "";
-    for (var fk = 0; fk < pendingFiles.length; fk++) {
-      if (pendingFiles[fk].type === "text") {
-        if (apiContent) apiContent += "\n\n";
-        apiContent += "[文件: "+pendingFiles[fk].name+"]\n"+pendingFiles[fk].data;
-      }
-    }
-    messages.push({role:"user", content:displayContent, rawContent:apiContent});
-  } else {
-    messages.push({role:"user", content:text});
   }
+  if (hasImages) {
+    if (apiContent) apiContent += "\n\n";
+    apiContent += "[用户上传了图片，但当前模型不支持图片识别]";
+  }
+  messages.push({role:"user", content:displayContent, rawContent: hasTextFiles ? apiContent : null});
 
   renderMsg("user", displayContent); saveMsgs();
   var filesToSend = pendingFiles.slice();
@@ -711,23 +695,12 @@ function sendMsg(text) {
   }
   if (sysP) apiMsgs.unshift({role:"system", content:sysP});
 
-  // Detect if any message has images → switch to vision model
-  var useModel = API_MODEL;
-  for (var j = 0; j < apiMsgs.length; j++) {
-    if (Array.isArray(apiMsgs[j].content)) {
-      for (var k = 0; k < apiMsgs[j].content.length; k++) {
-        if (apiMsgs[j].content[k].type === "image_url") { useModel = "deepseek-chat"; break; }
-      }
-      if (useModel !== API_MODEL) break;
-    }
-  }
-
   abortController = new AbortController();
   var signal = abortController.signal;
 
   fetch("https://api.deepseek.com/v1/chat/completions", {
     method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer "+API_KEY},
-    body:JSON.stringify({model:useModel, messages:apiMsgs, stream:true, temperature:0.7, max_tokens:4096}),
+    body:JSON.stringify({model:API_MODEL, messages:apiMsgs, stream:true, temperature:0.7, max_tokens:4096}),
     signal:signal
   }).then(function(resp) {
     if (!resp.ok) return resp.text().then(function(t){throw new Error("API "+resp.status+": "+t.slice(0,200))});
