@@ -66,9 +66,10 @@
     .mc-badge.rec{background:var(--accent-light);color:var(--accent)}
     .mc-badge.premium{background:linear-gradient(135deg,rgba(245,166,35,0.2),rgba(212,160,23,0.12));color:#C7920A;border:1px solid rgba(212,160,23,0.25)}
     .mc-badge.custom{background:rgba(0,0,0,0.05);color:var(--text2)}
-    .mc-limited{position:absolute;top:-8px;left:12px;background:linear-gradient(135deg,#E74C3C,#C0392B);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;line-height:1;box-shadow:0 2px 8px rgba(231,76,60,0.35);letter-spacing:.5px;z-index:1;animation:limitedPulse 2s ease-in-out infinite}
+    .mc-limited{position:absolute;top:2px;left:12px;background:linear-gradient(135deg,#E74C3C,#C0392B);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;line-height:1;box-shadow:0 2px 8px rgba(231,76,60,0.35);letter-spacing:.5px;z-index:1;animation:limitedPulse 2s ease-in-out infinite}
     @keyframes limitedPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-    .model-section-title{font-size:13px;font-weight:600;color:var(--text2);text-align:left;padding:20px 0 4px 4px;letter-spacing:1px}
+    .mc-badge.naiwa-tag{background:rgba(76,175,80,0.15);color:#388E3C;border:1px solid rgba(76,175,80,0.2)}
+    .model-section-title{font-size:13px;font-weight:600;color:var(--text);text-align:left;padding:20px 0 4px 4px;letter-spacing:1px}
     .model-section-title:first-child{padding-top:0}
 
     /* ===== CHAT ==== */
@@ -271,7 +272,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.6.4</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.6.5</p>
   </footer>
 </div>
 
@@ -566,11 +567,11 @@ function enterAsGuest() {
 
 dom.inviteCode.addEventListener("keydown", function(e) { if (e.key === "Enter") checkInvite(); });
 
-function modelCard(id, badge) {
+function modelCard(id, badge, showDesc) {
   var M = MODELS[id];
   var extra = id === "naiwa" ? '<span class="mc-limited">限时免费</span>' : '';
   var bg = badge || '';
-  var desc = M.desc ? '<div class="mc-desc">'+escHtml(M.desc)+'</div>' : '';
+  var desc = (showDesc !== false && M.desc) ? '<div class="mc-desc">'+escHtml(M.desc)+'</div>' : '';
   return '<div class="model-card" onclick="enterChat(\''+id+'\')">'+extra+
     '<div class="mc-avatar"><img src="'+id+'-avatar.jpg" onerror="this.src=\''+id+'-avatar.png\'"></div>'+
     '<div class="mc-info"><div class="mc-name">'+escHtml(M.name)+'</div>'+desc+'</div>'+bg+'</div>';
@@ -580,17 +581,19 @@ function showModelScreen(fullAccess) {
   dom.inviteScreen.classList.add("hide");
   dom.modelScreen.classList.add("show");
   var hasCustom = fullAccess && CODE_MODELS[currentInviteCode] && CODE_MODELS[currentInviteCode].length > 0;
-  var html = '<div class="model-section-title">🌐 通用模型</div>';
+  var html = '<div class="model-section-title">● 通用模型</div>';
   html += modelCard("swai", '<span class="mc-badge rec">推荐</span>');
+  if (hasCustom && CODE_MODELS[currentInviteCode].indexOf("naiwa") !== -1) {
+    html += modelCard("naiwa", '<span class="mc-badge naiwa-tag">娱乐</span>');
+  }
   if (hasCustom) {
     var models = CODE_MODELS[currentInviteCode];
     var anyCustom = false;
     var customHtml = '';
-    if (models.indexOf("ahy") !== -1) { customHtml += modelCard("ahy", '<span class="mc-badge premium">个人定制</span>'); anyCustom = true; }
-    if (models.indexOf("kute") !== -1) { customHtml += modelCard("kute", '<span class="mc-badge premium">个人定制</span>'); anyCustom = true; }
-    if (models.indexOf("nuanri") !== -1) { customHtml += modelCard("nuanri", '<span class="mc-badge premium">个人定制</span>'); anyCustom = true; }
-    if (models.indexOf("naiwa") !== -1) { customHtml += modelCard("naiwa", '<span class="mc-badge premium">限时免费</span>'); anyCustom = true; }
-    if (anyCustom) html += '<div class="model-section-title">⭐ 个人定制模型</div>' + customHtml;
+    if (models.indexOf("ahy") !== -1) { customHtml += modelCard("ahy", '<span class="mc-badge premium">个人定制</span>', false); anyCustom = true; }
+    if (models.indexOf("kute") !== -1) { customHtml += modelCard("kute", '<span class="mc-badge premium">个人定制</span>', false); anyCustom = true; }
+    if (models.indexOf("nuanri") !== -1) { customHtml += modelCard("nuanri", '<span class="mc-badge premium">个人定制</span>', false); anyCustom = true; }
+    if (anyCustom) html += '<div class="model-section-title">◆ 个人定制模型</div>' + customHtml;
   }
   dom.modelCards.innerHTML = html;
 }
