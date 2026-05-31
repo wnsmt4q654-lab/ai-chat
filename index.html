@@ -244,7 +244,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v13</p>
   </footer>
 </div>
 
@@ -994,6 +994,17 @@ function persistAll() {
 window.addEventListener("beforeunload", function() { persistAll(); });
 document.addEventListener("visibilitychange", function() {
   if (document.hidden) persistAll();
+});
+
+// ===== ERROR CATCH =====
+window.addEventListener("error", function(e) {
+  var el = document.getElementById("messages");
+  if (el) {
+    var d = document.createElement("div");
+    d.className = "error";
+    d.textContent = "⚠ JS错误: " + (e.message || e.error || "unknown") + " @ " + (e.filename||"").split("/").pop() + ":" + e.lineno;
+    el.appendChild(d);
+  }
 });
 
 // ===== INIT =====
