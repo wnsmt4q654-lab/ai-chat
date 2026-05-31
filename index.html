@@ -244,7 +244,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v15</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v16</p>
   </footer>
 </div>
 
@@ -544,10 +544,11 @@ function renderAllMessages() {
   for (var i = 0; i < messages.length; i++) {
     var role = messages[i].role;
     var content = messages[i].content;
+    var cssRole = role === "assistant" ? "ai" : role; // CSS uses .msg.ai not .msg.assistant
     var showAvatar = (role === "assistant" && currentModel !== "swai");
     var avatarHtml = '';
     if (showAvatar) avatarHtml = role === "user" ? userAvatar : M.avatar;
-    h += '<div class="msg '+role+(showAvatar?'':' no-avatar')+'">';
+    h += '<div class="msg '+cssRole+(showAvatar?'':' no-avatar')+'">';
     if (showAvatar) h += '<div class="msg-avatar">'+avatarHtml+'</div>';
     h += '<div class="msg-body"><div class="msg-content">'+renderMD(content)+'</div>';
     h += '<div class="msg-actions"><button class="btn-copy" onclick="copyMsg(this)">复制</button></div>';
