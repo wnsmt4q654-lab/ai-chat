@@ -11,9 +11,6 @@
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link id="hlTheme" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css" />
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
@@ -507,8 +504,6 @@ function enterChat(modelId) {
   dom.chatTitle.textContent = M.title;
   dom.modelScreen.style.display = "none";
   dom.chatView.style.display = "flex";
-  // DEBUG: show message count in title — remove once bug is confirmed fixed
-  console.log("ENTER CHAT: model="+modelId+" msgs="+messages.length, JSON.stringify(messages.map(function(m){return m.role})));
   var qa = document.getElementById("quickActions");
   if (qa) { qa.style.display = modelId === "swai" ? "flex" : "none"; }
   if (modelId === "swai") dom.typing.classList.add("no-avatar");
@@ -519,14 +514,12 @@ function enterChat(modelId) {
   var expectedCount = messages.length;
   setTimeout(function() {
     if (currentModel === modelId && messages.length !== expectedCount) {
-      console.log("re-render: expected="+expectedCount+" actual="+messages.length);
       renderAllMessages();
     }
   }, 250);
 }
 
 function goBack() {
-  console.log("GOBACK: model="+currentModel+" msgs="+messages.length+" streaming="+streaming);
   saveMsgs();
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
   dom.chatView.style.display = "none"; dom.modelScreen.style.display = "block";
@@ -727,7 +720,7 @@ function sendMsg(text) {
         if (result.done) {
           resolved = true; abortController = null;
           var finalText = fullContent || "…";
-          if (chatSessionId === sessionId) { chatArray.push({role:"assistant", content:finalText}); saveMsgsKey(capturedKey); console.log("STREAM-DONE: saved AI response, totalMsgs="+chatArray.length); }
+          if (chatSessionId === sessionId) { chatArray.push({role:"assistant", content:finalText}); saveMsgsKey(capturedKey); }
           contentDiv.innerHTML = renderMD(finalText); hl();
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
@@ -747,7 +740,6 @@ function sendMsg(text) {
         resolved = true; abortController = null;
         if (fullContent && chatSessionId === sessionId) {
           chatArray.push({role:"assistant", content:fullContent}); saveMsgsKey(capturedKey);
-          console.log("STREAM-ERR: saved partial AI content, len="+fullContent.length+" totalMsgs="+chatArray.length);
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
         } else if (!fullContent) {
@@ -843,13 +835,32 @@ document.getElementById("fileInput").addEventListener("change", function(e) {
   e.target.value = "";
 });
 
-// PDF text extraction
+// Lazy-load a script
+function loadScript(url, cb) {
+  var s = document.createElement("script");
+  s.src = url;
+  s.onload = cb;
+  s.onerror = function(){ cb(new Error("load failed")) };
+  document.head.appendChild(s);
+}
+
+// PDF text extraction — lazy-loads pdf.js
 function extractPDF(arrayBuffer, fileName) {
-  if (typeof pdfjsLib === "undefined") {
-    pendingFiles.push({name: fileName, data: "[PDF解析库加载失败]", type: "text"});
-    renderFilePreview();
-    return;
-  }
+  if (typeof pdfjsLib !== "undefined") { doExtractPDF(arrayBuffer, fileName); return; }
+  pendingFiles.push({name: fileName, data: null, type: "text", ocrStatus: "加载PDF引擎…"});
+  renderFilePreview();
+  loadScript("https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js", function(err) {
+    if (err) {
+      pendingFiles[pendingFiles.length-1].data = "[PDF引擎加载失败]";
+      pendingFiles[pendingFiles.length-1].ocrStatus = "失败";
+      renderFilePreview();
+      return;
+    }
+    pendingFiles.pop();
+    doExtractPDF(arrayBuffer, fileName);
+  });
+}
+function doExtractPDF(arrayBuffer, fileName) {
   pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
   pdfjsLib.getDocument({data: arrayBuffer}).promise.then(function(pdf) {
     var totalPages = pdf.numPages;
@@ -877,14 +888,22 @@ function extractPDF(arrayBuffer, fileName) {
   });
 }
 
-// OCR image text extraction using Tesseract.js
+// OCR image text extraction — lazy-loads Tesseract.js
 function runOCR(imgDataUrl, fileName, idx) {
-  if (typeof Tesseract === "undefined") {
-    pendingFiles[idx].ocrText = "[OCR引擎加载失败]";
-    pendingFiles[idx].ocrStatus = "失败";
-    renderFilePreview();
-    return;
-  }
+  if (typeof Tesseract !== "undefined") { doOCR(imgDataUrl, fileName, idx); return; }
+  pendingFiles[idx].ocrStatus = "加载引擎…";
+  renderFilePreview();
+  loadScript("https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js", function(err) {
+    if (err || typeof Tesseract === "undefined") {
+      pendingFiles[idx].ocrText = "[OCR引擎加载失败]";
+      pendingFiles[idx].ocrStatus = "失败";
+      renderFilePreview();
+      return;
+    }
+    doOCR(imgDataUrl, fileName, idx);
+  });
+}
+function doOCR(imgDataUrl, fileName, idx) {
   Tesseract.recognize(imgDataUrl, "chi_sim+eng", {
     logger: function(m) {
       if (m.status === "recognizing text") {
@@ -905,13 +924,23 @@ function runOCR(imgDataUrl, fileName, idx) {
   });
 }
 
-// DOCX text extraction using mammoth.js
+// DOCX text extraction — lazy-loads mammoth.js
 function extractDOCX(arrayBuffer, fileName) {
-  if (typeof mammoth === "undefined") {
-    pendingFiles.push({name: fileName, data: "[Word解析库加载失败]", type: "text"});
-    renderFilePreview();
-    return;
-  }
+  if (typeof mammoth !== "undefined") { doExtractDOCX(arrayBuffer, fileName); return; }
+  pendingFiles.push({name: fileName, data: null, type: "text", ocrStatus: "加载Word引擎…"});
+  renderFilePreview();
+  loadScript("https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js", function(err) {
+    if (err || typeof mammoth === "undefined") {
+      pendingFiles[pendingFiles.length-1].data = "[Word引擎加载失败]";
+      pendingFiles[pendingFiles.length-1].ocrStatus = "失败";
+      renderFilePreview();
+      return;
+    }
+    pendingFiles.pop();
+    doExtractDOCX(arrayBuffer, fileName);
+  });
+}
+function doExtractDOCX(arrayBuffer, fileName) {
   mammoth.extractRawText({arrayBuffer: arrayBuffer}).then(function(result) {
     var text = result.value.substring(0, 30000);
     pendingFiles.push({name: fileName, data: text || "[Word文档无文字内容]", type: "text"});
