@@ -20,10 +20,10 @@
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100dvh;height:-webkit-fill-available;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-webkit-user-select:none;user-select:none}
     :root{
-      --bg:#f0f4f8;--nav-bg:rgba(255,255,255,0.72);--card-bg:rgba(255,255,255,0.78);--card-border:rgba(0,0,0,0.06);
-      --text:#111;--text2:#888;--input-bg:rgba(255,255,255,0.85);--input-border:rgba(0,0,0,0.1);
-      --ai-bubble:rgba(255,255,255,0.8);--user-bubble:#C5DFF8;--bubble-shadow:0 1px 4px rgba(0,0,0,0.05);
-      --invite-bg:#f0f4f8;--accent:#4A90D9;--accent-light:rgba(74,144,217,0.12);
+      --bg:#fff;--nav-bg:#fff;--card-bg:#fff;--card-border:rgba(0,0,0,0.08);
+      --text:#111;--text2:#888;--input-bg:#fff;--input-border:rgba(0,0,0,0.12);
+      --ai-bubble:#fff;--user-bubble:#C5DFF8;--bubble-shadow:0 1px 4px rgba(0,0,0,0.06);
+      --invite-bg:#fff;--accent:#4A90D9;--accent-light:rgba(74,144,217,0.12);
     }
     body.dark{
       --bg:#111;--nav-bg:#1a1a1a;--card-bg:#1a1a1a;--card-border:#333;
@@ -65,7 +65,7 @@
     .mc-badge.custom{background:rgba(0,0,0,0.05);color:var(--text2)}
 
     /* ===== CHAT ==== */
-    #chatView{flex:1;display:none!important;flex-direction:column;overflow:hidden;background:var(--bg)}
+    #chatView{flex:1;display:none!important;flex-direction:column;overflow:hidden;overscroll-behavior:none;background:var(--bg)}
     #chatView.show{display:flex!important}
 
     /* Nav */
@@ -87,7 +87,7 @@
     .settings-drop .color-dot.active{border-color:var(--text);transform:scale(1.15)}
 
     /* Chat area */
-    .chat-area{flex:1;overflow-y:auto;padding:12px 14px;-webkit-overflow-scrolling:touch;background:var(--bg)}
+    .chat-area{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:12px 14px;-webkit-overflow-scrolling:touch;background:var(--bg);touch-action:pan-y}
     .messages{display:flex;flex-direction:column;gap:14px;padding-bottom:8px}
 
     .welcome{text-align:center;padding:60px 20px 30px}
@@ -250,7 +250,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.5.4</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.5.5</p>
   </footer>
 </div>
 
