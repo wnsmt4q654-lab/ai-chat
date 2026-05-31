@@ -163,7 +163,7 @@
     <button class="back" onclick="goBack()">← 返回</button>
     <span class="title" id="chatTitle">Chat</span>
     <div class="right-btn" id="btnSettings" onclick="toggleSettings()">
-      ⚙️
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <div class="settings-drop" id="settingsDrop">
         <div class="s-label">🌓 主题模式</div>
         <div class="s-row">
@@ -172,9 +172,9 @@
         </div>
         <div class="s-label" style="margin-top:8px">💬 气泡颜色</div>
         <div class="color-dots">
-          <span class="color-dot active" style="background:#95EC69" onclick="setBubble('#95EC69',this)" title="微信绿"></span>
+          <span class="color-dot" style="background:#95EC69" onclick="setBubble('#95EC69',this)" title="微信绿"></span>
           <span class="color-dot" style="background:#07C160" onclick="setBubble('#07C160',this)" title="深绿"></span>
-          <span class="color-dot" style="background:#4A90D9" onclick="setBubble('#4A90D9',this)" title="蓝色"></span>
+          <span class="color-dot active" style="background:#4A90D9" onclick="setBubble('#4A90D9',this)" title="蓝色"></span>
           <span class="color-dot" style="background:#FF6B6B" onclick="setBubble('#FF6B6B',this)" title="珊瑚"></span>
           <span class="color-dot" style="background:#F5A623" onclick="setBubble('#F5A623',this)" title="橙色"></span>
           <span class="color-dot" style="background:#A78BFA" onclick="setBubble('#A78BFA',this)" title="紫色"></span>
@@ -207,7 +207,7 @@ var userAvatar = "👤";
 
 // User-customizable settings (saved per device)
 var userTheme = "light";
-var userBubble = "#95EC69";
+var userBubble = "#4A90D9";
 
 try {
   var savedPrefs = JSON.parse(localStorage.getItem("ai-prefs") || "{}");
@@ -260,6 +260,7 @@ var messages = [];
 var msgsKey = "";
 var streaming = false;
 var abortController = null;  // for cancelling in-flight requests
+var chatSessionId = 0;      // incremented on each enterChat to detect stale callbacks
 
 var NUANRI_PROMPT = [
   "你是暖日蓝恬。女生，大学本科生（经济学院）。你在和你的朋友聊天。",
@@ -412,6 +413,7 @@ function toggleSettings() {
 
 // ===== NAVIGATION =====
 function enterChat(modelId) {
+  chatSessionId++;
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
   streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
   currentModel = modelId;
@@ -429,6 +431,8 @@ function enterChat(modelId) {
 }
 
 function goBack() {
+  chatSessionId++;  // invalidate any in-flight stream handlers
+  saveMsgs();       // force-save current messages before anything changes
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
   dom.chatView.style.display = "none"; dom.modelScreen.style.display = "block"; currentModel = null;
   streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
@@ -471,6 +475,7 @@ function copyMsg(btn) { var t=btn.closest(".msg").querySelector(".msg-content").
 function sendMsg(text) {
   if (streaming) return;
   text = text.trim(); if (!text) return;
+  var sessionId = chatSessionId;  // capture session — stale callbacks MUST NOT touch messages
   streaming = true; dom.btnSend.disabled = true; dom.typing.style.display = "flex"; scrollBottom();
   messages.push({role:"user", content:text});
   renderMsg("user", text); saveMsgs();
@@ -498,13 +503,13 @@ function sendMsg(text) {
     if (!resp.ok) return resp.text().then(function(t){throw new Error("API "+resp.status+": "+t.slice(0,200))});
     var reader = resp.body.getReader(), decoder = new TextDecoder(), buf = "";
     function pump() {
-      if (resolved) return;
+      if (resolved || chatSessionId !== sessionId) return;
       reader.read().then(function(result) {
-        if (resolved) return;
+        if (resolved || chatSessionId !== sessionId) return;
         if (result.done) {
           resolved = true; abortController = null;
           var finalText = fullContent || "…";
-          messages.push({role:"assistant", content:finalText}); saveMsgs();
+          if (chatSessionId === sessionId) { messages.push({role:"assistant", content:finalText}); saveMsgs(); }
           contentDiv.innerHTML = renderMD(finalText); hl();
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
@@ -520,15 +525,14 @@ function sendMsg(text) {
         }
         pump();
       }).catch(function(e) {
-        if (resolved) return;
+        if (resolved || chatSessionId !== sessionId) return;
         resolved = true; abortController = null;
-        // If we got partial content, save it as the assistant's reply
-        if (fullContent) {
+        if (fullContent && chatSessionId === sessionId) {
           messages.push({role:"assistant", content:fullContent}); saveMsgs();
           contentDiv.innerHTML = renderMD(fullContent); hl();
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
-        } else {
+        } else if (!fullContent) {
           if (!(e && e.name === "AbortError")) msgDiv.remove();
         }
         streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
@@ -536,15 +540,14 @@ function sendMsg(text) {
     }
     pump();
   }).catch(function(e) {
-    if (resolved) return;
+    if (resolved || chatSessionId !== sessionId) return;
     resolved = true; abortController = null;
-    // Save partial content if we have any on fetch error
-    if (fullContent) {
+    if (fullContent && chatSessionId === sessionId) {
       messages.push({role:"assistant", content:fullContent}); saveMsgs();
       contentDiv.innerHTML = renderMD(fullContent); hl();
       var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
       msgDiv.querySelector(".msg-body").appendChild(act);
-    } else {
+    } else if (!fullContent) {
       if (!(e && e.name === "AbortError")) { showErr(e.message); msgDiv.remove(); }
     }
     streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
