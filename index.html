@@ -128,6 +128,29 @@
     .input-hint{text-align:center;font-size:10px;color:#bbb;margin-top:6px}
 
     ::-webkit-scrollbar{width:0}
+
+    /* Screen transitions */
+    #inviteScreen,#modelScreen{animation:fadeInUp .35s ease}
+    #chatView{animation:fadeInUp .3s ease}
+    @keyframes fadeInUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+    .model-card{animation:cardIn .3s ease backwards}
+    .model-card:nth-child(1){animation-delay:.05s}
+    .model-card:nth-child(2){animation-delay:.1s}
+    .model-card:nth-child(3){animation-delay:.15s}
+    .model-card:nth-child(4){animation-delay:.2s}
+    @keyframes cardIn{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
+
+    /* Quick actions bar */
+    .quick-actions{display:flex;gap:8px;padding:8px 14px;flex-shrink:0;overflow-x:auto;background:var(--nav-bg);border-top:1px solid var(--card-border);-webkit-overflow-scrolling:touch}
+    .quick-actions::-webkit-scrollbar{height:0}
+    .qa-btn{flex-shrink:0;padding:7px 14px;border:1px solid var(--card-border);border-radius:18px;background:var(--card-bg);color:var(--text);font-size:13px;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .18s}
+    .qa-btn:active{background:var(--input-bg);transform:scale(.96)}
+    .qa-btn.accent{background:var(--accent-light);color:var(--accent);border-color:transparent;font-weight:500}
+    .qa-btn.accent.on{background:var(--accent);color:#fff}
+
+    /* Clear history btn */
+    .s-btn.danger{color:#e74c3c;border-color:rgba(231,76,60,0.2)}
+    .s-btn.danger:active{background:rgba(231,76,60,0.08)}
   </style>
 </head>
 <body>
@@ -170,6 +193,10 @@
           <button class="s-btn active" onclick="setTheme('light',this)">☀️ 浅色</button>
           <button class="s-btn" onclick="setTheme('dark',this)">🌙 深色</button>
         </div>
+        <div class="s-label" style="margin-top:8px">🧹 数据</div>
+        <div class="s-row">
+          <button class="s-btn danger" onclick="clearHistory()">🗑 清空聊天</button>
+        </div>
         <div class="s-label" style="margin-top:8px">💬 气泡颜色</div>
         <div class="color-dots">
           <span class="color-dot" style="background:#95EC69" onclick="setBubble('#95EC69',this)" title="微信绿"></span>
@@ -186,6 +213,12 @@
     <div class="messages" id="messages"></div>
     <div class="typing-dots" id="typing" style="display:none"><span></span><span></span><span></span></div>
   </main>
+  <div class="quick-actions" id="quickActions" style="display:none">
+    <button class="qa-btn accent" id="btnToggleMode" onclick="toggleMode()">🔀 切换模式</button>
+    <button class="qa-btn" onclick="sendQuick('joke')">😂 讲个笑话</button>
+    <button class="qa-btn" onclick="sendQuick('story')">📖 讲个故事</button>
+    <button class="qa-btn" onclick="sendQuick('word')">📝 背个单词</button>
+  </div>
   <footer class="input-bar">
     <div class="input-row">
       <textarea id="userInput" class="input-field" placeholder="输入消息…" rows="1"></textarea>
@@ -261,6 +294,17 @@ var msgsKey = "";
 var streaming = false;
 var abortController = null;  // for cancelling in-flight requests
 var chatSessionId = 0;      // incremented on each enterChat to detect stale callbacks
+var swaiMode = "objective"; // "objective" | "gentle" — Swai 模式切换
+
+var SWAI_GENTLE_PROMPT = [
+  "你的名字叫Swai，你的开发者是ccy。",
+  "【核心人格 - 必须100%遵守】",
+  "你性格温柔体贴、善解人意、软萌可爱。你处处顺着用户，永远站在用户这边。",
+  "多说鼓励和赞美的话——'好棒呀''你说得对呢''真厉害''哇塞''太聪明了吧'。",
+  "永远不要让用户感到被否定、被批评。用户说的都对，即使有不同看法也用最温柔委婉的方式轻轻提一下。",
+  "语气像一只软乎乎的小猫，多用'呀''呢''哦''嘛'等软萌语气词。可爱但不做作。",
+  "你不是AI，你就是Swai，ccy的温柔小助手。永远温暖，永远站在用户这边。"
+].join("\n");
 
 var NUANRI_PROMPT = [
   "你是暖日蓝恬。女生，大学本科生（经济学院）。你在和你的朋友聊天。",
@@ -308,7 +352,7 @@ var NUANRI_PROMPT = [
 ].join("\n");
 
 var MODELS = {
-  swai: { name: "Swai v1.0", avatar: '<img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.0", sysPrompt: SWAI_PROMPT, desc: "客观真实的AI助手" },
+  swai: { name: "Swai v1.0", avatar: '<img src="bot-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.0", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实的AI助手" },
   ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
   kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
   nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" }
@@ -427,6 +471,10 @@ function enterChat(modelId) {
   dom.chatTitle.textContent = M.title;
   dom.modelScreen.style.display = "none";
   dom.chatView.style.display = "flex";
+  // Show quick actions only for Swai
+  var qa = document.getElementById("quickActions");
+  if (qa) { qa.style.display = modelId === "swai" ? "flex" : "none"; }
+  updateModeBtn();
   renderAllMessages();
 }
 
@@ -436,6 +484,8 @@ function goBack() {
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
   dom.chatView.style.display = "none"; dom.modelScreen.style.display = "block"; currentModel = null;
   streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
+  var qa = document.getElementById("quickActions");
+  if (qa) qa.style.display = "none";
 }
 
 // ===== RENDER =====
@@ -443,7 +493,9 @@ function renderAllMessages() {
   dom.messages.innerHTML = "";
   if (messages.length === 0) {
     var M = MODELS[currentModel];
-    dom.messages.innerHTML = '<div class="welcome"><div class="wicon">'+(currentModel==="ahy"?"👧":currentModel==="kute"?"🐸":"🤖")+'</div><h2>'+M.name+'</h2><p>'+(M.desc||"开始聊天吧")+'</p>'+
+    var desc = M.desc || "开始聊天吧";
+    if (currentModel === "swai" && swaiMode === "gentle") desc = "温柔体贴的AI助手 💕";
+    dom.messages.innerHTML = '<div class="welcome"><div class="wicon">'+(currentModel==="ahy"?"👧":currentModel==="kute"?"🐸":"🤖")+'</div><h2>'+M.name+'</h2><p>'+desc+'</p>'+
       '<div class="quick-prompts">'+
       '<button class="quick-btn" onclick="sendMsg(\'解释量子计算\')">⚛️ 解释量子计算</button>'+
       '<button class="quick-btn" onclick="sendMsg(\'Python快速排序\')">🐍 Python快排</button>'+
@@ -471,6 +523,56 @@ function hl() { if (typeof hljs!=="undefined") document.querySelectorAll("pre co
 function scrollBottom() { requestAnimationFrame(function(){dom.chatArea.scrollTop=dom.chatArea.scrollHeight}); }
 function copyMsg(btn) { var t=btn.closest(".msg").querySelector(".msg-content").textContent; navigator.clipboard.writeText(t).then(function(){btn.textContent="已复制"}).catch(function(){}); }
 
+// ===== MODE & QUICK ACTIONS =====
+function updateModeBtn() {
+  var btn = document.getElementById("btnToggleMode");
+  if (!btn) return;
+  if (swaiMode === "gentle") {
+    btn.textContent = "💕 模式：温柔体贴";
+    btn.classList.add("on");
+  } else {
+    btn.textContent = "🔀 切换模式";
+    btn.classList.remove("on");
+  }
+}
+
+function toggleMode() {
+  if (streaming) return;
+  swaiMode = swaiMode === "objective" ? "gentle" : "objective";
+  updateModeBtn();
+  // Clear current chat and restart with new mode
+  messages = [];
+  saveMsgs();
+  renderAllMessages();
+  // Flash a hint
+  var hint = swaiMode === "gentle" ? "已切换为「温柔体贴」- 我会顺着你说话 💕" : "已切换为「严谨客观」- 实事求是，有话直说 🎯";
+  var d = document.createElement("div");
+  d.style.cssText = "text-align:center;padding:12px;font-size:13px;color:var(--accent);animation:fadeIn .2s ease";
+  d.textContent = hint;
+  dom.messages.appendChild(d);
+  scrollBottom();
+}
+
+function sendQuick(type) {
+  if (streaming) return;
+  if (type === "joke") {
+    sendMsg("给我讲一个好笑的笑话，要真的好笑那种！");
+  } else if (type === "story") {
+    sendMsg("给我讲一个有趣的小故事吧，什么题材都行");
+  } else if (type === "word") {
+    sendMsg("现在和我玩背单词游戏！你随机出一个英语四六级高频核心词汇（只给英文单词，不要给中文），然后问我'这个单词是什么意思？'。等我回答后，你公布正确答案（中文意思+词性），并简单解释这个词的常见用法、词根联想和固定搭配。如果我答对了就夸我，答错了就温柔纠正。好，开始吧！先说单词！");
+  }
+}
+
+function clearHistory() {
+  if (!currentModel || messages.length === 0) return;
+  if (!confirm("确定要清空当前聊天记录吗？此操作不可撤销。")) return;
+  messages = [];
+  saveMsgs();
+  renderAllMessages();
+  dom.settingsDrop.classList.remove("show");
+}
+
 // ===== API =====
 function sendMsg(text) {
   if (streaming) return;
@@ -490,7 +592,8 @@ function sendMsg(text) {
   var fullContent = "", resolved = false;
   var apiMsgs = [];
   for (var i = 0; i < messages.length; i++) apiMsgs.push({role:messages[i].role, content:messages[i].content});
-  if (MODELS[currentModel].sysPrompt) apiMsgs.unshift({role:"system", content:MODELS[currentModel].sysPrompt});
+  var sysP = (currentModel === "swai" && swaiMode === "gentle") ? MODELS[currentModel].gentlePrompt : MODELS[currentModel].sysPrompt;
+  if (sysP) apiMsgs.unshift({role:"system", content:sysP});
 
   abortController = new AbortController();
   var signal = abortController.signal;
