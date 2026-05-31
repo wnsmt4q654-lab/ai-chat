@@ -658,28 +658,24 @@ function sendMsg(text) {
   }
 
   // Build API content — images are NOT sent (DeepSeek lacks vision support)
+  var filesToSend = pendingFiles.slice(); // capture BEFORE clearing — used below
+
   var apiContent = text || "";
   var hasTextFiles = false;
-  for (var fj = 0; fj < pendingFiles.length; fj++) {
-    var f = pendingFiles[fj];
+  for (var fj = 0; fj < filesToSend.length; fj++) {
+    var f = filesToSend[fj];
     if (f.type === "text") {
       hasTextFiles = true;
       if (apiContent) apiContent += "\n\n";
       apiContent += "[文件: "+f.name+"]\n"+f.data;
-    }
-  }
-  // Include OCR text from images
-  for (var fi2 = 0; fi2 < filesToSend.length; fi2++) {
-    var f2 = filesToSend[fi2];
-    if (f2.type === "image" && f2.ocrText) {
+    } else if (f.type === "image" && f.ocrText) {
       if (apiContent) apiContent += "\n\n";
-      apiContent += "[图片OCR: "+f2.name+"]\n"+f2.ocrText;
+      apiContent += "[图片OCR: "+f.name+"]\n"+f.ocrText;
     }
   }
   chatArray.push({role:"user", content:displayContent, rawContent: hasTextFiles ? apiContent : null});
 
   renderMsg("user", displayContent); saveMsgsKey(capturedKey);
-  var filesToSend = pendingFiles.slice();
   pendingFiles = [];
   renderFilePreview();
 
