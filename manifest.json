@@ -10,12 +10,12 @@
   "background_color": "#f0f4f8",
   "icons": [
     {
-      "src": "swai-icon.jpg",
+      "src": "swai-avatar.jpg",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "swai-icon.jpg",
+      "src": "swai-avatar.jpg",
       "sizes": "512x512",
       "type": "image/png"
     }

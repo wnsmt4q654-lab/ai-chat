@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="SeaWhy AI" />
-  <link rel="apple-touch-icon" href="swai-icon.jpg" />
+  <link rel="apple-touch-icon" href="swai-avatar.jpg" />
   <link rel="manifest" href="manifest.json" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
@@ -55,14 +55,21 @@
     #modelScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
     #modelScreen .sub{font-size:14px;color:var(--text2);margin-bottom:32px}
     .model-cards{max-width:320px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-    .model-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:15px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .15s}
+    .model-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:15px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .15s;position:relative;overflow:visible}
     .model-card:active{background:var(--input-bg);transform:scale(.98)}
     .mc-avatar{width:50px;height:50px;border-radius:50%;flex-shrink:0;overflow:hidden}
     .mc-avatar img{width:100%;height:100%;object-fit:cover}
+    .mc-info{flex:1;min-width:0}
     .mc-name{font-size:17px;font-weight:500}
+    .mc-desc{font-size:12px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .mc-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500;margin-left:auto;flex-shrink:0}
     .mc-badge.rec{background:var(--accent-light);color:var(--accent)}
+    .mc-badge.premium{background:linear-gradient(135deg,rgba(245,166,35,0.2),rgba(212,160,23,0.12));color:#C7920A;border:1px solid rgba(212,160,23,0.25)}
     .mc-badge.custom{background:rgba(0,0,0,0.05);color:var(--text2)}
+    .mc-limited{position:absolute;top:-8px;left:12px;background:linear-gradient(135deg,#E74C3C,#C0392B);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;line-height:1;box-shadow:0 2px 8px rgba(231,76,60,0.35);letter-spacing:.5px;z-index:1;animation:limitedPulse 2s ease-in-out infinite}
+    @keyframes limitedPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+    .model-section-title{font-size:13px;font-weight:600;color:var(--text2);text-align:left;padding:20px 0 4px 4px;letter-spacing:1px}
+    .model-section-title:first-child{padding-top:0}
 
     /* ===== CHAT ==== */
     #chatView{flex:1;display:none!important;flex-direction:column;overflow:hidden;overscroll-behavior:none;background:var(--bg)}
@@ -189,7 +196,7 @@
 
 <!-- INVITE -->
 <div id="inviteScreen">
-  <div class="logo"><img src="swai-icon.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
+  <div class="logo"><img src="swai-avatar.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
   <h2>SeaWhy AI</h2>
   <p class="sub">请输入邀请码</p>
   <input type="text" class="invite-input" id="inviteCode" placeholder="******" maxlength="10" autofocus />
@@ -201,12 +208,12 @@
 
 <!-- MODEL SELECT -->
 <div id="modelScreen">
-  <div class="logo"><img src="swai-icon.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
+  <div class="logo"><img src="swai-avatar.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
   <h2>SeaWhy AI</h2>
   <p class="sub">选择模型开始对话</p>
   <div class="model-cards" id="modelCards">
     <div class="model-card" onclick="enterChat('swai')">
-      <div class="mc-avatar"><img src="swai-icon.jpg" /></div>
+      <div class="mc-avatar"><img src="swai-avatar.jpg" /></div>
       <div class="mc-name">Swai v1.5</div>
     </div>
   </div>
@@ -264,7 +271,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.6.3</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.6.4</p>
   </footer>
 </div>
 
@@ -516,11 +523,11 @@ var NAIWA_MOOD_IMAGES = {
 };
 
 var MODELS = {
-  swai: { name: "Swai v1.5", avatar: '<img src="swai-icon.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实的AI助手" },
-  ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
-  kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
-  nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" },
-  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙", sysPrompt: NAIWA_PROMPT, desc: "全网最抽象的捧腹大笑AI 🐸" }
+  swai: { name: "Swai v1.5", avatar: '<img src="swai-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实 · 严谨/温柔双模式 · DeepSeek驱动" },
+  ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "法学女大学生 · 爱拍照P图 · 你的死党闺蜜 👧" },
+  kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "抽象高中生 · 奶龙十级学者 · 梗图大王 🐸" },
+  nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "经济学霸 · 团委活跃分子 · 正能量girl 🌸" },
+  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙", sysPrompt: NAIWA_PROMPT, desc: "全网最抽象的捧腹大笑AI · 脑腐文化终极形态 🐸" }
 };
 
 // ===== DOM =====
@@ -559,16 +566,31 @@ function enterAsGuest() {
 
 dom.inviteCode.addEventListener("keydown", function(e) { if (e.key === "Enter") checkInvite(); });
 
+function modelCard(id, badge) {
+  var M = MODELS[id];
+  var extra = id === "naiwa" ? '<span class="mc-limited">限时免费</span>' : '';
+  var bg = badge || '';
+  var desc = M.desc ? '<div class="mc-desc">'+escHtml(M.desc)+'</div>' : '';
+  return '<div class="model-card" onclick="enterChat(\''+id+'\')">'+extra+
+    '<div class="mc-avatar"><img src="'+id+'-avatar.jpg" onerror="this.src=\''+id+'-avatar.png\'"></div>'+
+    '<div class="mc-info"><div class="mc-name">'+escHtml(M.name)+'</div>'+desc+'</div>'+bg+'</div>';
+}
+
 function showModelScreen(fullAccess) {
   dom.inviteScreen.classList.add("hide");
   dom.modelScreen.classList.add("show");
-  var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="swai-icon.jpg"></div><div class="mc-name">Swai v1.5</div><span class="mc-badge rec">推荐</span></div>';
-  if (fullAccess && CODE_MODELS[currentInviteCode]) {
+  var hasCustom = fullAccess && CODE_MODELS[currentInviteCode] && CODE_MODELS[currentInviteCode].length > 0;
+  var html = '<div class="model-section-title">🌐 通用模型</div>';
+  html += modelCard("swai", '<span class="mc-badge rec">推荐</span>');
+  if (hasCustom) {
     var models = CODE_MODELS[currentInviteCode];
-    if (models.indexOf("ahy") !== -1) html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div><span class="mc-badge custom">个人定制</span></div>';
-    if (models.indexOf("kute") !== -1) html += '<div class="model-card" onclick="enterChat(\'kute\')"><div class="mc-avatar"><img src="kute-avatar.jpg"></div><div class="mc-name">kute</div><span class="mc-badge custom">个人定制</span></div>';
-    if (models.indexOf("nuanri") !== -1) html += '<div class="model-card" onclick="enterChat(\047nuanri\047)"><div class="mc-avatar"><img src="nuanri-avatar.jpg"></div><div class="mc-name">暖日蓝恬</div><span class="mc-badge custom">个人定制</span></div>';
-    if (models.indexOf("naiwa") !== -1) html += '<div class="model-card" onclick="enterChat(\047naiwa\047)"><div class="mc-avatar"><img src="naiwa-avatar.jpg"></div><div class="mc-name">奶蛙</div><span class="mc-badge" style="background:rgba(76,175,80,0.15);color:#4CAF50">抽象</span></div>';
+    var anyCustom = false;
+    var customHtml = '';
+    if (models.indexOf("ahy") !== -1) { customHtml += modelCard("ahy", '<span class="mc-badge premium">个人定制</span>'); anyCustom = true; }
+    if (models.indexOf("kute") !== -1) { customHtml += modelCard("kute", '<span class="mc-badge premium">个人定制</span>'); anyCustom = true; }
+    if (models.indexOf("nuanri") !== -1) { customHtml += modelCard("nuanri", '<span class="mc-badge premium">个人定制</span>'); anyCustom = true; }
+    if (models.indexOf("naiwa") !== -1) { customHtml += modelCard("naiwa", '<span class="mc-badge premium">限时免费</span>'); anyCustom = true; }
+    if (anyCustom) html += '<div class="model-section-title">⭐ 个人定制模型</div>' + customHtml;
   }
   dom.modelCards.innerHTML = html;
 }
@@ -678,7 +700,7 @@ function renderAllMessages() {
     var M = MODELS[currentModel];
     var desc = M.desc || "开始聊天吧";
     if (currentModel === "swai" && swaiMode === "gentle") desc = "温柔体贴的AI助手 💕";
-    var wicon = currentModel==="ahy"?"👧":currentModel==="kute"?"🐸":currentModel==="nuanri"?"🌸":'<img src="swai-icon.jpg" style="width:56px;height:56px;border-radius:50%;object-fit:cover">';
+    var wicon = currentModel==="ahy"?"👧":currentModel==="kute"?"🐸":currentModel==="nuanri"?"🌸":'<img src="swai-avatar.jpg" style="width:56px;height:56px;border-radius:50%;object-fit:cover">';
     dom.messages.innerHTML = '<div class="welcome"><div class="wicon">'+wicon+'</div><h2>'+M.name+'</h2><p>'+desc+'</p>'+
       '<div class="quick-prompts">'+
       '<button class="quick-btn" onclick="sendMsg(\'解释量子计算\')">⚛️ 解释量子计算</button>'+
