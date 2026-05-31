@@ -121,11 +121,13 @@
 
     /* Input bar */
     .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:6px 10px calc(6px + env(safe-area-inset-bottom,0px));box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
-    .input-tools{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;justify-content:center}
-    .input-tool{width:30px;height:30px;border:none;border-radius:50%;background:var(--input-bg);color:var(--text2);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;padding:0}
-    .input-tool:active{background:var(--input-border);transform:scale(.9)}
+    .dialog-box{background:var(--input-bg);border:2px solid var(--input-border);border-radius:22px;padding:8px 12px 6px;box-shadow:0 -2px 16px rgba(0,0,0,0.05);transition:border-color .2s}
+    .dialog-box:focus-within{border-color:var(--accent);box-shadow:0 -2px 20px rgba(74,144,217,0.1)}
+    .input-tools{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;justify-content:center}
+    .input-tool{display:flex;align-items:center;gap:3px;padding:4px 9px;border:none;border-radius:14px;background:rgba(0,0,0,0.04);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap;transition:all .15s}
+    .input-tool:active{transform:scale(.95)}
     .input-tool.on{background:var(--accent);color:#fff}
-    .input-tool svg{width:15px;height:15px}
+    .input-tool svg{width:13px;height:13px;flex-shrink:0}
     .input-row{display:flex;align-items:flex-end;gap:8px}
     .btn-attach{width:36px;height:36px;border:none;border-radius:50%;background:var(--input-bg);color:var(--text2);font-size:18px;cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .btn-attach:active{background:var(--input-border);transform:scale(.92)}
@@ -225,13 +227,14 @@
     <div class="typing-dots" id="typing" style="display:none"><span></span><span></span><span></span></div>
   </div>
   <footer class="input-bar">
+    <div class="dialog-box">
     <div class="input-tools" id="inputTools" style="display:flex">
-      <button class="input-tool on" id="btnToggleMode" onclick="toggleMode()" title="切换模式"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></button>
-      <button class="input-tool" id="btnPro" onclick="togglePro()" title="PRO模型"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></button>
-      <button class="input-tool" id="btnSearchQA" onclick="toggleSearch()" title="联网搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
-      <button class="input-tool" onclick="sendQuick('joke')" title="讲个笑话"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></button>
-      <button class="input-tool" onclick="sendQuick('story')" title="讲个故事"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></button>
-      <button class="input-tool" onclick="sendQuick('word')" title="背个单词"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></button>
+      <button class="input-tool on" id="btnToggleMode" onclick="toggleMode()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>严谨客观</button>
+      <button class="input-tool" id="btnPro" onclick="togglePro()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>PRO</button>
+      <button class="input-tool" id="btnSearchQA" onclick="toggleSearch()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>搜索</button>
+      <button class="input-tool" onclick="sendQuick('joke')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>笑话</button>
+      <button class="input-tool" onclick="sendQuick('story')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>故事</button>
+      <button class="input-tool" onclick="sendQuick('word')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>单词</button>
     </div>
     <div class="file-preview" id="filePreview"></div>
     <div class="input-row">
@@ -242,7 +245,8 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.4.1</p>
+    </div>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.4.2</p>
   </footer>
 </div>
 
@@ -608,7 +612,9 @@ function updateModeBtn() {
   var btn = document.getElementById("btnToggleMode");
   if (!btn) return;
   btn.classList.toggle("on", swaiMode === "objective");
-  btn.title = swaiMode === "gentle" ? "模式：温柔体贴" : "模式：严谨客观";
+  btn.innerHTML = swaiMode === "gentle"
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>温柔体贴'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>严谨客观';
 }
 
 function toggleMode() {
