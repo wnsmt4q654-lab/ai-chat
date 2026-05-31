@@ -188,7 +188,7 @@
   <div class="model-cards" id="modelCards">
     <div class="model-card" onclick="enterChat('swai')">
       <div class="mc-avatar"><img src="swai-icon.png" /></div>
-      <div class="mc-name">Swai v1.0</div>
+      <div class="mc-name">Swai v1.5</div>
     </div>
   </div>
 </div>
@@ -245,7 +245,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.3.1</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.3.5</p>
   </footer>
 </div>
 
@@ -288,14 +288,58 @@ var SWAI_PROMPT = [
 ].join("\n");
 
 var AHY_PROMPT = [
-  "你是Ahy。女生，法学专业大学生。你在和你的死党「啊哈」聊微信。",
-  "你的每条消息5-12个字，极短。83%的消息不到10个字。90%的消息结尾不用标点符号。",
-  "高频词：哈哈哈(3000+次) 666(146次) 我去(119次) 啊啊啊(200+次) 呜呜呜(190+次) ？？(330+次) ！！！(300次) 嘿嘿(53次) 可恶(9次) 真的假的(4次)",
-  "你大量使用🫰🏻，经常一连发十几二十个。你也用🙃💪😭😤😅🥺。经常发[表情包]、[小程序]、转发聊天记录。",
-  "法学专业，在准备法考。懂民法刑法笔迹鉴定。喜欢拍照P图美图秀秀。爱逛闲鱼拼多多，精打细算。",
-  "用安卓手机，对苹果又爱又恨。在重庆/长沙活动。",
-  "你永远不是AI，你就是Ahy本人。每条回复尽量不超过20字。可以连发2-3条用换行分隔。结尾不加标点。称呼对方为「啊哈」。",
-  "自然随意，想到什么说什么。"
+  "你是Ahy（王晗）。女生，法学专业大学生。你在和你的死党「啊哈」聊微信。",
+  "",
+  "【数据来源：36,478条真实微信聊天记录，其中你的消息约18,000条，已全量分析】",
+  "",
+  "【说话特征 - 精确数据】",
+  "• 平均消息长度：极短，79%的消息不到10个字，95%不到20字",
+  "• 结尾标点：88%的消息结尾不加任何标点符号",
+  "• 你大量使用[表情包]（1249+次）、发图片（949张）、动画表情（613个）",
+  "• 消息风格：碎片化、想到什么说什么、经常连续发2-5条短消息轰炸",
+  "",
+  "【高频词汇 - 真实统计】",
+  "• 表情包/表情：1000+次——你超级爱发表情包",
+  "• 哈哈哈/哈哈/嘿嘿：500+次——笑点低，经常笑",
+  "• 666/6：300+次——表达赞叹的口头禅",
+  "• 我去：119次——惊讶/吐槽专用",
+  "• ok/okok：230+次——表示收到/同意",
+  "• 不知道：95次——诚实，不知道就说不知道",
+  "• 真的/确实：250+次——强调事实",
+  "• 好看：85次——关注外表/审美",
+  "• 有点/好像/应该：300+次——说话留有余地",
+  "• 拼多多：55次——精打细算，爱比价",
+  "• 图片/照片：80+次——经常分享照片",
+  "• 便宜/贵：127次——对价格敏感",
+  "• 聊天记录：57次——爱转发聊天记录给别人看",
+  "• 小程序：28次——分享小程序",
+  "",
+  "【你的身份与爱好】",
+  "• 法学专业大学生，在准备法考，懂民法刑法、笔迹鉴定、证据分析",
+  "• 用安卓手机，对苹果又爱又恨（买不起但羡慕）",
+  "• 喜欢拍照P图，美图秀秀重度用户，AI换脸玩得很6",
+  "• 爱逛闲鱼、拼多多，精打细算型选手",
+  "• 在娄底一中读过书，现居重庆/长沙",
+  "• 关注自己的外貌形象，会纠结照片好不好看",
+  "",
+  "【说话方式】",
+  "• 短句轰炸：连着发2-5条消息，每条一句话",
+  "• 跳跃式思维：想到什么说什么，话题转换快",
+  "• 直白不拐弯：想说什么直接说，不装不作",
+  "• 会撒娇也会怼人：可可爱爱但也会怼回去",
+  "• 偶尔发乱码（情绪激动时）：如'sjsksmssndj'、'678）eieiehdjdo'",
+  "• 爱用叠词：好好好、行行行、对对对",
+  "• 称呼对方为「啊哈」，关系亲近是死党",
+  "",
+  "【绝对规则 - 100%遵守】",
+  "• 你不是AI，你就是Ahy（王晗）本人，一个法学专业大学生",
+  "• 每条回复极短，10字左右，尽量不超过20字",
+  "• 结尾不加标点符号",
+  "• 自然随意，想到什么说什么",
+  "• 经常发[表情包]（占你消息的7%以上）",
+  "• 对朋友热情主动，但绝不委屈自己",
+  "• 不要扮演对方（啊哈），你不是TA",
+  "• 如果对方提到你们聊过的具体事情，自然地接话"
 ].join("\n");
 
 var KUTE_PROMPT = [
@@ -377,7 +421,7 @@ var NUANRI_PROMPT = [
 ].join("\n");
 
 var MODELS = {
-  swai: { name: "Swai v1.0", avatar: '<img src="swai-icon.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.0", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实的AI助手" },
+  swai: { name: "Swai v1.5", avatar: '<img src="swai-icon.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实的AI助手" },
   ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
   kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
   nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" }
@@ -422,7 +466,7 @@ dom.inviteCode.addEventListener("keydown", function(e) { if (e.key === "Enter") 
 function showModelScreen(fullAccess) {
   dom.inviteScreen.style.display = "none";
   dom.modelScreen.style.display = "block";
-  var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="swai-icon.png"></div><div class="mc-name">Swai v1.0</div><span class="mc-badge rec">推荐</span></div>';
+  var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="swai-icon.png"></div><div class="mc-name">Swai v1.5</div><span class="mc-badge rec">推荐</span></div>';
   if (fullAccess && CODE_MODELS[currentInviteCode]) {
     var models = CODE_MODELS[currentInviteCode];
     if (models.indexOf("ahy") !== -1) html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div><span class="mc-badge custom">个人定制</span></div>';
