@@ -312,15 +312,15 @@ var KUTE_PROMPT = [
 
 // ===== STATE =====
 var currentModel = null;
-var messages = [];
+var messages = [];          // ALWAYS a reference to messageCache[currentModel]
 var msgsKey = "";
 var streaming = false;
-var abortController = null;  // for cancelling in-flight requests
-var chatSessionId = 0;      // incremented on each enterChat to detect stale callbacks
-var swaiMode = "objective"; // "objective" | "gentle" — Swai 模式切换
-var webSearch = false;      // 联网搜索开关
-var messageCache = {};      // 内存缓存 { "swai": [...], "ahy": [...] } 防止气泡丢失
-var pendingFiles = [];      // 待发送的文件 [{name, data, type}]
+var abortController = null;
+var chatSessionId = 0;
+var swaiMode = "objective";
+var webSearch = false;
+var messageCache = {};      // { "swai": [...], "ahy": [...] } — messages is a LIVE reference
+var pendingFiles = [];
 
 var SWAI_GENTLE_PROMPT = [
   "你的名字叫Swai，你的开发者是ccy。",
@@ -488,31 +488,24 @@ function enterChat(modelId) {
   streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
   currentModel = modelId;
   msgsKey = "chat-msgs-" + modelId;
-  // 恢复消息：内存缓存 ＞ localStorage ＞ 空
-  messages = [];
-  var fromCache = messageCache[modelId];
-  var fromLS = null;
-  try { fromLS = localStorage.getItem(msgsKey); } catch(e) {}
-  // 取两者中消息更多的那一份
-  var cachedMsgs = (fromCache && fromCache.length > 0) ? fromCache : null;
-  var lsMsgs = null;
-  if (fromLS) { try { var p = JSON.parse(fromLS); if (Array.isArray(p) && p.length > 0) lsMsgs = p; } catch(e) {} }
-  if (cachedMsgs && lsMsgs) {
-    messages = cachedMsgs.length >= lsMsgs.length ? cachedMsgs.slice() : lsMsgs;
-  } else if (cachedMsgs) {
-    messages = cachedMsgs.slice();
-  } else if (lsMsgs) {
-    messages = lsMsgs;
+
+  // Ensure cache slot exists — try localStorage first, then empty
+  if (!messageCache[modelId]) {
+    messageCache[modelId] = [];
+    try {
+      var saved = localStorage.getItem(msgsKey);
+      if (saved) { var p = JSON.parse(saved); if (Array.isArray(p) && p.length > 0) messageCache[modelId] = p; }
+    } catch(e) {}
   }
-  console.log("enterChat model="+modelId+" cache="+(cachedMsgs?cachedMsgs.length:0)+" ls="+(lsMsgs?lsMsgs.length:0)+" final="+messages.length);
+  // messages is a LIVE REFERENCE — any push/splice immediately updates the cache
+  messages = messageCache[modelId];
+
   var M = MODELS[modelId];
   dom.chatTitle.textContent = M.title;
   dom.modelScreen.style.display = "none";
   dom.chatView.style.display = "flex";
-  // Show quick actions only for Swai
   var qa = document.getElementById("quickActions");
   if (qa) { qa.style.display = modelId === "swai" ? "flex" : "none"; }
-  // Typing dots: no avatar for Swai
   if (modelId === "swai") dom.typing.classList.add("no-avatar");
   else dom.typing.classList.remove("no-avatar");
   updateModeBtn();
@@ -520,12 +513,12 @@ function enterChat(modelId) {
 }
 
 function goBack() {
-  // NOTE: do NOT increment chatSessionId here — we want the in-flight
-  // stream abort-handler to still be able to save partial AI content.
-  // chatSessionId is only bumped in enterChat, after loading from cache.
-  saveMsgs();       // save current state (may update again when abort fires)
+  saveMsgs();
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
-  dom.chatView.style.display = "none"; dom.modelScreen.style.display = "block"; currentModel = null;
+  dom.chatView.style.display = "none"; dom.modelScreen.style.display = "block";
+  // DON'T set messages=[] or currentModel=null — the live reference stays intact
+  // for any in-flight abort handler to push into. Next enterChat just re-points
+  // messages to the same cache slot.
   streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
   var qa = document.getElementById("quickActions");
   if (qa) qa.style.display = "none";
@@ -590,8 +583,7 @@ function toggleMode() {
   swaiMode = swaiMode === "objective" ? "gentle" : "objective";
   updateModeBtn();
   // Clear current chat and restart with new mode
-  messages = [];
-  messageCache["swai"] = [];
+  messages.length = 0;
   saveMsgs();
   renderAllMessages();
   // Flash a hint
@@ -628,8 +620,7 @@ function toggleSearch() {
 function clearHistory() {
   if (!currentModel || messages.length === 0) return;
   if (!confirm("确定要清空当前聊天记录吗？此操作不可撤销。")) return;
-  messages = [];
-  if (currentModel) { messageCache[currentModel] = []; }
+  messages.length = 0;  // clears the live reference directly
   saveMsgs();
   renderAllMessages();
   dom.settingsDrop.classList.remove("show");
@@ -642,6 +633,9 @@ function sendMsg(text) {
   var hasFiles = pendingFiles.length > 0;
   if (!text && !hasFiles) return;
   var sessionId = chatSessionId;
+  var chatArray = messages;        // captured reference — always pushes to the right cache slot
+  var capturedModel = currentModel; // for save key, survives goBack's currentModel=null
+  var capturedKey = msgsKey;
   streaming = true; dom.btnSend.disabled = true; dom.typing.style.display = "flex"; scrollBottom();
 
   // Build display content for user bubble
@@ -675,9 +669,9 @@ function sendMsg(text) {
       apiContent += "[图片OCR: "+f2.name+"]\n"+f2.ocrText;
     }
   }
-  messages.push({role:"user", content:displayContent, rawContent: hasTextFiles ? apiContent : null});
+  chatArray.push({role:"user", content:displayContent, rawContent: hasTextFiles ? apiContent : null});
 
-  renderMsg("user", displayContent); saveMsgs();
+  renderMsg("user", displayContent); saveMsgsKey(capturedKey);
   var filesToSend = pendingFiles.slice();
   pendingFiles = [];
   renderFilePreview();
@@ -719,7 +713,7 @@ function sendMsg(text) {
         if (result.done) {
           resolved = true; abortController = null;
           var finalText = fullContent || "…";
-          if (chatSessionId === sessionId) { messages.push({role:"assistant", content:finalText}); saveMsgs(); }
+          if (chatSessionId === sessionId) { chatArray.push({role:"assistant", content:finalText}); saveMsgsKey(capturedKey); }
           contentDiv.innerHTML = renderMD(finalText); hl();
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
@@ -738,7 +732,7 @@ function sendMsg(text) {
         if (resolved || chatSessionId !== sessionId) return;
         resolved = true; abortController = null;
         if (fullContent && chatSessionId === sessionId) {
-          messages.push({role:"assistant", content:fullContent}); saveMsgs();
+          chatArray.push({role:"assistant", content:fullContent}); saveMsgsKey(capturedKey);
           contentDiv.innerHTML = renderMD(fullContent); hl();
           var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
           msgDiv.querySelector(".msg-body").appendChild(act);
@@ -753,7 +747,7 @@ function sendMsg(text) {
     if (resolved || chatSessionId !== sessionId) return;
     resolved = true; abortController = null;
     if (fullContent && chatSessionId === sessionId) {
-      messages.push({role:"assistant", content:fullContent}); saveMsgs();
+      chatArray.push({role:"assistant", content:fullContent}); saveMsgsKey(capturedKey);
       contentDiv.innerHTML = renderMD(fullContent); hl();
       var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>';
       msgDiv.querySelector(".msg-body").appendChild(act);
@@ -766,14 +760,27 @@ function sendMsg(text) {
 
 function showErr(msg) { var d = document.createElement("div"); d.className = "error"; d.textContent = "⚠ "+msg; dom.messages.appendChild(d); scrollBottom(); }
 function saveMsgs() {
-  // Use msgsKey to derive model ID even if currentModel was reset
-  var modelId = currentModel || (msgsKey ? msgsKey.replace("chat-msgs-","") : null);
-  if (modelId && messages.length > 0) {
-    messageCache[modelId] = messages.slice();
-  }
   if (msgsKey) {
-    try { var clone = messages.map(function(m){return {role:m.role, content:m.content}}); localStorage.setItem(msgsKey, JSON.stringify(clone)); } catch(e) { console.error("saveMsgs err:", e); }
+    try {
+      var clone = messages.map(function(m){return {role:m.role, content:m.content}});
+      localStorage.setItem(msgsKey, JSON.stringify(clone));
+    } catch(e) { console.error("saveMsgs err:", e); }
   }
+}
+
+// Save using a specific key (for async handlers where msgsKey may have changed)
+function saveMsgsKey(key) {
+  if (!key) return;
+  try {
+    var modelId = key.replace("chat-msgs-", "");
+    var arr = messageCache[modelId];
+    if (arr && arr.length > 0) {
+      var clone = arr.map(function(m){return {role:m.role, content:m.content}});
+      localStorage.setItem(key, JSON.stringify(clone));
+    } else {
+      localStorage.removeItem(key);
+    }
+  } catch(e) { console.error("saveMsgsKey err:", e); }
 }
 
 // ===== EVENTS =====
