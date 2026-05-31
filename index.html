@@ -485,19 +485,23 @@ function enterChat(modelId) {
   streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
   currentModel = modelId;
   msgsKey = "chat-msgs-" + modelId;
-  // 1) 优先内存缓存 — 这才是最可靠的（解决气泡消失的核心）
-  if (messageCache[modelId] && messageCache[modelId].length > 0) {
-    messages = messageCache[modelId].slice();
-    console.log("enterChat model="+modelId+" fromCache="+messages.length+" msgs");
-  } else {
-    // 2) 其次 localStorage（页面刷新后恢复）
-    messages = [];
-    try {
-      var saved = localStorage.getItem(msgsKey);
-      if (saved) { var p = JSON.parse(saved); if (Array.isArray(p) && p.length > 0) messages = p; }
-    } catch(e) { console.error("loadMsgs err:", e); messages = []; }
-    console.log("enterChat model="+modelId+" fromLS="+messages.length+" msgs");
+  // 恢复消息：内存缓存 ＞ localStorage ＞ 空
+  messages = [];
+  var fromCache = messageCache[modelId];
+  var fromLS = null;
+  try { fromLS = localStorage.getItem(msgsKey); } catch(e) {}
+  // 取两者中消息更多的那一份
+  var cachedMsgs = (fromCache && fromCache.length > 0) ? fromCache : null;
+  var lsMsgs = null;
+  if (fromLS) { try { var p = JSON.parse(fromLS); if (Array.isArray(p) && p.length > 0) lsMsgs = p; } catch(e) {} }
+  if (cachedMsgs && lsMsgs) {
+    messages = cachedMsgs.length >= lsMsgs.length ? cachedMsgs.slice() : lsMsgs;
+  } else if (cachedMsgs) {
+    messages = cachedMsgs.slice();
+  } else if (lsMsgs) {
+    messages = lsMsgs;
   }
+  console.log("enterChat model="+modelId+" cache="+(cachedMsgs?cachedMsgs.length:0)+" ls="+(lsMsgs?lsMsgs.length:0)+" final="+messages.length);
   var M = MODELS[modelId];
   dom.chatTitle.textContent = M.title;
   dom.modelScreen.style.display = "none";
@@ -707,12 +711,23 @@ function sendMsg(text) {
   }
   if (sysP) apiMsgs.unshift({role:"system", content:sysP});
 
+  // Detect if any message has images → switch to vision model
+  var useModel = API_MODEL;
+  for (var j = 0; j < apiMsgs.length; j++) {
+    if (Array.isArray(apiMsgs[j].content)) {
+      for (var k = 0; k < apiMsgs[j].content.length; k++) {
+        if (apiMsgs[j].content[k].type === "image_url") { useModel = "deepseek-chat"; break; }
+      }
+      if (useModel !== API_MODEL) break;
+    }
+  }
+
   abortController = new AbortController();
   var signal = abortController.signal;
 
   fetch("https://api.deepseek.com/v1/chat/completions", {
     method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer "+API_KEY},
-    body:JSON.stringify({model:API_MODEL, messages:apiMsgs, stream:true, temperature:0.7, max_tokens:4096}),
+    body:JSON.stringify({model:useModel, messages:apiMsgs, stream:true, temperature:0.7, max_tokens:4096}),
     signal:signal
   }).then(function(resp) {
     if (!resp.ok) return resp.text().then(function(t){throw new Error("API "+resp.status+": "+t.slice(0,200))});
@@ -771,10 +786,14 @@ function sendMsg(text) {
 
 function showErr(msg) { var d = document.createElement("div"); d.className = "error"; d.textContent = "⚠ "+msg; dom.messages.appendChild(d); scrollBottom(); }
 function saveMsgs() {
-  if (currentModel && messages.length > 0) {
-    messageCache[currentModel] = messages.slice();
+  // Use msgsKey to derive model ID even if currentModel was reset
+  var modelId = currentModel || (msgsKey ? msgsKey.replace("chat-msgs-","") : null);
+  if (modelId && messages.length > 0) {
+    messageCache[modelId] = messages.slice();
   }
-  try { var clone = messages.map(function(m){return {role:m.role, content:m.content}}); localStorage.setItem(msgsKey, JSON.stringify(clone)); } catch(e) { console.error("saveMsgs err:", e); }
+  if (msgsKey) {
+    try { var clone = messages.map(function(m){return {role:m.role, content:m.content}}); localStorage.setItem(msgsKey, JSON.stringify(clone)); } catch(e) { console.error("saveMsgs err:", e); }
+  }
 }
 
 // ===== EVENTS =====
