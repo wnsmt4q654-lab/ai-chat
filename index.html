@@ -244,7 +244,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v13</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v14</p>
   </footer>
 </div>
 
@@ -533,7 +533,6 @@ function goBack() {
 
 // ===== RENDER =====
 function renderAllMessages() {
-  dom.messages.innerHTML = "";
   if (messages.length === 0) {
     var M = MODELS[currentModel];
     var desc = M.desc || "开始聊天吧";
@@ -547,9 +546,24 @@ function renderAllMessages() {
       '</div></div>';
     return;
   }
+  // Build all HTML at once — more reliable than incremental DOM ops
+  var M = MODELS[currentModel];
+  var h = '';
   for (var i = 0; i < messages.length; i++) {
-    try { renderMsg(messages[i].role, messages[i].content); } catch(e) { console.error("renderMsg "+i+" err:", e); }
+    var role = messages[i].role;
+    var content = messages[i].content;
+    var showAvatar = (role === "assistant" && currentModel !== "swai");
+    var avatarHtml = '';
+    if (showAvatar) avatarHtml = role === "user" ? userAvatar : M.avatar;
+    h += '<div class="msg '+role+(showAvatar?'':' no-avatar')+'">';
+    if (showAvatar) h += '<div class="msg-avatar">'+avatarHtml+'</div>';
+    h += '<div class="msg-body"><div class="msg-content">'+renderMD(content)+'</div>';
+    h += '<div class="msg-actions"><button class="btn-copy" onclick="copyMsg(this)">复制</button></div>';
+    h += '</div></div>';
   }
+  dom.messages.innerHTML = h;
+  hl();
+  scrollBottom();
 }
 
 function renderMsg(role, content) {
