@@ -245,7 +245,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.4.4</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.4.5</p>
   </footer>
 </div>
 
@@ -539,7 +539,7 @@ function enterChat(modelId) {
 function goBack() {
   saveMsgs();
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
-  dom.chatView.classList.remove("show"); dom.modelScreen.style.display = "block";
+  dom.chatView.classList.remove("show"); dom.modelScreen.classList.add("show");
   // DON'T set messages=[] or currentModel=null — the live reference stays intact
   // for any in-flight abort handler to push into. Next enterChat just re-points
   // messages to the same cache slot.
