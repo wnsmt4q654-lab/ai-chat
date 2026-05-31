@@ -19,7 +19,6 @@
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
     html,body{height:100dvh;height:-webkit-fill-available;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-webkit-user-select:none;user-select:none}
-    body{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
     :root{
       --bg:#f0f4f8;--nav-bg:rgba(255,255,255,0.72);--card-bg:rgba(255,255,255,0.78);--card-border:rgba(0,0,0,0.06);
       --text:#111;--text2:#888;--input-bg:rgba(255,255,255,0.85);--input-border:rgba(0,0,0,0.1);
@@ -35,7 +34,7 @@
     body{display:flex;flex-direction:column;background:var(--bg)}
 
     /* ===== INVITE ===== */
-    #inviteScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 24px;text-align:center;background:var(--invite-bg)}
+    #inviteScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:max(30px,env(safe-area-inset-top)) 24px max(30px,env(safe-area-inset-bottom));text-align:center;background:var(--invite-bg)}
     #inviteScreen.hide{display:none!important}
     #inviteScreen .logo{font-size:64px;margin-bottom:12px}
     #inviteScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
@@ -50,7 +49,7 @@
     .invite-info{font-size:10px;color:#bbb;margin-top:20px}
 
     /* ===== MODEL SCREEN ===== */
-    #modelScreen{flex:1;overflow-y:auto;padding:40px 20px 30px;text-align:center;background:var(--invite-bg);display:none!important}
+    #modelScreen{flex:1;overflow-y:auto;padding:max(40px,env(safe-area-inset-top)) 20px max(30px,env(safe-area-inset-bottom));text-align:center;background:var(--invite-bg);display:none!important}
     #modelScreen.show{display:block!important}
     #modelScreen .logo{font-size:64px;margin-bottom:12px}
     #modelScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
@@ -70,7 +69,7 @@
     #chatView.show{display:flex!important}
 
     /* Nav */
-    .wx-nav{display:flex;align-items:center;padding:0 12px;height:46px;background:var(--nav-bg);flex-shrink:0;border-bottom:1px solid var(--card-border)}
+    .wx-nav{display:flex;align-items:center;padding:env(safe-area-inset-top) 12px 0;height:calc(46px + env(safe-area-inset-top));background:var(--nav-bg);flex-shrink:0;border-bottom:1px solid var(--card-border)}
     .wx-nav .back{font-size:15px;color:var(--text);cursor:pointer;padding:8px 6px;flex-shrink:0;width:56px;border:none;background:none;font-family:inherit}
     .wx-nav .title{flex:1;text-align:center;font-size:17px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .wx-nav .right-btn{font-size:20px;color:var(--text);cursor:pointer;padding:8px;width:44px;text-align:center;flex-shrink:0;border:none;background:none;position:relative}
@@ -129,7 +128,7 @@
     .error{background:rgba(231,76,60,0.08);color:#e74c3c;padding:10px 14px;border-radius:14px;font-size:12px;margin:6px 0}
 
     /* Input bar */
-    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:6px 10px;box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
+    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:6px 10px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
     .input-tools{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;justify-content:center}
     .input-tool{display:flex;align-items:center;gap:3px;padding:4px 9px;border:none;border-radius:14px;background:rgba(0,0,0,0.04);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap;transition:all .15s}
     .input-tool:active{transform:scale(.95)}
@@ -251,7 +250,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.5.1</p>
+    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.5.2</p>
   </footer>
 </div>
 
