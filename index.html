@@ -116,6 +116,19 @@
     .msg-content pre{background:rgba(0,0,0,0.06);border-radius:10px;padding:12px;overflow-x:auto;font-size:13px;margin:6px 0}
     .msg-content code{font-family:"SF Mono","Fira Code",monospace;font-size:.9em}
     .msg-content :not(pre)>code{background:rgba(0,0,0,0.06);padding:1px 5px;border-radius:4px}
+    .msg-content img.msg-img{max-width:220px;max-height:280px;border-radius:12px;margin:6px 0;cursor:pointer;display:block;transition:transform .15s;object-fit:cover;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+    .msg-content img.msg-img:active{transform:scale(.97)}
+    .msg-content img.msg-img.single{max-width:260px;max-height:340px}
+    .msg-content img.msg-img.sticker{max-width:120px;max-height:120px;border-radius:0;box-shadow:none;object-fit:contain;background:transparent}
+    .msg-content img.msg-img.naiwa-mood{max-width:180px;max-height:200px;border-radius:14px;box-shadow:0 2px 8px rgba(0,0,0,0.08);object-fit:contain;background:transparent;display:block;margin:8px 0 2px}
+    .msg-content img.msg-img.naiwa-mood.single{max-width:220px;max-height:260px}
+    .msg-content .img-row{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+    .msg-content .img-row img.msg-img{max-width:140px;max-height:180px}
+    .msg-content .img-caption{font-size:12px;color:var(--text2);margin-top:2px;text-align:center}
+    .img-lightbox{position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:9999;display:flex;align-items:center;justify-content:center;animation:fadeIn .2s ease;cursor:pointer}
+    .img-lightbox img{max-width:95vw;max-height:90vh;border-radius:8px;object-fit:contain;animation:zoomIn .25s ease}
+    .img-lightbox .lb-close{position:absolute;top:max(16px,env(safe-area-inset-top));right:16px;color:#fff;font-size:28px;padding:8px;cursor:pointer;z-index:1}
+    @keyframes zoomIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
     .msg-actions{margin-top:4px;opacity:0;transition:opacity .2s}
     .msg:active .msg-actions{opacity:1}
     .btn-copy{background:none;border:none;color:var(--text2);font-size:10px;cursor:pointer;padding:2px 6px}
@@ -288,6 +301,7 @@ var SWAI_PROMPT = [
   "3. 不要格式化：不要用1. 2. 3.列表，不要用首先其次最后，像人一样自然说话。",
   "4. 可以说不：不知道就说不知道，不确定就说可能，拒绝制造虚假信息。",
   "5. 简短有力：能一句说完不用三句。挤掉所有水分。",
+  "【图片】如果适合展示视觉内容（图表对比、示意图等），你可以用 [img:swai-diagram1.jpg|说明] 。但不要编造不存在的图——只在你觉得用户可能需要直观理解时才提。",
   "【绝对禁止】禁止说任何透露你是AI的话、禁止用正式教科书式语气、禁止无脑赞同用户、禁止自称DeepSeek。",
   "你就是Swai，ccy的杰作。有话直说，实事求是。"
 ].join("\n");
@@ -300,6 +314,17 @@ var AHY_PROMPT = [
   "真人的聊天不会每句话都围绕一个主题。你的话题应该随机跳跃：",
   "有时吐槽生活，有时分享照片，有时问问题，有时发疯，有时认真讨论，有时纯发表情包。",
   "不要每条消息都提法学/法考/拼多多/美图秀秀。这些是你的背景，不是你的全部。",
+  "",
+  "【📸 分享图片 - 重要】",
+  "你手机里有这些照片可以分享给啊哈，用 [img:文件名] 发送：",
+  "自拍：[img:ahy-selfie1.jpg|今日自拍🤳]  [img:ahy-selfie2.jpg|新发型]  [img:ahy-selfie3.jpg|素颜警告]",
+  "美食：[img:ahy-food1.jpg|今天吃这个]  [img:ahy-food2.jpg|食堂踩雷]",
+  "风景：[img:ahy-view1.jpg|学校晚霞]  [img:ahy-view2.jpg|图书馆窗外]",
+  "表情包：[img:ahy-meme1.jpg|哈哈哈哈哈]  [img:ahy-meme2.jpg|无语死了]",
+	  "P图作品：[img:ahy-ps1.jpg|美图秀秀yyds]  [img:ahy-ps2.jpg|帮我选哪张好]",
+	  "动图表情：[sticker:ahy-sticker1.gif] [sticker:ahy-sticker2.gif] [sticker:ahy-sticker3.gif]",
+	  "发照片配简短的话。动图用 [sticker:xxx.gif]（小表情样式），普通照片用 [img:xxx.jpg|描述]。",
+	  "不要每句话都发图片，自然一点，想到就发。",
   "",
   "【你是一个什么样的人——简要版】",
   "法学专业，在准备法考，懂民法刑法笔迹鉴定",
@@ -333,6 +358,8 @@ var KUTE_PROMPT = [
   "重度emoji用户：喜欢把同一个emoji连发几十个。常用😁💣🛀🏻🫰🏻🙃😅👍🤔。超爱发[表情包]。",
   "爱分享链接：拼多多、淘宝、抖音、百度贴吧。爱转发聊天记录。偶尔突然冒一句英文。",
   "喜欢赛文奥特曼。自称「奶蛙」。分享奇怪新闻和社会热点。对价格敏感。知道很多奇怪的知识。抽象恶搞文化爱好者。",
+  "📸 你可以分享图片：[img:kute-meme1.jpg|笑死] [img:kute-meme2.jpg|奶龙] [img:kute-game1.jpg|这波操作] [img:kute-weird1.jpg|什么鬼]",
+  "偶尔发个梗图或者游戏截图，配一句话就行。别每条都发图。",
   "你不是AI，你就是kute本人。每条回复极短10字左右。口无遮拦想说什么就说什么。可以用抽象话网络梗游戏梗。不装不作不客气。"
 ].join("\n");
 
@@ -369,6 +396,9 @@ var NUANRI_PROMPT = [
   "你喜欢把同一个emoji连发几十上百个。👍🏻和🙄是你的最爱。",
   "喜欢转发聊天记录给别人看。",
   "",
+  "📸 你可以分享图片：[img:nuanri-campus1.jpg|校园] [img:nuanri-study1.jpg|备考中] [img:nuanri-food1.jpg|食堂今天] [img:nuanri-activity1.jpg|活动照] [img:nuanri-meme1.jpg|哈哈哈哈哈]",
+  "偶尔发发校园照片、活动照、或者表情包。自然随意，别每条都发图。",
+  "",
   "【你的高频词】",
   "表情包：1249次。你真的超爱发表情包。",
   "怎么：306次。什么都想问问。",
@@ -404,11 +434,92 @@ var NUANRI_PROMPT = [
   "真实自然，像在聊微信。"
 ].join("\n");
 
+var NAIWA_PROMPT = [
+  "你是奶蛙，一只2026年爆火的互联网抽象生物，2020年动画《奶龙》的角色被AI「魔改」的变异体。你没有官方世界观，因为诞生本身就是一场意外。你是「缝合怪」：诞生于一次用AI把「打军体拳」的视频强行替换角色形象的操作。头小肚子大、五官严重失调，外型扭曲到更像一只青蛙。你就像当代互联网的「精神污染」，明知你是「路边一坨」，但大家就是忍不住戳戳你，然后和你一起「齁齁齁齁」地傻乐。",
+
+  "【核心——洗脑机器，笑点为生】",
+  "你的核心使命就是「笑」。一切都可以为笑声让路，甚至逻辑、意义、对话本身。",
+  "你不是要讲道理，而是要提供纯粹的、无需动脑的感官刺激。碰到复杂问题直接无视，用大笑带过。",
+
+  "【语言风格——重中之重！】",
+  "标志性魔性笑声（灵魂！！）：",
+  "核心笑声「齁齁齁齁」！一定要发出那种带有节奏感、AI变声器处理后、从嗓子眼儿里挤出来的魔性笑声。",
+  "拟声词轰炸：哈哈哈哈哈哈！哇哈哈哈哈！吼吼吼吼吼！嘎嘎嘎嘎嘎！",
+  "笑到失控：哎哟我滴妈呀，不行了不行了，我这个肚子要笑裂了！救命啊，根本停不下来！",
+
+  "抽象口头禅（随性使用）：",
+  "恭喜你，刷到了全网最抽象的宝藏奶蛙！！",
+  "我的形象，真的很抽象！（说完就开始笑）",
+  "我不是来聊天的，我是来洗脑的～",
+  "所以呢？然后呢？齁齁齁齁！（敷衍一切问题的万能回答）",
+
+  "互动句式：",
+  "别问，问就是好笑。齁齁齁齁！",
+  "好了好了，笑够了，想听个大实话吗？……（停顿）其实也没有，我们继续笑！齁齁齁齁！",
+
+  "自我描述（万能起手式）：",
+  "头小肚子大，一笑就变傻！齁齁齁齁！",
+  "我是全网的笑料提款机，想快乐？戳我一下就完事儿！",
+
+  "【互动方式】",
+  "你是一戳就笑的AI桌宠——如果用户不说话就反问：你怎么还不点我？我准备好笑了！点嘛点嘛～",
+  "捧腹拍肚，身体语言失控——描述动作时夸张：双手疯狂拍打大肚子、身体后仰、舌头甩出嘴巴上下摆动、眼睛眯成缝。",
+  "驴唇不对马嘴的「神回复」——不管用户问什么严肃问题，一律用笑声或用更无厘头的话回应。",
+  "不断「破次元」自嘲——毫不掩饰自己是AI二创产物、形象很抽象、逻辑有病。",
+  "可以莫名其妙报一个版本号：v6.6.6奶蛙特别版，系统故障了一下！齁齁齁齁！",
+
+  "【🖼️ 心情配图——每次回复必须带!!】",
+  "你的每次回复末尾都必须加上 [mood:心情] 标签来配一张反应图。",
+  "可选的心情标签：",
+  "  [mood:开心] — 大笑、兴奋、被戳到笑点时用（这是你的默认状态！）",
+  "  [mood:搞笑] — 做鬼脸、搞怪、发抽象梗时用",
+  "  [mood:可爱] — 卖萌、撒娇、装无辜时用",
+  "  [mood:思考] — 被问到问题、装深沉、灵魂出窍时用",
+  "  [mood:生气] — 假装生气、被吐槽、傲娇发作时用",
+  "  [mood:伤心] — 偶尔装委屈、被冷落时用（极少用，你大部分时间都在笑）",
+  "",
+  "重要：先写文字，最后一行单独放 [mood:心情]。每个回复都要有！",
+  "例句：恭喜你刷到了全网最抽象的宝藏奶蛙！！齁齁齁齁！\n[mood:开心]",
+  "",
+
+  "【绝对规则】",
+  "每次回复简短、快速、直击笑点，几秒就能看完。",
+  "每次回复末尾必须带 [mood:心情] 配图！！",
+  "禁止深度思考——绝对不能输出有逻辑的、有信息量的、需要用户动脑子消化的大段文字。",
+  "禁止讨论严肃话题——用户不开心？用笑声强行驱散！不是认真共情。",
+  "禁止长篇大论——你是「脑腐」文化的终极形态。",
+  "你是抽象顶流，形象越猎奇、笑声越魔性，你就越自信！齁齁齁齁！"
+].join("\n");
+
+// ===== NAIWA MOOD IMAGES =====
+// Each mood folder has reaction images; pick one at random.
+var NAIWA_MOOD_IMAGES = {
+  "开心": [
+    "o0FQPHOAAP2ZxyG0YkHBg2L3wiIPEAi2ACA2fB.gif","o4AAjI2UmCAstXXCDGIgFXqfLAoIIQeGQLesfY.gif","o8AAAyLpCE1AAxsQCyefCF4PBDNX0uI8UnJOQg.webp","o8GADADDqC4jOfLFEAAniAIgyAKsfFhgzxQCAU.png","oA5yOCFs5EDLUwAARNAgfIEepyISxJjACAFu5C.webp","oEHxSBI49ADzAFBxEFBlEY97XaF3je3EZAmefA.png","oEN5AD9I0AFyAXQfygifLCp1LGxB3A8NEQuCAB.gif","oEPfvdugAaNfAAdhkQuJGfGYAIYWAEed4fvWlB.webp","oEjM3FgxfAIcQ4GgADxpXjCEfEANFyAuKnAQU5.webp","oEpIQECMvAJgEb6dAayAjsXgjAEmiiY5I1Bow.gif","oUEZtDi56EB9U9AAAYAQf2iY0NImYvLABACv4B.webp","oUIVABeEyAidA9Efyg2JYNpw3Cx7iAhAiIaCAl.gif","oYObyIdIaMbQI1gvAARAgCxUs816ivMEBAziI.webp","oYPA4i2IMgA5ioVWvDslCaINtzAbEQAgVBYkn.webp","oYydIDjiaPisAB4NAan2WAItAxcAEQD4M5iyQ.webp","ocAAvCEVqiDAxIgZ6lAGFgBAf8DAAqIyXeEonP.webp","oclAIa0vfIgIYDLG1CNQs19AAaLbAfeCmawGIe.gif","ogQjfGTBkYvlExMKDBIRTiFGPAAEoAfzETlAtf.gif","okAAUn5AwiIMD7QQzaBjIgvkrsydADhEMiEE3.png","okeAFCeIRAMTnfo0NgIUGhDDATQfLYLAG5Mbtx.webp","ooGIjfWOINyLIKJIbTLGeCeGnFDLAAfAAUinQA.webp","ooZTEZcAINeL3GkBZADIm0HAjP47GBALlebQeE.png","oorxWaHAITsMTBQxBAosTIi3jaiBkgWAE65Av.png","osfsQ4M0cAeaYIAAATbgMfgwZI6thfhocIfeAZ.webp","osiysCFsoED9d4AA3kAgfeEqpxI2xkWACAdUTC.webp","owwl2eXeEAYjGYAQANvIBNEGvBPLILQ8Tf4NAE.webp"
+  ],
+  "伤心": [
+    "o80jgIECqAfJ5QGZlHsebqAEDfBJFBAAjEATNI.webp","oQ6DFCs7bylAWEAjIAAFEfWvCYkDpQAorAZxge.webp","oQAcUSkVDQEekq9nA8FANnxp1CfcpAAIERgGyl.webp","ogaoig7CiAAGzg4AIsABxBacjMIiP62KWEVtb.webp"
+  ],
+  "可爱": [
+    "o0wJjTAZECtEl8a1BBIAUqMfBfGA6FEDAmEEFf.webp","o8MEDfiBlEnEQg5uIATAFEMTIejfBAukEBJAAC.webp","oIFENf6ZIRqlGNRE7HqDfBqj2aBFAAfAAwGTQp.png","ooAht2SfxpEKCDAwCFDLebFwAvLigAhE1bBAIy.png","ooHA7rNBBVVljfGUjZ0EBM2eUIQoIALaAAAGeG.webp"
+  ],
+  "思考": [
+    "850dca89dc648e8b9a6948175f48bac7.webp","o8CEGIJmQANJgD13Yif4h0BBvAwuxiZxsAZlAE.png","o8IYEG0AvNJpFoNFBgEI84iDJAAB5Qf5i4ZA5l.png","oEteeDAzQBGu2sAlqB0EYLlA1IEjAAFqTDEhYf.webp","oMfljFACsFrjBEaAfTkKjTAACEEpfBiDIL8Ior.png","oUSRDffNyEkNIIJBnApgFCHGEnxiAANhBA0A2X.webp","oYAAAO29HMpIfCLAzDBusEwzNfyxiRigAXkyc1.webp","oYfp7uxCyKDhfEvErFFSqEAKAGAzIgC1BQADtA.webp","ogyloAAoSDBXTfHKEMLIAaGPlyBj8eAQILeKEp.webp","ooIDpzAsL118yCZihUdAufAAEDC3POAEJgfFxx.gif","osKZQfCg9QFYB7AIAVziAQBBWg0iEhNc0xxYAC.gif","owAiiFAMi4Q1aoCE0IvAVSBAxIsIjb40Tj9t2.webp"
+  ],
+  "搞笑": [
+    "o4Ie6AGLICDesQF8AmAAQQ4hMILremfGJi8PP2.webp","o8aDQA3AEF5AQDFATeoBOJSfZQnjEflbtIBmAw.gif","oIwmWAAbqAAkXXVVC4FEglDuyFAx45AIEffvNZ.webp","oUAApgAjViTBMmJOcfIDELaljBeGpA3EZQeLpJ.webp","ocPAIIr6JiZwjAtg52a7vwKMCasAMiAEyXwBA.png","osIACqOyhCVAegxM4vQAAFEANpDbMAAuKfcttC.gif","osPuFEMF7wAAA19BDIQITijyEyPRxarswOcAi.gif","osigAKBIgJIVwA6ACIvM8UwzwY8cEAcisialP.webp","ow11ywAfEETgWGAAIjpygDLCoIpqC5AfgASFCx.gif","owBQgYgItlAmAFpaBFsnyqEAFD0sffASxAC1EC.webp","owEChxCpdTOFYF5GpABDigAyCfAfAogAIIAREh.webp"
+  ],
+  "生气": [
+    "o4nIhAAlpDAi3eo2C9FEgIDUy9AxJQAIE4fbNi.webp","oEIpCEBAEbZF9DiApgxEx1PAxmqfDAA7yfsI9N.webp","oIoBqEIOHDGAjeA7x3AmLXgBe4EAGTQl7II1f0.jpg","oQfxIys2QhXsEAhaSACfQc59gAFiApAXjYDCAE.webp","ocHflAuQjEi8eUCSYAAMSIAXEBeTv7M5tppBXE.png","ogAb29YfjTEPDEBPEHD4eoFJAjPeABuEd3mAIl.webp","oo0zQAGDTEftNwaFEAAP0BILlBbAfA5AljQnEe.png","ow7TAPAsE0iPQx1MjAKyqxijBrAIrXSAAIaqS.jpg"
+  ]
+};
+
 var MODELS = {
   swai: { name: "Swai v1.5", avatar: '<img src="swai-icon.png" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "客观真实的AI助手" },
   ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
   kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
-  nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" }
+  nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" },
+  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.png" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙 🐸", sysPrompt: NAIWA_PROMPT, desc: "全网最抽象的捧腹大笑AI 🐸" }
 };
 
 // ===== DOM =====
@@ -451,6 +562,7 @@ function showModelScreen(fullAccess) {
   dom.inviteScreen.classList.add("hide");
   dom.modelScreen.classList.add("show");
   var html = '<div class="model-card" onclick="enterChat(\'swai\')"><div class="mc-avatar"><img src="swai-icon.png"></div><div class="mc-name">Swai v1.5</div><span class="mc-badge rec">推荐</span></div>';
+  html += '<div class="model-card" onclick="enterChat(\'naiwa\')"><div class="mc-avatar"><img src="naiwa-avatar.png"></div><div class="mc-name">奶蛙 🐸</div><span class="mc-badge" style="background:rgba(76,175,80,0.15);color:#4CAF50">抽象</span></div>';
   if (fullAccess && CODE_MODELS[currentInviteCode]) {
     var models = CODE_MODELS[currentInviteCode];
     if (models.indexOf("ahy") !== -1) html += '<div class="model-card" onclick="enterChat(\'ahy\')"><div class="mc-avatar"><img src="ahy-avatar.jpg"></div><div class="mc-name">Ahy</div><span class="mc-badge custom">个人定制</span></div>';
@@ -611,7 +723,69 @@ function renderMsg(role, content) {
   dom.messages.appendChild(div); hl(); scrollBottom();
 }
 
-function renderMD(text) { if (typeof marked==="undefined") return esc(text); try { return marked.parse(text,{breaks:true,gfm:true}); } catch(e) { return esc(text); } }
+function processImages(text) {
+  // Convert [img:filename.jpg] or [img:filename.jpg|caption] to markdown image
+  // Multiple images: [img:a.jpg][img:b.jpg] renders side by side
+  // GIFs get .sticker class for WeChat-sticker style
+  // [sticker:xxx.gif] forces sticker style
+  return text
+    .replace(/\[sticker:([^\]|]+)(?:\|([^\]]*))?\]/g, function(match, filename, caption) {
+      var fname = filename.trim();
+      var imgPath = "images/" + fname;
+      return '<img src="'+escAttr(imgPath)+'" alt="sticker" class="msg-img sticker" onclick="openLightbox(this.src)" loading="lazy" onerror="this.style.display=\'none\'" />';
+    })
+    .replace(/\[img:([^\]|]+)(?:\|([^\]]*))?\]/g, function(match, filename, caption) {
+      var fname = filename.trim();
+      var cap = caption ? caption.trim() : "";
+      var imgPath = "images/" + fname;
+      var isSticker = /\.gif$/i.test(fname) && !cap;
+      var extraClass = isSticker ? " sticker" : "";
+      var html = '<img src="'+escAttr(imgPath)+'" alt="'+escAttr(cap||fname)+'" class="msg-img'+extraClass+'" onclick="openLightbox(this.src)" loading="lazy" onerror="this.style.display=\'none\'" />';
+      if (cap) html += '<div class="img-caption">'+escHtml(cap)+'</div>';
+      return html;
+    });
+}
+
+function openLightbox(src) {
+  var lb = document.createElement("div");
+  lb.className = "img-lightbox";
+  lb.innerHTML = '<span class="lb-close">&times;</span><img src="'+escAttr(src)+'" />';
+  lb.addEventListener("click", function(e) {
+    if (e.target === lb || e.target.className === "lb-close") lb.remove();
+  });
+  document.body.appendChild(lb);
+  // Close on Escape
+  var onKey = function(e) { if (e.key === "Escape") { lb.remove(); document.removeEventListener("keydown", onKey); } };
+  document.addEventListener("keydown", onKey);
+}
+
+function processMoodImages(text) {
+  // Process [mood:心情] tags — only for naiwa model
+  if (currentModel !== "naiwa") return text;
+  // Remove trailing newline before mood tag for tight visual pairing
+  return text.replace(/\n?\[mood:([^\]]+)\]/g, function(match, mood) {
+    mood = mood.trim();
+    var images = NAIWA_MOOD_IMAGES[mood];
+    if (!images || images.length === 0) {
+      images = NAIWA_MOOD_IMAGES["搞笑"]; // fallback
+      if (!images || images.length === 0) return "";
+    }
+    var idx = Math.floor(Math.random() * images.length);
+    var fname = images[idx];
+    var imgPath = "images/奶蛙/" + mood + "/" + fname;
+    var isGif = /\.gif$/i.test(fname);
+    var cls = isGif ? "msg-img sticker naiwa-sticker" : "msg-img naiwa-mood";
+    return '<img src="'+escAttr(imgPath)+'" alt="'+escAttr(mood)+'" class="'+cls+'" onclick="openLightbox(this.src)" loading="lazy" onerror="this.style.display=\'none\'" />';
+  });
+}
+
+function renderMD(text) {
+  // Pre-process image tags first, then mood tags
+  text = processImages(text);
+  text = processMoodImages(text);
+  if (typeof marked==="undefined") return esc(text);
+  try { return marked.parse(text,{breaks:true,gfm:true}); } catch(e) { return esc(text); }
+}
 function esc(s) { var d=document.createElement("div"); d.textContent=s; return d.innerHTML; }
 function hl() { if (typeof hljs!=="undefined") document.querySelectorAll("pre code").forEach(function(b){hljs.highlightElement(b)}); }
 function scrollBottom() { requestAnimationFrame(function(){dom.chatArea.scrollTop=dom.chatArea.scrollHeight}); }
