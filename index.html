@@ -420,7 +420,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.4</p>
+    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.5</p>
   </footer>
 </div>
 
@@ -1265,6 +1265,7 @@ function processImagesPost(html) {
 function processImages(text) {
   return processImagesPost(text);
 }
+function openLightbox(src) {
   var lb=document.createElement("div");lb.className="img-lightbox";lb.innerHTML='<span class="lb-close">&times;</span><img src="'+escAttr(src)+'" />';
   lb.addEventListener("click",function(e){if(e.target===lb||e.target.className==="lb-close")lb.remove()});document.body.appendChild(lb);
   var onKey=function(e){if(e.key==="Escape"){lb.remove();document.removeEventListener("keydown",onKey)}};document.addEventListener("keydown",onKey);
