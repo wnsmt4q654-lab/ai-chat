@@ -63,7 +63,13 @@
     #modelScreen h2{font-size:24px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px}
     #modelScreen .brand-tagline{font-size:13px;color:var(--text2);margin-bottom:6px;line-height:1.6;max-width:280px;margin-left:auto;margin-right:auto}
     #modelScreen .brand-tagline em{font-style:normal;color:var(--accent);font-weight:600}
-    #modelScreen .sub{font-size:13px;color:var(--text2);margin-bottom:18px}
+    #modelScreen .sub{font-size:13px;color:var(--text2);margin-bottom:12px}
+    .cta-btn{display:block;width:100%;max-width:300px;margin:0 auto 20px;padding:16px 24px;border:none;border-radius:16px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;background:linear-gradient(135deg,#6366f1,#4A90D9);box-shadow:0 4px 20px rgba(99,102,241,0.35);transition:all .15s;font-family:inherit;letter-spacing:.5px}
+    .cta-btn:active{transform:scale(.97);opacity:.9}
+    .collapse-toggle{font-size:12px;color:var(--accent);cursor:pointer;padding:8px 0;text-align:center;user-select:none}
+    .collapse-toggle:active{opacity:.7}
+    .collapsed{display:none!important}
+    .recent-label{font-size:11px;font-weight:600;color:var(--text2);text-align:center;padding:0 0 8px;letter-spacing:1px}
     .model-cards{max-width:340px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
     .model-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;position:relative;overflow:visible}
     .model-card:active{background:var(--input-bg);transform:scale(.98)}
@@ -317,14 +323,16 @@
   <h2>SeaWhy AI</h2>
   <p class="brand-tagline">像鲸鱼在<em>信息海洋</em>中深潜，寻找问题背后的<em>Why</em> 🐋</p>
   <p class="sub">选择 AI 模型，开始对话</p>
+  <button class="cta-btn" onclick="enterChat('swai')">⚡ 立即体验 Swai 2.0</button>
+  <div class="recent-label" id="recentLabel" style="display:none">最近使用</div>
   <div class="model-cards" id="modelCards"></div>
+  <div id="moreModels" style="display:none"></div>
+  <div class="collapse-toggle" id="collapseToggle" onclick="toggleMoreModels()" style="display:none">▼ 更多模型</div>
   <div style="text-align:center;margin-top:12px">
     <button class="plaza-link" onclick="showCreator()" style="margin-right:8px">⚡ 创建角色</button>
     <button class="plaza-link" onclick="showPlaza()" style="margin-right:8px">🌐 AI广场</button>
     <button class="plaza-link" onclick="showShop()">🛒 积分商城</button>
-  </div>
-  <div style="text-align:center;margin-top:6px">
-    <button class="plaza-link" onclick="showAbout()">📋 关于我们</button>
+    <button class="plaza-link" onclick="showAbout()">📋 关于</button>
   </div>
 </div>
 
@@ -358,17 +366,17 @@
         <div id="prefLength" style="margin-bottom:8px">
           <span style="font-size:10px;color:var(--text2)">回复长度</span>
           <div class="s-row">
-            <button class="s-btn" onclick="setPref('length','short',this)">📝 简短</button>
-            <button class="s-btn active" onclick="setPref('length','normal',this)">📄 标准</button>
-            <button class="s-btn" onclick="setPref('length','long',this)">📚 详细</button>
+            <button class="s-btn" onclick="setPref('length','short',this)">简洁</button>
+            <button class="s-btn active" onclick="setPref('length','normal',this)">标准</button>
+            <button class="s-btn" onclick="setPref('length','long',this)">深度</button>
           </div>
         </div>
         <div id="prefTone" style="margin-bottom:8px">
-          <span style="font-size:10px;color:var(--text2)">额外语气</span>
+          <span style="font-size:10px;color:var(--text2)">回答风格</span>
           <div class="s-row">
-            <button class="s-btn" onclick="setPref('tone','creative',this)">🎨 创意</button>
-            <button class="s-btn" onclick="setPref('tone','professional',this)">💼 专业</button>
-            <button class="s-btn active" onclick="setPref('tone','none',this)">✨ 默认</button>
+            <button class="s-btn active" onclick="setPref('tone','none',this)">通用</button>
+            <button class="s-btn" onclick="setPref('tone','professional',this)">专业</button>
+            <button class="s-btn" onclick="setPref('tone','creative',this)">创意</button>
           </div>
         </div>
         <div class="s-label" style="margin-top:8px">👤 用户</div>
@@ -399,17 +407,15 @@
   </main>
   <footer class="input-bar">
     <div class="input-tools" id="inputTools" style="display:flex">
-      <span class="tool-group-label">模式</span>
-      <button class="input-tool on" id="btnToggleMode" onclick="toggleMode()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>严谨客观</button>
-      <span class="tool-group-divider" id="dividerTools"></span>
-      <span class="tool-group-label" id="labelTools">工具</span>
-      <button class="input-tool" id="btnPro" onclick="togglePro()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>PRO</button>
-      <button class="input-tool" id="btnSearchQA" onclick="toggleSearch()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>联网</button>
-      <span class="tool-group-divider" id="dividerFun"></span>
-      <span class="tool-group-label" id="labelFun">娱乐</span>
-      <button class="input-tool" onclick="sendQuick('joke')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>笑话</button>
-      <button class="input-tool" onclick="sendQuick('story')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>故事</button>
-      <button class="input-tool" onclick="sendQuick('word')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>单词</button>
+      <button class="input-tool" id="btnToggleMode" onclick="toggleMode()" title="严谨/温柔模式"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>严谨</button>
+      <button class="input-tool" id="btnSearchQA" onclick="toggleSearch()" title="联网搜索"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>联网</button>
+      <button class="input-tool" id="btnPro" onclick="togglePro()" title="深度思考"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>深度</button>
+      <button class="input-tool" id="btnMoreTools" onclick="toggleMoreTools()" title="更多"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
+      <span id="extraTools" style="display:none;display:flex;gap:3px">
+        <button class="input-tool" onclick="sendQuick('joke')">笑话</button>
+        <button class="input-tool" onclick="sendQuick('story')">故事</button>
+        <button class="input-tool" onclick="sendQuick('word')">单词</button>
+      </span>
     </div>
     <div class="file-preview" id="filePreview"></div>
     <div class="input-row">
@@ -420,7 +426,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.9</p>
+    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.10</p>
   </footer>
 </div>
 
@@ -694,7 +700,7 @@ var NAIWA_MOOD_IMAGES = {
 
 // ===== MODELS (personal models: no descriptions) =====
 var MODELS = {
-  swai: { name: "Swai v2.0", avatar: '<img src="swai-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v2.0", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "严谨分析 · 法律学习 · 论文辅导 · 代码开发", caps: ["严谨分析","论文辅导","代码开发","法律学习","知识问答","逻辑推理"], tag:"official" },
+  swai: { name: "Swai v2.0", avatar: '<img src="swai-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v2.0", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "深度推理 · 联网搜索 · 文件解析 · 法律优化", caps: ["深度推理","联网搜索","文件解析","代码开发","论文辅导","法律优化"], tag:"official" },
   ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "", caps: [], tag:"personal" },
   kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "", caps: [], tag:"personal" },
   nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "", caps: [], tag:"personal" },
@@ -828,35 +834,93 @@ document.addEventListener('touchend', function(e) {
 });
 
 // ===== SHOW MODEL SCREEN =====
+// ===== RECENT MODELS =====
+var RECENT_MODELS = [];
+try { RECENT_MODELS = JSON.parse(localStorage.getItem("ai-recent-models") || "[]"); } catch(e) {}
+function trackRecent(id) {
+  RECENT_MODELS = RECENT_MODELS.filter(function(x){return x !== id});
+  RECENT_MODELS.unshift(id);
+  if (RECENT_MODELS.length > 4) RECENT_MODELS.pop();
+  try { localStorage.setItem("ai-recent-models", JSON.stringify(RECENT_MODELS)); } catch(e) {}
+}
+
 function showModelScreen(fullAccess) {
   showScreen("modelScreen");
   var hasCustom = fullAccess && CODE_MODELS[currentInviteCode] && CODE_MODELS[currentInviteCode].length > 0;
-  var html = '<div class="model-section-title">🐋 通用模型</div>';
-  html += '<div class="model-section-sub">多场景AI助手，覆盖学习、工作与娱乐</div>';
-  html += modelCard("swai", '<span class="mc-badge rec">推荐</span>');
-  if (hasCustom && CODE_MODELS[currentInviteCode].indexOf("naiwa") !== -1) {
-    html += modelCard("naiwa", '<span class="mc-badge naiwa-tag">娱乐</span>');
+
+  // Swai always shown first
+  var mainHtml = modelCard("swai", '<span class="mc-badge rec">推荐</span>');
+
+  // Recently used (exclude swai)
+  var recents = RECENT_MODELS.filter(function(id){return id !== "swai" && (MODELS[id] || CUSTOM_CHARS[id])});
+  var recentHtml = '';
+  if (recents.length > 0) {
+    document.getElementById("recentLabel").style.display = "block";
+    for (var ri = 0; ri < Math.min(recents.length, 3); ri++) {
+      var rid = recents[ri], rM = MODELS[rid] || CUSTOM_CHARS[rid];
+      if (!rM) continue;
+      var rBadge = '';
+      if (rid === "naiwa") rBadge = '<span class="mc-badge naiwa-tag">娱乐</span>';
+      else if (rid === "xiaojiqi") rBadge = '<span class="mc-badge premium">专属</span>';
+      else if (CUSTOM_CHARS[rid]) rBadge = '<span class="mc-badge custom">自创</span>';
+      else if (["ahy","kute","nuanri"].indexOf(rid) !== -1) rBadge = '<span class="mc-badge premium">个人定制</span>';
+      recentHtml += modelCard(rid, rBadge);
+    }
+    dom.modelCards.innerHTML = mainHtml + recentHtml;
+  } else {
+    document.getElementById("recentLabel").style.display = "none";
+    dom.modelCards.innerHTML = mainHtml;
   }
+
+  // Collapsible more models
+  var moreHtml = '';
   if (hasCustom) {
     var models = CODE_MODELS[currentInviteCode];
-    var customHtml = '';
-    if (models.indexOf("ahy") !== -1) customHtml += modelCard("ahy", '<span class="mc-badge premium">个人定制</span>');
-    if (models.indexOf("kute") !== -1) customHtml += modelCard("kute", '<span class="mc-badge premium">个人定制</span>');
-    if (models.indexOf("nuanri") !== -1) customHtml += modelCard("nuanri", '<span class="mc-badge premium">个人定制</span>');
-    if (customHtml) html += '<div class="model-section-title">👤 个人定制模型</div>' + customHtml;
-    // xiaojiqi: premium protected model (030325 only)
-    if (models.indexOf("xiaojiqi") !== -1) {
-      html += '<div class="model-section-title">💋 专属模型</div>';
-      html += '<div class="model-section-sub">仅限邀请码 030325 用户可见 · 配图已加密保护</div>';
-      html += modelCard("xiaojiqi", '<span class="mc-badge premium">专属</span>');
-    }
+    // naiwa
+    if (models.indexOf("naiwa") !== -1 && recents.indexOf("naiwa") === -1)
+      moreHtml += modelCard("naiwa", '<span class="mc-badge naiwa-tag">娱乐</span>');
+    // personal models
+    if (models.indexOf("ahy") !== -1 && recents.indexOf("ahy") === -1)
+      moreHtml += modelCard("ahy", '<span class="mc-badge premium">个人定制</span>');
+    if (models.indexOf("kute") !== -1 && recents.indexOf("kute") === -1)
+      moreHtml += modelCard("kute", '<span class="mc-badge premium">个人定制</span>');
+    if (models.indexOf("nuanri") !== -1 && recents.indexOf("nuanri") === -1)
+      moreHtml += modelCard("nuanri", '<span class="mc-badge premium">个人定制</span>');
+    // xiaojiqi
+    if (models.indexOf("xiaojiqi") !== -1 && recents.indexOf("xiaojiqi") === -1)
+      moreHtml += modelCard("xiaojiqi", '<span class="mc-badge premium">专属</span>');
   }
+  // custom chars
   var customKeys = Object.keys(CUSTOM_CHARS);
-  if (customKeys.length > 0) {
-    html += '<div class="model-section-title">⚡ 我的创作</div>';
-    for (var ck = 0; ck < customKeys.length; ck++) html += modelCard(customKeys[ck], '<span class="mc-badge custom">自创</span>');
+  for (var ck = 0; ck < customKeys.length; ck++) {
+    if (recents.indexOf(customKeys[ck]) === -1)
+      moreHtml += modelCard(customKeys[ck], '<span class="mc-badge custom">自创</span>');
   }
-  dom.modelCards.innerHTML = html;
+
+  var moreEl = document.getElementById("moreModels");
+  var toggleEl = document.getElementById("collapseToggle");
+  if (moreHtml) {
+    moreEl.innerHTML = moreHtml;
+    moreEl.style.display = "block";
+    moreEl.classList.add("collapsed");
+    toggleEl.style.display = "block";
+    toggleEl.textContent = "▼ 更多模型 (" + (moreHtml.split('model-card').length - 1) + ")";
+  } else {
+    moreEl.style.display = "none";
+    toggleEl.style.display = "none";
+  }
+}
+
+function toggleMoreModels() {
+  var el = document.getElementById("moreModels");
+  var btn = document.getElementById("collapseToggle");
+  if (el.classList.contains("collapsed")) {
+    el.classList.remove("collapsed");
+    btn.textContent = "▲ 收起";
+  } else {
+    el.classList.add("collapsed");
+    btn.textContent = "▼ 更多模型 (" + (el.querySelectorAll('.model-card').length) + ")";
+  }
 }
 
 // ===== AI PLAZA =====
@@ -1139,10 +1203,23 @@ function updatePrefVisibility(modelId) {
 // ===== TOOLBAR VISIBILITY =====
 function updateToolbarVisibility(modelId) {
   var tools = document.getElementById("inputTools"); if (!tools) return;
-  tools.style.display = "flex"; var isSwai = modelId === "swai";
-  ["btnToggleMode","btnPro","btnSearchQA"].forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = isSwai ? "" : "none"; });
-  ["dividerTools","labelTools"].forEach(function(id) { var el = document.getElementById(id); if (el) el.style.display = isSwai ? "" : "none"; });
-  var modeLabel = tools.querySelector(".tool-group-label"); if (modeLabel) modeLabel.style.display = isSwai ? "" : "none";
+  tools.style.display = "flex";
+  var isSwai = modelId === "swai";
+  document.getElementById("btnToggleMode").style.display = isSwai ? "" : "none";
+  document.getElementById("btnPro").style.display = isSwai ? "" : "none";
+  document.getElementById("btnSearchQA").style.display = isSwai ? "" : "none";
+}
+
+function toggleMoreTools() {
+  var el = document.getElementById("extraTools");
+  var btn = document.getElementById("btnMoreTools");
+  if (el.style.display === "none" || !el.style.display) {
+    el.style.display = "flex";
+    btn.classList.add("on");
+  } else {
+    el.style.display = "none";
+    btn.classList.remove("on");
+  }
 }
 
 // ===== NAVIGATION =====
@@ -1159,7 +1236,7 @@ function enterChat(modelId) {
   updateToolbarVisibility(modelId);
   updatePrefVisibility(modelId);
   if (modelId === "swai") dom.typing.classList.add("no-avatar"); else dom.typing.classList.remove("no-avatar");
-  updateModeBtn(); trackModelUse(modelId); addPoints(1); renderAllMessages();
+  updateModeBtn(); trackModelUse(modelId); trackRecent(modelId); addPoints(1); renderAllMessages();
   var expectedCount = messages.length;
   setTimeout(function() { if (currentModel === modelId && messages.length !== expectedCount) renderAllMessages(); }, 250);
 }
@@ -1168,7 +1245,7 @@ function goBack() {
   saveMsgs();
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
   dom.chatView.classList.remove("show"); streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
-  document.getElementById("inputTools").style.display = "none";
+  var tools = document.getElementById("inputTools"); if (tools) tools.style.display = "none";
   showModelScreen(hasFullAccess);
 }
 
@@ -1285,8 +1362,8 @@ function updateModeBtn() {
   var btn = document.getElementById("btnToggleMode"); if (!btn) return;
   btn.classList.toggle("on", swaiMode === "objective");
   btn.innerHTML = swaiMode === "gentle"
-    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>温柔体贴'
-    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>严谨客观';
+    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>温柔'
+    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>严谨';
 }
 function toggleMode() {
   if (streaming) return;
