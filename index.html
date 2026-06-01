@@ -258,14 +258,6 @@
     @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-6px);opacity:1}}
     .error{background:rgba(231,76,60,0.08);color:#e74c3c;padding:10px 14px;border-radius:14px;font-size:12px;margin:6px 0}
 
-    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:6px 10px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
-    /* ===== TOOLS PANEL (slides up from input) ===== */
-    .tools-panel{display:none;padding:8px 14px;background:var(--nav-bg);border-top:1px solid var(--card-border);gap:6px;flex-wrap:wrap;align-items:center}
-    .tools-panel.show{display:flex}
-    .tools-panel .tp-btn{display:flex;align-items:center;gap:4px;padding:6px 12px;border:none;border-radius:16px;background:var(--input-bg);color:var(--text);cursor:pointer;font-size:12px;font-family:inherit;white-space:nowrap;transition:all .15s}
-    .tools-panel .tp-btn:active{transform:scale(.95)}
-    .tools-panel .tp-btn.on{background:var(--accent);color:#fff}
-    .tools-panel .tp-sep{width:1px;height:18px;background:var(--card-border);margin:0 2px}
     /* Toolbar row */
     .input-tools{display:flex;gap:4px;flex-wrap:nowrap;margin-bottom:6px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
     .input-tools::-webkit-scrollbar{display:none}
@@ -273,7 +265,7 @@
     .input-tool:active{transform:scale(.95)}
     .input-tool.on{background:var(--accent);color:#fff}
     /* Input bar */
-    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:8px 12px calc(8px + env(safe-area-inset-bottom))}
+    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:8px 12px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
     .input-row{display:flex;align-items:flex-end;gap:8px}
     .btn-plus{width:36px;height:36px;border:none;border-radius:50%;background:var(--input-bg);color:var(--text2);font-size:22px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s}
     .btn-plus:active{background:var(--input-border);transform:scale(.92)}
@@ -440,7 +432,7 @@
       </button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 网页由ccy制作 · v2.0.13</p>
+    <p class="input-hint">🐋 SeaWhy AI · 网页由ccy制作 · v2.0.14</p>
   </footer>
 </div>
 
