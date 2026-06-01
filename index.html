@@ -420,7 +420,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.6</p>
+    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.7</p>
   </footer>
 </div>
 
@@ -1394,11 +1394,11 @@ var WH_PICS = ["IMG_4922.JPG","IMG_4923.JPG","IMG_4924.JPG","IMG_4925.JPG","IMG_
 function autoAppendXiaojiqiImage(text) {
   if (currentModel !== "xiaojiqi") return text;
   if (!text) return text;
-  // If AI already included an image, keep it
-  if (/\[img:wh\//i.test(text)) return text;
-  // Auto-append a random photo
+  // Already has an image (raw HTML or [img:...] tag)?
+  if (/images\/wh\//i.test(text) || /\[img:wh\//i.test(text)) return text;
+  // Directly inject HTML img tag — bypass regex/markdown pipeline entirely
   var pic = WH_PICS[Math.floor(Math.random() * WH_PICS.length)];
-  return text + '\n\n[img:wh/' + pic + ']';
+  return text + '\n\n<img src="images/wh/' + encodeURI(pic) + '" class="msg-img" onclick="openLightbox(this.src)" loading="lazy" style="max-width:220px;max-height:280px;border-radius:12px;display:block;object-fit:cover" onerror="this.style.display=\'none\'">';
 }
 function saveMsgs() {
   if (!msgsKey || messages.length === 0) return;
