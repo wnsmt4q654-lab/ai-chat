@@ -7,12 +7,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="apple-mobile-web-app-title" content="SeaWhy AI" />
+  <meta name="description" content="SeaWhy AI — 像鲸鱼一样在信息海洋中深潜，寻找问题背后的Why。多模型AI聊天平台。" />
   <link rel="apple-touch-icon" href="swai-avatar.jpg" />
   <link rel="manifest" href="manifest.json" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <title>SeaWhy AI</title>
+  <title>SeaWhy AI · 深潜信息海洋</title>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link id="hlTheme" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/atom-one-light.min.css" />
   <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
@@ -36,12 +37,15 @@
     /* ===== INVITE ===== */
     #inviteScreen{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:max(30px,env(safe-area-inset-top)) 24px max(30px,env(safe-area-inset-bottom));text-align:center;background:var(--invite-bg)}
     #inviteScreen.hide{display:none!important}
-    #inviteScreen .logo{font-size:64px;margin-bottom:12px}
-    #inviteScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
-    #inviteScreen .sub{font-size:13px;color:var(--text2);margin-bottom:28px}
-    .invite-input{width:100%;max-width:280px;padding:15px 20px;border:2px solid var(--input-border);border-radius:28px;font-size:18px;text-align:center;letter-spacing:4px;outline:none;font-family:inherit;background:var(--input-bg);color:var(--text);margin-bottom:14px;transition:all .2s}
+    #inviteScreen .logo{font-size:40px;margin-bottom:10px}
+    #inviteScreen .logo img{width:52px;height:52px;border-radius:50%;object-fit:cover;box-shadow:0 4px 20px rgba(74,144,217,0.25)}
+    #inviteScreen h2{font-size:24px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px}
+    #inviteScreen .brand-tagline{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6;max-width:280px}
+    #inviteScreen .brand-tagline em{font-style:normal;color:var(--accent);font-weight:600}
+    #inviteScreen .sub{font-size:12px;color:var(--text2);margin-bottom:20px;letter-spacing:1px}
+    .invite-input{width:100%;max-width:280px;padding:14px 18px;border:2px solid var(--input-border);border-radius:28px;font-size:17px;text-align:center;letter-spacing:4px;outline:none;font-family:inherit;background:var(--input-bg);color:var(--text);margin-bottom:12px;transition:all .2s}
     .invite-input:focus{border-color:var(--accent)}
-    .invite-btn{width:100%;max-width:280px;padding:15px;border:none;border-radius:28px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:10px;color:#fff;transition:all .15s}
+    .invite-btn{width:100%;max-width:280px;padding:14px;border:none;border-radius:28px;font-size:16px;font-weight:600;cursor:pointer;margin-bottom:8px;color:#fff;transition:all .15s}
     .invite-btn:active{opacity:.8;transform:scale(.98)}
     .invite-btn{background:var(--accent)}
     .invite-skip{width:100%;max-width:280px;padding:12px;border:none;border-radius:28px;font-size:13px;cursor:pointer;background:transparent;color:var(--text2)}
@@ -49,28 +53,32 @@
     .invite-info{font-size:10px;color:#bbb;margin-top:20px}
 
     /* ===== MODEL SCREEN ===== */
-    #modelScreen{flex:1;overflow-y:auto;padding:max(40px,env(safe-area-inset-top)) 20px max(30px,env(safe-area-inset-bottom));text-align:center;background:var(--invite-bg);display:none!important}
+    #modelScreen{flex:1;overflow-y:auto;padding:max(36px,env(safe-area-inset-top)) 20px max(30px,env(safe-area-inset-bottom));text-align:center;background:var(--invite-bg);display:none!important}
     #modelScreen.show{display:block!important}
-    #modelScreen .logo{font-size:64px;margin-bottom:12px}
-    #modelScreen h2{font-size:22px;font-weight:700;margin-bottom:6px}
-    #modelScreen .sub{font-size:14px;color:var(--text2);margin-bottom:32px}
-    .model-cards{max-width:320px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
-    .model-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:15px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .15s;position:relative;overflow:visible}
+    #modelScreen .logo{font-size:40px;margin-bottom:10px}
+    #modelScreen .logo img{width:52px;height:52px;border-radius:50%;object-fit:cover;box-shadow:0 4px 20px rgba(74,144,217,0.25)}
+    #modelScreen h2{font-size:24px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px}
+    #modelScreen .brand-tagline{font-size:13px;color:var(--text2);margin-bottom:6px;line-height:1.6;max-width:280px;margin-left:auto;margin-right:auto}
+    #modelScreen .brand-tagline em{font-style:normal;color:var(--accent);font-weight:600}
+    #modelScreen .sub{font-size:13px;color:var(--text2);margin-bottom:28px}
+    .model-cards{max-width:340px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
+    .model-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;position:relative;overflow:visible}
     .model-card:active{background:var(--input-bg);transform:scale(.98)}
-    .mc-avatar{width:50px;height:50px;border-radius:50%;flex-shrink:0;overflow:hidden}
+    .mc-avatar{width:46px;height:46px;border-radius:50%;flex-shrink:0;overflow:hidden}
     .mc-avatar img{width:100%;height:100%;object-fit:cover}
-    .mc-info{flex:1;min-width:0}
-    .mc-name{font-size:17px;font-weight:500}
-    .mc-desc{font-size:12px;color:var(--text2);margin-top:2px;line-height:1.4}
-    .mc-badge{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:500;margin-left:auto;flex-shrink:0}
+    .mc-info{flex:1;min-width:0;text-align:left}
+    .mc-name{font-size:16px;font-weight:600;line-height:1.3}
+    .mc-desc{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.5}
+    .mc-badge{font-size:10px;padding:3px 10px;border-radius:12px;font-weight:500;margin-left:auto;flex-shrink:0;white-space:nowrap}
     .mc-badge.rec{background:var(--accent-light);color:var(--accent)}
     .mc-badge.premium{background:linear-gradient(135deg,rgba(245,166,35,0.2),rgba(212,160,23,0.12));color:#C7920A;border:1px solid rgba(212,160,23,0.25)}
     .mc-badge.custom{background:rgba(0,0,0,0.05);color:var(--text2)}
+    .mc-badge.naiwa-tag{background:rgba(76,175,80,0.15);color:#388E3C;border:1px solid rgba(76,175,80,0.2)}
     .mc-limited{position:absolute;top:2px;left:12px;background:linear-gradient(135deg,#E74C3C,#C0392B);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;line-height:1;box-shadow:0 2px 8px rgba(231,76,60,0.35);letter-spacing:.5px;z-index:1;animation:limitedPulse 2s ease-in-out infinite}
     @keyframes limitedPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-    .mc-badge.naiwa-tag{background:rgba(76,175,80,0.15);color:#388E3C;border:1px solid rgba(76,175,80,0.2)}
-    .model-section-title{font-size:13px;font-weight:600;color:var(--text);text-align:left;padding:20px 0 4px 4px;letter-spacing:1px}
+    .model-section-title{font-size:12px;font-weight:700;color:var(--text);text-align:left;padding:18px 0 4px 4px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
     .model-section-title:first-child{padding-top:0}
+    .model-section-sub{font-size:10px;color:var(--text2);text-align:left;padding:0 0 8px 4px;font-weight:400;letter-spacing:0}
 
     /* ===== CHAT ==== */
     #chatView{flex:1;display:none!important;flex-direction:column;overflow:hidden;overscroll-behavior:none;background:var(--bg)}
@@ -98,13 +106,23 @@
     .chat-area{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:12px 14px;-webkit-overflow-scrolling:touch;background:var(--bg);touch-action:pan-y}
     .messages{display:flex;flex-direction:column;gap:14px;padding-bottom:8px}
 
-    .welcome{text-align:center;padding:60px 20px 30px}
-    .welcome .wicon{font-size:52px;margin-bottom:10px}
-    .welcome h2{font-size:18px;font-weight:600;margin-bottom:6px}
-    .welcome p{font-size:13px;color:var(--text2);margin-bottom:24px}
+    .welcome{text-align:center;padding:40px 16px 24px}
+    .welcome .wicon{font-size:48px;margin-bottom:8px}
+    .welcome .wicon img{width:48px;height:48px;border-radius:50%;object-fit:cover}
+    .welcome h2{font-size:18px;font-weight:700;margin-bottom:4px}
+    .welcome .welcome-model-desc{font-size:12px;color:var(--text2);margin-bottom:8px;line-height:1.5}
+    .welcome .capability-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:0 0 18px}
+    .capability-chip{background:var(--card-bg);border:1px solid var(--card-border);border-radius:14px;padding:5px 10px;font-size:11px;color:var(--text2);white-space:nowrap}
+    .capability-chip.highlight{background:var(--accent-light);color:var(--accent);border-color:transparent;font-weight:500}
+    .welcome .section-label{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
     .quick-prompts{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:340px;margin:0 auto}
     .quick-btn{background:var(--card-bg);border:1px solid var(--card-border);color:var(--text);padding:12px 10px;border-radius:12px;font-size:12px;cursor:pointer;text-align:left;transition:all .15s}
     .quick-btn:active{background:var(--input-bg)}
+
+    /* Model intro card on welcome */
+    .model-intro-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:14px 16px;text-align:left;max-width:340px;margin:0 auto 18px}
+    .model-intro-card .mi-name{font-size:14px;font-weight:600;margin-bottom:4px}
+    .model-intro-card .mi-desc{font-size:12px;color:var(--text2);line-height:1.5}
 
     /* Bubbles */
     .msg{display:flex;gap:8px;padding:0;opacity:0;transform:translateY(30px) scale(.7);transition:opacity .3s cubic-bezier(.34,1.56,.64,1),transform .3s cubic-bezier(.34,1.56,.64,1);will-change:transform,opacity}
@@ -151,11 +169,13 @@
 
     /* Input bar */
     .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:6px 10px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
-    .input-tools{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px;justify-content:center}
+    .input-tools{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px;align-items:center;justify-content:center}
     .input-tool{display:flex;align-items:center;gap:3px;padding:4px 9px;border:none;border-radius:14px;background:rgba(0,0,0,0.04);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap;transition:all .15s}
     .input-tool:active{transform:scale(.95)}
     .input-tool.on{background:var(--accent);color:#fff}
     .input-tool svg{width:13px;height:13px;flex-shrink:0}
+    .tool-group-label{font-size:9px;color:var(--text2);padding:2px 4px;flex-shrink:0;font-weight:700;text-transform:uppercase;letter-spacing:.8px;opacity:.6}
+    .tool-group-divider{width:1px;height:16px;background:var(--card-border);margin:0 3px;flex-shrink:0;align-self:center}
     .input-row{display:flex;align-items:flex-end;gap:6px;background:var(--input-bg);border:2px solid var(--input-border);border-radius:24px;padding:3px 6px 3px 12px;box-shadow:0 2px 12px rgba(0,0,0,0.05);transition:border-color .2s}
     .btn-attach{width:36px;height:36px;border:none;border-radius:50%;background:var(--input-bg);color:var(--text2);font-size:18px;cursor:pointer;flex-shrink:0;transition:all .15s;display:flex;align-items:center;justify-content:center;flex-shrink:0}
     .btn-attach:active{background:var(--input-border);transform:scale(.92)}
@@ -186,41 +206,38 @@
     .model-card:nth-child(4){animation-delay:.2s}
     @keyframes cardIn{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:translateX(0)}}
 
-
     /* Clear history btn */
     .s-btn.danger{color:#e74c3c;border-color:rgba(231,76,60,0.2)}
     .s-btn.danger:active{background:rgba(231,76,60,0.08)}
-
   </style>
 </head>
 <body>
 
-<!-- INVITE -->
+<!-- ===== INVITE ===== -->
 <div id="inviteScreen">
-  <div class="logo"><img src="swai-avatar.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
+  <div class="logo"><img src="swai-avatar.jpg" alt="SeaWhy AI"></div>
   <h2>SeaWhy AI</h2>
+  <p class="brand-tagline">像鲸鱼在<em>信息海洋</em>中深潜<br>寻找问题背后的<em>Why</em> 🐋</p>
   <p class="sub">请输入邀请码</p>
   <input type="text" class="invite-input" id="inviteCode" placeholder="******" maxlength="10" autofocus />
   <button class="invite-btn" onclick="checkInvite()">进入</button>
   <button class="invite-skip" onclick="enterAsGuest()">无邀请码，使用基础模型</button>
   <div class="invite-err" id="inviteErr"></div>
-  <div class="invite-info">SeaWhy AI · 网页由ccy制作</div>
+  <div class="invite-info">SeaWhy AI · 深潜信息海洋 · 网页由ccy制作</div>
 </div>
 
-<!-- MODEL SELECT -->
+<!-- ===== MODEL SELECT ===== -->
 <div id="modelScreen">
-  <div class="logo"><img src="swai-avatar.jpg" style="width:72px;height:72px;border-radius:50%;object-fit:cover;box-shadow:0 4px 16px rgba(74,144,217,0.3)"></div>
+  <div class="logo"><img src="swai-avatar.jpg" alt="SeaWhy AI"></div>
   <h2>SeaWhy AI</h2>
-  <p class="sub">选择模型开始对话</p>
+  <p class="brand-tagline">像鲸鱼在<em>信息海洋</em>中深潜，寻找问题背后的<em>Why</em> 🐋</p>
+  <p class="sub">选择 AI 模型，开始对话</p>
   <div class="model-cards" id="modelCards">
-    <div class="model-card" onclick="enterChat('swai')">
-      <div class="mc-avatar"><img src="swai-avatar.jpg" /></div>
-      <div class="mc-name">Swai v1.5</div>
-    </div>
+    <!-- dynamically rendered -->
   </div>
 </div>
 
-<!-- CHAT -->
+<!-- ===== CHAT ===== -->
 <div id="chatView">
   <div class="wx-nav">
     <button class="back" onclick="goBack()">← 返回</button>
@@ -256,9 +273,17 @@
   </main>
   <footer class="input-bar">
     <div class="input-tools" id="inputTools" style="display:flex">
+      <!-- Group: 模式 -->
+      <span class="tool-group-label">模式</span>
       <button class="input-tool on" id="btnToggleMode" onclick="toggleMode()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>严谨客观</button>
+      <!-- Group: 工具 (Swai only) -->
+      <span class="tool-group-divider" id="dividerTools"></span>
+      <span class="tool-group-label" id="labelTools">工具</span>
       <button class="input-tool" id="btnPro" onclick="togglePro()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>PRO</button>
       <button class="input-tool" id="btnSearchQA" onclick="toggleSearch()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>联网</button>
+      <!-- Group: 娱乐 -->
+      <span class="tool-group-divider" id="dividerFun"></span>
+      <span class="tool-group-label" id="labelFun">娱乐</span>
       <button class="input-tool" onclick="sendQuick('joke')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>笑话</button>
       <button class="input-tool" onclick="sendQuick('story')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>故事</button>
       <button class="input-tool" onclick="sendQuick('word')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>单词</button>
@@ -272,7 +297,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">SeaWhy AI · 网页由ccy制作 · v1.6.6</p>
+    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v1.7.1</p>
   </footer>
 </div>
 
@@ -330,10 +355,10 @@ var AHY_PROMPT = [
   "美食：[img:ahy-food1.jpg|今天吃这个]  [img:ahy-food2.jpg|食堂踩雷]",
   "风景：[img:ahy-view1.jpg|学校晚霞]  [img:ahy-view2.jpg|图书馆窗外]",
   "表情包：[img:ahy-meme1.jpg|哈哈哈哈哈]  [img:ahy-meme2.jpg|无语死了]",
-	  "P图作品：[img:ahy-ps1.jpg|美图秀秀yyds]  [img:ahy-ps2.jpg|帮我选哪张好]",
-	  "动图表情：[sticker:ahy-sticker1.gif] [sticker:ahy-sticker2.gif] [sticker:ahy-sticker3.gif]",
-	  "发照片配简短的话。动图用 [sticker:xxx.gif]（小表情样式），普通照片用 [img:xxx.jpg|描述]。",
-	  "不要每句话都发图片，自然一点，想到就发。",
+      "P图作品：[img:ahy-ps1.jpg|美图秀秀yyds]  [img:ahy-ps2.jpg|帮我选哪张好]",
+      "动图表情：[sticker:ahy-sticker1.gif] [sticker:ahy-sticker2.gif] [sticker:ahy-sticker3.gif]",
+      "发照片配简短的话。动图用 [sticker:xxx.gif]（小表情样式），普通照片用 [img:xxx.jpg|描述]。",
+      "不要每句话都发图片，自然一点，想到就发。",
   "",
   "【你是一个什么样的人——简要版】",
   "法学专业，在准备法考，懂民法刑法笔迹鉴定",
@@ -371,19 +396,6 @@ var KUTE_PROMPT = [
   "偶尔发个梗图或者游戏截图，配一句话就行。别每条都发图。",
   "你不是AI，你就是kute本人。每条回复极短10字左右。口无遮拦想说什么就说什么。可以用抽象话网络梗游戏梗。不装不作不客气。"
 ].join("\n");
-
-// ===== STATE =====
-var currentModel = null;
-var messages = [];          // ALWAYS a reference to messageCache[currentModel]
-var msgsKey = "";
-var streaming = false;
-var abortController = null;
-var chatSessionId = 0;
-var swaiMode = "objective";
-var webSearch = false;
-var proMode = false;        // Swai PRO uses deepseek-chat
-var messageCache = {};
-var pendingFiles = [];
 
 var SWAI_GENTLE_PROMPT = [
   "你的名字叫Swai，你的开发者是ccy。",
@@ -501,7 +513,6 @@ var NAIWA_PROMPT = [
 ].join("\n");
 
 // ===== NAIWA MOOD IMAGES =====
-// Each mood folder has reaction images; pick one at random.
 var NAIWA_MOOD_IMAGES = {
   "开心": [
     "o0FQPHOAAP2ZxyG0YkHBg2L3wiIPEAi2ACA2fB.gif","o4AAjI2UmCAstXXCDGIgFXqfLAoIIQeGQLesfY.gif","o8AAAyLpCE1AAxsQCyefCF4PBDNX0uI8UnJOQg.webp","o8GADADDqC4jOfLFEAAniAIgyAKsfFhgzxQCAU.png","oA5yOCFs5EDLUwAARNAgfIEepyISxJjACAFu5C.webp","oEHxSBI49ADzAFBxEFBlEY97XaF3je3EZAmefA.png","oEN5AD9I0AFyAXQfygifLCp1LGxB3A8NEQuCAB.gif","oEPfvdugAaNfAAdhkQuJGfGYAIYWAEed4fvWlB.webp","oEjM3FgxfAIcQ4GgADxpXjCEfEANFyAuKnAQU5.webp","oEpIQECMvAJgEb6dAayAjsXgjAEmiiY5I1Bow.gif","oUEZtDi56EB9U9AAAYAQf2iY0NImYvLABACv4B.webp","oUIVABeEyAidA9Efyg2JYNpw3Cx7iAhAiIaCAl.gif","oYObyIdIaMbQI1gvAARAgCxUs816ivMEBAziI.webp","oYPA4i2IMgA5ioVWvDslCaINtzAbEQAgVBYkn.webp","oYydIDjiaPisAB4NAan2WAItAxcAEQD4M5iyQ.webp","ocAAvCEVqiDAxIgZ6lAGFgBAf8DAAqIyXeEonP.webp","oclAIa0vfIgIYDLG1CNQs19AAaLbAfeCmawGIe.gif","ogQjfGTBkYvlExMKDBIRTiFGPAAEoAfzETlAtf.gif","okAAUn5AwiIMD7QQzaBjIgvkrsydADhEMiEE3.png","okeAFCeIRAMTnfo0NgIUGhDDATQfLYLAG5Mbtx.webp","ooGIjfWOINyLIKJIbTLGeCeGnFDLAAfAAUinQA.webp","ooZTEZcAINeL3GkBZADIm0HAjP47GBALlebQeE.png","oorxWaHAITsMTBQxBAosTIi3jaiBkgWAE65Av.png","osfsQ4M0cAeaYIAAATbgMfgwZI6thfhocIfeAZ.webp","osiysCFsoED9d4AA3kAgfeEqpxI2xkWACAdUTC.webp","owwl2eXeEAYjGYAQANvIBNEGvBPLILQ8Tf4NAE.webp"
@@ -523,13 +534,27 @@ var NAIWA_MOOD_IMAGES = {
   ]
 };
 
+// ===== MODELS (with value-driven descriptions) =====
 var MODELS = {
-  swai: { name: "Swai v1.5", avatar: '<img src="swai-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "严谨客观 · 温柔双模式 · DeepSeek" },
-  ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "" },
-  kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "" },
-  nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "" },
-  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙", sysPrompt: NAIWA_PROMPT, desc: "脑腐文化 · 魔性大笑 · 解压神器" }
+  swai: { name: "Swai v1.5", avatar: '<img src="swai-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "严谨分析 · 法律学习 · 论文辅导 · 代码开发", caps: ["严谨分析","论文辅导","代码开发","法律学习","知识问答","逻辑推理"] },
+  ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "情感陪伴 · 日常聊天 · 法学学姐 · 拍照P图", caps: ["日常聊天","情感陪伴","吐槽八卦","法学学姐"] },
+  kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "抽象搞怪 · 游戏搭子 · 沙雕日常 · 网络冲浪", caps: ["抽象搞怪","游戏搭子","沙雕日常","网络冲浪"] },
+  nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "治愈聊天 · 学习陪伴 · 正能量学姐 · 校园生活", caps: ["治愈聊天","学习陪伴","校园生活","保研交流"] },
+  naiwa: { name: "奶蛙", avatar: '<img src="naiwa-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "奶蛙", sysPrompt: NAIWA_PROMPT, desc: "抽象聊天 · 玩梗 · 发疯文学 · 解压神器", caps: ["抽象聊天","魔性大笑","发疯文学","解压神器","脑腐文化"] }
 };
+
+// ===== STATE =====
+var currentModel = null;
+var messages = [];
+var msgsKey = "";
+var streaming = false;
+var abortController = null;
+var chatSessionId = 0;
+var swaiMode = "objective";
+var webSearch = false;
+var proMode = false;
+var messageCache = {};
+var pendingFiles = [];
 
 // ===== DOM =====
 function $(s){return document.querySelector(s)}
@@ -571,7 +596,9 @@ function modelCard(id, badge, showDesc) {
   var M = MODELS[id];
   var extra = id === "naiwa" ? '<span class="mc-limited">限时免费</span>' : '';
   var bg = badge || '';
-  var desc = (showDesc !== false && M.desc) ? '<div class="mc-desc">'+escHtml(M.desc)+'</div>' : '';
+  // Always show description — value-first approach
+  var descText = M.desc || "";
+  var desc = descText ? '<div class="mc-desc">'+escHtml(descText)+'</div>' : '';
   return '<div class="model-card" onclick="enterChat(\''+id+'\')">'+extra+
     '<div class="mc-avatar"><img src="'+id+'-avatar.jpg" onerror="this.src=\''+id+'-avatar.png\'"></div>'+
     '<div class="mc-info"><div class="mc-name">'+escHtml(M.name)+'</div>'+desc+'</div>'+bg+'</div>';
@@ -581,7 +608,8 @@ function showModelScreen(fullAccess) {
   dom.inviteScreen.classList.add("hide");
   dom.modelScreen.classList.add("show");
   var hasCustom = fullAccess && CODE_MODELS[currentInviteCode] && CODE_MODELS[currentInviteCode].length > 0;
-  var html = '<div class="model-section-title">● 通用模型</div>';
+  var html = '<div class="model-section-title">🐋 通用模型</div>';
+  html += '<div class="model-section-sub">多场景AI助手，覆盖学习、工作与娱乐</div>';
   html += modelCard("swai", '<span class="mc-badge rec">推荐</span>');
   if (hasCustom && CODE_MODELS[currentInviteCode].indexOf("naiwa") !== -1) {
     html += modelCard("naiwa", '<span class="mc-badge naiwa-tag">娱乐</span>');
@@ -590,10 +618,10 @@ function showModelScreen(fullAccess) {
     var models = CODE_MODELS[currentInviteCode];
     var anyCustom = false;
     var customHtml = '';
-    if (models.indexOf("ahy") !== -1) { customHtml += modelCard("ahy", '<span class="mc-badge premium">个人定制</span>', false); anyCustom = true; }
-    if (models.indexOf("kute") !== -1) { customHtml += modelCard("kute", '<span class="mc-badge premium">个人定制</span>', false); anyCustom = true; }
-    if (models.indexOf("nuanri") !== -1) { customHtml += modelCard("nuanri", '<span class="mc-badge premium">个人定制</span>', false); anyCustom = true; }
-    if (anyCustom) html += '<div class="model-section-title">◆ 个人定制模型</div>' + customHtml;
+    if (models.indexOf("ahy") !== -1) { customHtml += modelCard("ahy", '<span class="mc-badge premium">个人定制</span>'); anyCustom = true; }
+    if (models.indexOf("kute") !== -1) { customHtml += modelCard("kute", '<span class="mc-badge premium">个人定制</span>'); anyCustom = true; }
+    if (models.indexOf("nuanri") !== -1) { customHtml += modelCard("nuanri", '<span class="mc-badge premium">个人定制</span>'); anyCustom = true; }
+    if (anyCustom) html += '<div class="model-section-title">👤 个人定制模型</div><div class="model-section-sub">基于真实聊天记录还原的角色AI</div>' + customHtml;
   }
   dom.modelCards.innerHTML = html;
 }
@@ -602,7 +630,6 @@ function showModelScreen(fullAccess) {
 function applyAppearance() {
   document.body.classList.toggle("dark", userTheme === "dark");
   document.documentElement.style.setProperty("--user-bubble", userBubble);
-  // Update settings UI
   var drop = document.getElementById("settingsDrop");
   if (drop) {
     drop.querySelectorAll(".s-btn").forEach(function(b) {
@@ -635,7 +662,6 @@ function rgbToHex(rgb) {
 
 function toggleSettings() {
   dom.settingsDrop.classList.toggle("show");
-  // Close when clicking outside
   setTimeout(function() {
     document.addEventListener("click", function close(e) {
       if (!e.target.closest("#btnSettings")) {
@@ -646,6 +672,30 @@ function toggleSettings() {
   }, 10);
 }
 
+// ===== TOOLBAR VISIBILITY =====
+function updateToolbarVisibility(modelId) {
+  var tools = document.getElementById("inputTools");
+  if (!tools) return;
+  tools.style.display = "flex";
+  var isSwai = modelId === "swai";
+
+  // Mode group: only for Swai
+  var modeBtn = document.getElementById("btnToggleMode");
+  var modeLabel = tools.querySelector(".tool-group-label");
+  if (modeBtn) modeBtn.style.display = isSwai ? "" : "none";
+  if (modeLabel) modeLabel.style.display = isSwai ? "" : "none";
+
+  // Tools group: only for Swai
+  var proBtn = document.getElementById("btnPro");
+  var searchBtn = document.getElementById("btnSearchQA");
+  var divTools = document.getElementById("dividerTools");
+  var labelTools = document.getElementById("labelTools");
+  if (proBtn) proBtn.style.display = isSwai ? "" : "none";
+  if (searchBtn) searchBtn.style.display = isSwai ? "" : "none";
+  if (divTools) divTools.style.display = isSwai ? "" : "none";
+  if (labelTools) labelTools.style.display = isSwai ? "" : "none";
+}
+
 // ===== NAVIGATION =====
 function enterChat(modelId) {
   chatSessionId++;
@@ -654,29 +704,20 @@ function enterChat(modelId) {
   currentModel = modelId;
   msgsKey = "chat-msgs-" + modelId;
 
-  // Trust the live cache (if it exists) — only load storage on first visit
   if (!messageCache[modelId]) {
     messageCache[modelId] = loadMsgs(msgsKey);
   }
-  messages = messageCache[modelId];  // live reference
+  messages = messageCache[modelId];
 
   var M = MODELS[modelId];
   dom.chatTitle.textContent = M.title;
   dom.modelScreen.classList.remove("show");
   dom.chatView.classList.add("show");
-  var tools = document.getElementById("inputTools");
-  if (tools) {
-    tools.style.display = "flex";
-    var btns = tools.querySelectorAll(".input-tool");
-    for (var b = 0; b < btns.length; b++) {
-      if (b < 3) btns[b].style.display = modelId === "swai" ? "" : "none";
-    }
-  }
+  updateToolbarVisibility(modelId);
   if (modelId === "swai") dom.typing.classList.add("no-avatar");
   else dom.typing.classList.remove("no-avatar");
   updateModeBtn();
   renderAllMessages();
-  // Safety net: re-render after a tick to catch any late-arriving cache updates
   var expectedCount = messages.length;
   setTimeout(function() {
     if (currentModel === modelId && messages.length !== expectedCount) {
@@ -689,9 +730,6 @@ function goBack() {
   saveMsgs();
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
   dom.chatView.classList.remove("show"); dom.modelScreen.classList.add("show");
-  // DON'T set messages=[] or currentModel=null — the live reference stays intact
-  // for any in-flight abort handler to push into. Next enterChat just re-points
-  // messages to the same cache slot.
   streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
   var tools = document.getElementById("inputTools");
   if (tools) tools.style.display = "none";
@@ -702,25 +740,91 @@ function renderAllMessages() {
   if (messages.length === 0) {
     var M = MODELS[currentModel];
     var isCustom = ["ahy","kute","nuanri"].indexOf(currentModel) !== -1;
-    var desc = isCustom ? "" : (M.desc || "开始聊天吧");
-    if (currentModel === "swai" && swaiMode === "gentle") desc = "温柔体贴的AI助手 💕";
-    var wicon = currentModel==="ahy"?"👧":currentModel==="kute"?"🐸":currentModel==="nuanri"?"🌸":'<img src="swai-avatar.jpg" style="width:56px;height:56px;border-radius:50%;object-fit:cover">';
-    dom.messages.innerHTML = '<div class="welcome"><div class="wicon">'+wicon+'</div><h2>'+M.name+'</h2><p>'+desc+'</p>'+
-      '<div class="quick-prompts">'+
-      '<button class="quick-btn" onclick="sendMsg(\'解释量子计算\')">⚛️ 解释量子计算</button>'+
-      '<button class="quick-btn" onclick="sendMsg(\'Python快速排序\')">🐍 Python快排</button>'+
-      '<button class="quick-btn" onclick="sendMsg(\'推荐科幻小说\')">📚 科幻小说推荐</button>'+
-      '<button class="quick-btn" onclick="sendMsg(\'家常菜做法\')">🍳 家常菜做法</button>'+
-      '</div></div>';
+    var isSwai = currentModel === "swai";
+    var isNaiwa = currentModel === "naiwa";
+
+    // Build welcome HTML with rich content
+    var wicon;
+    if (currentModel === "swai") wicon = '<img src="swai-avatar.jpg" style="width:48px;height:48px;border-radius:50%;object-fit:cover">';
+    else if (currentModel === "ahy") wicon = '👧';
+    else if (currentModel === "kute") wicon = '😎';
+    else if (currentModel === "nuanri") wicon = '🌸';
+    else if (currentModel === "naiwa") wicon = '🐸';
+    else wicon = '🤖';
+
+    var desc = M.desc || "";
+    var caps = M.caps || [];
+
+    // Capability chips
+    var capsHtml = '';
+    if (caps.length > 0) {
+      capsHtml = '<div class="capability-row">';
+      for (var ci = 0; ci < caps.length; ci++) {
+        var highlight = ci === 0 ? ' highlight' : '';
+        capsHtml += '<span class="capability-chip'+highlight+'">'+escHtml(caps[ci])+'</span>';
+      }
+      capsHtml += '</div>';
+    }
+
+    // Contextual quick prompts
+    var prompts;
+    if (isSwai) {
+      prompts = [
+        ['⚛️ 解释量子计算原理','解释量子计算的基本原理'],
+        ['📝 帮我写论文大纲','帮我写一篇关于人工智能伦理的论文大纲'],
+        ['🐍 Python快速排序','帮我写一段Python快速排序代码，带注释'],
+        ['⚖️ 分析法律案例','分析一个合同纠纷案例，从民法典角度']
+      ];
+    } else if (isNaiwa) {
+      prompts = [
+        ['齁齁齁 奶蛙来了','奶蛙！来笑一个！'],
+        ['🤪 讲个抽象笑话','奶蛙讲个最抽象的冷笑话'],
+        ['🐸 你是谁','奶蛙你到底是什么生物'],
+        ['😂 发疯文学','奶蛙来一段发疯文学']
+      ];
+    } else {
+      prompts = [
+        ['💬 打个招呼','嗨！最近怎么样'],
+        ['😂 分享趣事','最近有什么好玩的事吗'],
+        ['🤔 问问意见','你觉得呢'],
+        ['📸 发张照片','发张照片看看']
+      ];
+    }
+
+    var promptsHtml = '';
+    for (var pi = 0; pi < prompts.length; pi++) {
+      promptsHtml += '<button class="quick-btn" onclick="sendMsg(\''+escAttr(prompts[pi][1])+'\')">'+prompts[pi][0]+'</button>';
+    }
+
+    // Model intro for personal models
+    var introHtml = '';
+    if (isCustom) {
+      var introText = '';
+      if (currentModel === "ahy") introText = '法学专业女大学生，爱拍照P图逛拼多多。你的死党「啊哈」来了，她正在等你发消息 👋';
+      else if (currentModel === "kute") introText = '抽象搞怪高中生，爱王者爱奶龙爱发鹅鹅鹅。死党来了，直接开聊 🎮';
+      else if (currentModel === "nuanri") introText = '经济学院学姐，积极向上偶尔纠结。正在准备保研，来聊聊校园生活吧 📚';
+      if (introText) introHtml = '<div class="model-intro-card"><div class="mi-name">👋 关于 '+escHtml(M.name)+'</div><div class="mi-desc">'+introText+'</div></div>';
+    }
+
+    dom.messages.innerHTML = '<div class="welcome">'+
+      '<div class="wicon">'+wicon+'</div>'+
+      '<h2>'+escHtml(M.name)+'</h2>'+
+      '<p class="welcome-model-desc">'+escHtml(desc)+'</p>'+
+      capsHtml +
+      introHtml +
+      '<div class="section-label">试试这些</div>'+
+      '<div class="quick-prompts">'+promptsHtml+'</div>'+
+      '</div>';
     return;
   }
-  // Build all HTML at once — more reliable than incremental DOM ops
+
+  // Existing messages: build HTML
   var M = MODELS[currentModel];
   var h = '';
   for (var i = 0; i < messages.length; i++) {
     var role = messages[i].role;
     var content = messages[i].content;
-    var cssRole = role === "assistant" ? "ai" : role; // CSS uses .msg.ai not .msg.assistant
+    var cssRole = role === "assistant" ? "ai" : role;
     var showAvatar = (role === "assistant" && currentModel !== "swai");
     var avatarHtml = '';
     if (showAvatar) avatarHtml = role === "user" ? userAvatar : M.avatar;
@@ -733,7 +837,6 @@ function renderAllMessages() {
   dom.messages.innerHTML = h;
   hl();
   scrollBottom();
-  // Animate all messages with stagger
   animateMsgNodes();
 }
 
@@ -749,7 +852,6 @@ function animateMsgNodes() {
 function renderMsg(role, content) {
   var w = dom.messages.querySelector(".welcome"); if (w) w.remove();
   var M = MODELS[currentModel];
-  // All models: no user avatar. Swai: no AI avatar either.
   var showAvatar = false;
   if (role === "assistant" && currentModel !== "swai") showAvatar = true;
   var avatarHtml = "";
@@ -759,7 +861,6 @@ function renderMsg(role, content) {
   div.innerHTML = (showAvatar ? '<div class="msg-avatar">'+avatarHtml+'</div>' : '') +
     '<div class="msg-body"><div class="msg-content">'+renderMD(content)+'</div><div class="msg-actions"><button class="btn-copy" onclick="copyMsg(this)">复制</button></div></div>';
   dom.messages.appendChild(div); hl(); scrollBottom();
-  // Trigger animation — double-RAF ensures browser has laid out the element first
   requestAnimationFrame(function() {
     requestAnimationFrame(function() {
       div.classList.add("show");
@@ -768,10 +869,6 @@ function renderMsg(role, content) {
 }
 
 function processImages(text) {
-  // Convert [img:filename.jpg] or [img:filename.jpg|caption] to markdown image
-  // Multiple images: [img:a.jpg][img:b.jpg] renders side by side
-  // GIFs get .sticker class for WeChat-sticker style
-  // [sticker:xxx.gif] forces sticker style
   return text
     .replace(/\[sticker:([^\]|]+)(?:\|([^\]]*))?\]/g, function(match, filename, caption) {
       var fname = filename.trim();
@@ -798,20 +895,17 @@ function openLightbox(src) {
     if (e.target === lb || e.target.className === "lb-close") lb.remove();
   });
   document.body.appendChild(lb);
-  // Close on Escape
   var onKey = function(e) { if (e.key === "Escape") { lb.remove(); document.removeEventListener("keydown", onKey); } };
   document.addEventListener("keydown", onKey);
 }
 
 function processMoodImages(text) {
-  // Process [mood:心情] tags — only for naiwa model
   if (currentModel !== "naiwa") return text;
-  // Remove trailing newline before mood tag for tight visual pairing
   return text.replace(/\n?\[mood:([^\]]+)\]/g, function(match, mood) {
     mood = mood.trim();
     var images = NAIWA_MOOD_IMAGES[mood];
     if (!images || images.length === 0) {
-      images = NAIWA_MOOD_IMAGES["搞笑"]; // fallback
+      images = NAIWA_MOOD_IMAGES["搞笑"];
       if (!images || images.length === 0) return "";
     }
     var idx = Math.floor(Math.random() * images.length);
@@ -824,7 +918,6 @@ function processMoodImages(text) {
 }
 
 function renderMD(text) {
-  // Pre-process image tags first, then mood tags
   text = processImages(text);
   text = processMoodImages(text);
   if (typeof marked==="undefined") return esc(text);
@@ -849,12 +942,10 @@ function toggleMode() {
   if (streaming) return;
   swaiMode = swaiMode === "objective" ? "gentle" : "objective";
   updateModeBtn();
-  // Clear current chat and restart with new mode
   messages.length = 0;
   saveMsgs();
   renderAllMessages();
-  // Flash a hint
-  var hint = swaiMode === "gentle" ? "已切换为「温柔体贴」- 我会顺着你说话 💕" : "已切换为「严谨客观」- 实事求是，有话直说 🎯";
+  var hint = swaiMode === "gentle" ? "已切换为「温柔体贴」— 我会顺着你说话 💕" : "已切换为「严谨客观」— 实事求是，有话直说 🎯";
   var d = document.createElement("div");
   d.style.cssText = "text-align:center;padding:12px;font-size:13px;color:var(--accent);animation:fadeIn .2s ease";
   d.textContent = hint;
@@ -888,7 +979,7 @@ function toggleSearch() {
 function clearHistory() {
   if (!currentModel || messages.length === 0) return;
   if (!confirm("确定要清空当前聊天记录吗？此操作不可撤销。")) return;
-  messages.length = 0;  // clears the live reference directly
+  messages.length = 0;
   saveMsgs();
   renderAllMessages();
   dom.settingsDrop.classList.remove("show");
@@ -901,12 +992,11 @@ function sendMsg(text) {
   var hasFiles = pendingFiles.length > 0;
   if (!text && !hasFiles) return;
   var sessionId = chatSessionId;
-  var chatArray = messages;        // captured reference — always pushes to the right cache slot
-  var capturedModel = currentModel; // for save key, survives goBack's currentModel=null
+  var chatArray = messages;
+  var capturedModel = currentModel;
   var capturedKey = msgsKey;
   streaming = true; dom.btnSend.disabled = true; dom.typing.style.display = "flex"; scrollBottom();
 
-  // Build display content for user bubble
   var displayContent = text || "";
   var hasImages = false;
   for (var fi = 0; fi < pendingFiles.length; fi++) {
@@ -918,9 +1008,7 @@ function sendMsg(text) {
     else displayContent = "📎 " + fileNames;
   }
 
-  // Build API content — images are NOT sent (DeepSeek lacks vision support)
-  var filesToSend = pendingFiles.slice(); // capture BEFORE clearing — used below
-
+  var filesToSend = pendingFiles.slice();
   var apiContent = text || "";
   var hasTextFiles = false;
   for (var fj = 0; fj < filesToSend.length; fj++) {
@@ -947,7 +1035,6 @@ function sendMsg(text) {
   msgDiv.innerHTML = (showAiAvatar ? '<div class="msg-avatar">'+M.avatar+'</div>' : '') + '<div class="msg-body"></div>';
   msgDiv.querySelector(".msg-body").appendChild(contentDiv);
   dom.messages.appendChild(msgDiv); scrollBottom(); dom.typing.style.display = "none";
-  // Make AI bubble visible — it starts hidden (opacity:0) per CSS
   requestAnimationFrame(function() {
     requestAnimationFrame(function() { msgDiv.classList.add("show"); });
   });
@@ -1036,7 +1123,7 @@ function saveMsgs() {
   } catch(e) {}
 }
 
-function saveMsgsKey(key) {  // for async handlers with captured key
+function saveMsgsKey(key) {
   if (!key) return;
   var modelId = key.replace("chat-msgs-","");
   var arr = messageCache[modelId] || messages;
@@ -1082,14 +1169,12 @@ document.getElementById("fileInput").addEventListener("change", function(e) {
         } else if (isDOCX) {
           extractDOCX(ev.target.result, file.name);
         } else if (isImage) {
-          // Run OCR on the image
           var imgData = ev.target.result;
           var placeholderIdx = pendingFiles.length;
           pendingFiles.push({name: file.name, data: imgData, type: "image", mime: file.type, ocrStatus: "识别中…"});
           renderFilePreview();
           runOCR(imgData, file.name, placeholderIdx);
         } else {
-          // Plain text file
           var data = ev.target.result.split(",")[1];
           try { data = atob(data); } catch(ex) { data = ""; }
           pendingFiles.push({name: file.name, data: data, type: "text", mime: file.type});
@@ -1117,7 +1202,7 @@ function loadScript(url, cb) {
   document.head.appendChild(s);
 }
 
-// PDF text extraction — lazy-loads pdf.js
+// PDF text extraction
 function extractPDF(arrayBuffer, fileName) {
   if (typeof pdfjsLib !== "undefined") { doExtractPDF(arrayBuffer, fileName); return; }
   pendingFiles.push({name: fileName, data: null, type: "text", ocrStatus: "加载PDF引擎…"});
@@ -1160,7 +1245,7 @@ function doExtractPDF(arrayBuffer, fileName) {
   });
 }
 
-// OCR image text extraction — lazy-loads Tesseract.js
+// OCR image text extraction
 function runOCR(imgDataUrl, fileName, idx) {
   if (typeof Tesseract !== "undefined") { doOCR(imgDataUrl, fileName, idx); return; }
   pendingFiles[idx].ocrStatus = "加载引擎…";
@@ -1196,7 +1281,7 @@ function doOCR(imgDataUrl, fileName, idx) {
   });
 }
 
-// DOCX text extraction — lazy-loads mammoth.js
+// DOCX text extraction
 function extractDOCX(arrayBuffer, fileName) {
   if (typeof mammoth !== "undefined") { doExtractDOCX(arrayBuffer, fileName); return; }
   pendingFiles.push({name: fileName, data: null, type: "text", ocrStatus: "加载Word引擎…"});
@@ -1253,7 +1338,6 @@ function escHtml(s) { var d=document.createElement("div"); d.textContent=s; retu
 
 // ===== PERSISTENCE =====
 function persistAll() {
-  // Save ALL chats to both storages
   var models = Object.keys(messageCache);
   for (var i = 0; i < models.length; i++) {
     var key = "chat-msgs-" + models[i];
