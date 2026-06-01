@@ -420,7 +420,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.8</p>
+    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.9</p>
   </footer>
 </div>
 
@@ -753,6 +753,7 @@ function checkInvite() {
   dom.inviteErr.textContent = "";
   if (VALID_CODES.indexOf(code) !== -1) {
     hasFullAccess = true; currentInviteCode = code;
+    requestWhToken(code);
     if (code === "030325") userAvatar = '<img src="user-030325.jpg" style="width:100%;height:100%;object-fit:cover">';
     else if (code === "0428") userAvatar = '<img src="user-0428.jpg" style="width:100%;height:100%;object-fit:cover">';
     else if (code === "1009") userAvatar = '<img src="user-1009.jpg" style="width:100%;height:100%;object-fit:cover">';
@@ -1394,11 +1395,23 @@ var WH_PICS = ["IMG_4922.JPG","IMG_4923.JPG","IMG_4924.JPG","IMG_4925.JPG","IMG_
 function autoAppendXiaojiqiImage(text) {
   if (currentModel !== "xiaojiqi") return text;
   if (!text) return text;
-  // Already has an image (raw HTML or [img:...] tag)?
-  if (/images\/wh\//i.test(text) || /\[img:wh\//i.test(text)) return text;
-  // Directly inject HTML img tag — bypass regex/markdown pipeline entirely
+  if (/images\/wh\//i.test(text) || /\[img:wh\//i.test(text) || /\/api\/wh-img/i.test(text)) return text;
   var pic = WH_PICS[Math.floor(Math.random() * WH_PICS.length)];
-  return text + '\n\n<img src="images/wh/' + encodeURI(pic) + '" class="msg-img" onclick="openLightbox(this.src)" loading="lazy" style="max-width:220px;max-height:280px;border-radius:12px;display:block;object-fit:cover" onerror="this.style.display=\'none\'">';
+  // Use API proxy if token available, else direct (dev fallback)
+  var src = whToken ? '/api/wh-img?f=' + encodeURIComponent(pic) + '&t=' + whToken : 'images/wh/' + encodeURI(pic);
+  return text + '\n\n<img src="' + src + '" class="msg-img" onclick="openLightbox(this.src)" loading="lazy" style="max-width:220px;max-height:280px;border-radius:12px;display:block;object-fit:cover" onerror="this.style.display=\'none\'">';
+}
+
+// Request image proxy token when 030325 is used
+function requestWhToken(code) {
+  if (code !== "030325") return;
+  fetch('/api/wh-auth', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({code: code})
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.ok && d.token) { whToken = d.token; }
+  }).catch(function(){ /* server not available, use direct paths */ });
 }
 function saveMsgs() {
   if (!msgsKey || messages.length === 0) return;
