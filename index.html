@@ -420,7 +420,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.7</p>
+    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.8</p>
   </footer>
 </div>
 
@@ -658,13 +658,13 @@ var XIAOQIQI_PROMPT = [
   "还有：[img:wh/IMG_6752.JPG] [img:wh/IMG_6759.JPG] [img:wh/IMG_6760.JPG] [img:wh/IMG_6761.JPG]",
   "全身：[img:wh/IMG_7262.JPG] [img:wh/IMG_7263.JPG] [img:wh/IMG_7358.JPG] [img:wh/IMG_7359.JPG]",
   "日常：[img:wh/IMG_7483.jpg] [img:wh/IMG_7503.JPG] [img:wh/IMG_7505.JPG] [img:wh/IMG_7506.JPG]",
-  "自拍2：[img:wh/IMG_7976.PNG] [img:wh/IMG_7986.PNG] [img:wh/IMG_7987.JPG] [img:wh/IMG_7988.JPG]",
+  "自拍2：[img:wh/IMG_7976.jpg] [img:wh/IMG_7986.jpg] [img:wh/IMG_7987.JPG] [img:wh/IMG_7988.JPG]",
   "还有：[img:wh/IMG_7989.JPG] [img:wh/IMG_7990.JPG] [img:wh/IMG_8020.jpg]",
-  "更多自拍：[img:wh/0179CCC4-A97B-4C86-B561-AD41A7D41A96.PNG] [img:wh/36874.JPG]",
-  "[img:wh/401B7A4B-11B6-46D7-8667-7BEE8FE9713E.PNG] [img:wh/57A8A04A-50F7-4993-B6D7-FF8F7FD38A1D.PNG]",
-  "[img:wh/68CE538A-4375-49E3-98E2-0C294122D0A7.PNG] [img:wh/B1350E2E-DCA7-456B-9E44-9C03B1376B61.PNG]",
-  "[img:wh/D2B09C0F-C659-4814-8195-37C03FA694F7.PNG] [img:wh/IMG_4976.PNG] [img:wh/IMG_4977.PNG]",
-  "[img:wh/IMG_6766.PNG] [img:wh/IMG_7990 (1).JPG] [img:wh/D2B09C0F-C659-4814-8195-37C03FA694F7 (1).PNG]",
+  "更多自拍：[img:wh/0179CCC4-A97B-4C86-B561-AD41A7D41A96.jpg] [img:wh/36874.JPG]",
+  "[img:wh/401B7A4B-11B6-46D7-8667-7BEE8FE9713E.jpg] [img:wh/57A8A04A-50F7-4993-B6D7-FF8F7FD38A1D.jpg]",
+  "[img:wh/68CE538A-4375-49E3-98E2-0C294122D0A7.jpg] [img:wh/B1350E2E-DCA7-456B-9E44-9C03B1376B61.jpg]",
+  "[img:wh/D2B09C0F-C659-4814-8195-37C03FA694F7.jpg] [img:wh/IMG_4976.jpg] [img:wh/IMG_4977.jpg]",
+  "[img:wh/IMG_6766.jpg] [img:wh/IMG_7990 (1).JPG] [img:wh/D2B09C0F-C659-4814-8195-37C03FA694F7 (1).jpg]",
   "自然地发照片，配一句话。",
   "",
   "【📸 配图规则 — 最重要!!】",
@@ -1390,7 +1390,7 @@ function sendMsg(text) {
 function showErr(msg) { var d = document.createElement("div"); d.className = "error"; d.textContent = "⚠ "+msg; dom.messages.appendChild(d); scrollBottom(); }
 
 // ===== AUTO-APPEND IMAGE FOR XIAOJIQI =====
-var WH_PICS = ["IMG_4922.JPG","IMG_4923.JPG","IMG_4924.JPG","IMG_4925.JPG","IMG_4926.JPG","IMG_4974.JPG","IMG_6742.JPG","IMG_6744.JPG","IMG_6746.JPG","IMG_6750.JPG","IMG_6751.JPG","IMG_6752.JPG","IMG_6759.JPG","IMG_6760.JPG","IMG_6761.JPG","IMG_7262.JPG","IMG_7358.JPG","IMG_7359.JPG","IMG_7483.jpg","IMG_7503.JPG","IMG_7505.JPG","IMG_7506.JPG","IMG_7987.JPG","IMG_7988.JPG","IMG_7989.JPG","IMG_7990.JPG","IMG_8020.jpg","IMG_6766.PNG","IMG_7976.PNG","IMG_7986.PNG","IMG_4976.PNG","IMG_4977.PNG","0179CCC4-A97B-4C86-B561-AD41A7D41A96.PNG","36874.JPG","401B7A4B-11B6-46D7-8667-7BEE8FE9713E.PNG","57A8A04A-50F7-4993-B6D7-FF8F7FD38A1D.PNG","68CE538A-4375-49E3-98E2-0C294122D0A7.PNG","B1350E2E-DCA7-456B-9E44-9C03B1376B61.PNG","D2B09C0F-C659-4814-8195-37C03FA694F7.PNG","IMG_7263.JPG"];
+var WH_PICS = ["IMG_4922.JPG","IMG_4923.JPG","IMG_4924.JPG","IMG_4925.JPG","IMG_4926.JPG","IMG_4974.JPG","IMG_6742.JPG","IMG_6744.JPG","IMG_6746.JPG","IMG_6750.JPG","IMG_6751.JPG","IMG_6752.JPG","IMG_6759.JPG","IMG_6760.JPG","IMG_6761.JPG","IMG_7262.JPG","IMG_7358.JPG","IMG_7359.JPG","IMG_7483.jpg","IMG_7503.JPG","IMG_7505.JPG","IMG_7506.JPG","IMG_7987.JPG","IMG_7988.JPG","IMG_7989.JPG","IMG_7990.JPG","IMG_8020.jpg","IMG_6766.jpg","IMG_7976.jpg","IMG_7986.jpg","IMG_4976.jpg","IMG_4977.jpg","0179CCC4-A97B-4C86-B561-AD41A7D41A96.jpg","36874.JPG","401B7A4B-11B6-46D7-8667-7BEE8FE9713E.jpg","57A8A04A-50F7-4993-B6D7-FF8F7FD38A1D.jpg","68CE538A-4375-49E3-98E2-0C294122D0A7.jpg","B1350E2E-DCA7-456B-9E44-9C03B1376B61.jpg","D2B09C0F-C659-4814-8195-37C03FA694F7.jpg","IMG_7263.JPG"];
 function autoAppendXiaojiqiImage(text) {
   if (currentModel !== "xiaojiqi") return text;
   if (!text) return text;
