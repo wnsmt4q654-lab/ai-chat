@@ -180,9 +180,9 @@
     #chatView.show{display:flex!important}
 
     .wx-nav{display:flex;align-items:center;padding:env(safe-area-inset-top) 12px 0;height:calc(46px + env(safe-area-inset-top));background:var(--nav-bg);flex-shrink:0;border-bottom:1px solid var(--card-border)}
-    .wx-nav .back{font-size:16px;color:var(--accent);cursor:pointer;padding:8px 4px;flex-shrink:0;white-space:nowrap;border:none;background:none;font-family:inherit}
-    .wx-nav .title{flex:1;text-align:center;font-size:17px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-    .wx-nav .right-btn{font-size:20px;color:var(--text);cursor:pointer;padding:8px;width:44px;text-align:center;flex-shrink:0;border:none;background:none;position:relative}
+    .wx-nav .back{font-size:16px;color:var(--accent);cursor:pointer;padding:8px 4px;flex-shrink:0;white-space:nowrap;border:none;background:none;font-family:inherit;width:44px;display:flex;align-items:center;justify-content:center}
+    .wx-nav .title{flex:1;text-align:center;font-size:17px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px}
+    .wx-nav .right-btn{font-size:20px;color:var(--text);cursor:pointer;padding:8px;width:44px;text-align:center;flex-shrink:0;border:none;background:none;position:relative;display:flex;align-items:center;justify-content:center}
 
     .settings-drop{position:absolute;top:42px;right:4px;background:var(--card-bg);border:1px solid var(--card-border);border-radius:16px;padding:14px 16px;min-width:200px;z-index:100;box-shadow:0 8px 30px rgba(0,0,0,0.12);opacity:0;transform:translateY(-8px) scale(.95);pointer-events:none;transition:opacity .2s ease,transform .2s ease}
     .settings-drop.show{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
@@ -266,6 +266,12 @@
     .tools-panel .tp-btn:active{transform:scale(.95)}
     .tools-panel .tp-btn.on{background:var(--accent);color:#fff}
     .tools-panel .tp-sep{width:1px;height:18px;background:var(--card-border);margin:0 2px}
+    /* Toolbar row */
+    .input-tools{display:flex;gap:4px;flex-wrap:nowrap;margin-bottom:6px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+    .input-tools::-webkit-scrollbar{display:none}
+    .input-tool{display:flex;align-items:center;gap:3px;padding:5px 10px;border:none;border-radius:14px;background:rgba(0,0,0,0.04);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap;transition:all .15s}
+    .input-tool:active{transform:scale(.95)}
+    .input-tool.on{background:var(--accent);color:#fff}
     /* Input bar */
     .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:8px 12px calc(8px + env(safe-area-inset-bottom))}
     .input-row{display:flex;align-items:flex-end;gap:8px}
@@ -413,20 +419,19 @@
     <div class="typing-dots" id="typing" style="display:none"><span></span><span></span><span></span></div>
   </main>
   <footer class="input-bar">
-    <!-- Tools panel (slides up from + button) -->
-    <div class="tools-panel" id="toolsPanel">
-      <button class="tp-btn on" id="btnToggleMode" onclick="toggleMode()">严谨</button>
-      <span class="tp-sep"></span>
-      <button class="tp-btn" id="btnSearchQA" onclick="toggleSearch()">联网</button>
-      <button class="tp-btn" id="btnPro" onclick="togglePro()">深度</button>
-      <span class="tp-sep"></span>
-      <button class="tp-btn" onclick="sendQuick('joke')">笑话</button>
-      <button class="tp-btn" onclick="sendQuick('story')">故事</button>
-      <button class="tp-btn" onclick="sendQuick('word')">单词</button>
+    <div class="input-tools" id="inputTools" style="display:flex;justify-content:flex-end">
+      <button class="input-tool on" id="btnToggleMode" onclick="toggleMode()">严谨</button>
+      <button class="input-tool" id="btnSearchQA" onclick="toggleSearch()">联网</button>
+      <button class="input-tool" id="btnPro" onclick="togglePro()">深度</button>
+      <button class="input-tool" onclick="sendQuick('joke')">笑话</button>
+      <button class="input-tool" onclick="sendQuick('story')">故事</button>
+      <button class="input-tool" onclick="sendQuick('word')">单词</button>
     </div>
     <div class="file-preview" id="filePreview"></div>
     <div class="input-row">
-      <button class="btn-plus" id="btnPlus" title="功能菜单">+</button>
+      <button class="btn-plus" id="btnPlus" title="上传文件">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+      </button>
       <div class="input-field-wrap">
         <textarea id="userInput" class="input-field" placeholder="说点什么…" rows="1"></textarea>
       </div>
@@ -435,7 +440,7 @@
       </button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 网页由ccy制作 · v2.0.12</p>
+    <p class="input-hint">🐋 SeaWhy AI · 网页由ccy制作 · v2.0.13</p>
   </footer>
 </div>
 
@@ -1162,6 +1167,8 @@ function updatePrefVisibility(modelId) {
 
 // ===== TOOLBAR VISIBILITY =====
 function updateToolbarVisibility(modelId) {
+  var tools = document.getElementById("inputTools"); if (!tools) return;
+  tools.style.display = "flex";
   var isSwai = modelId === "swai";
   var btnM = document.getElementById("btnToggleMode");
   var btnP = document.getElementById("btnPro");
@@ -1169,18 +1176,6 @@ function updateToolbarVisibility(modelId) {
   if (btnM) btnM.style.display = isSwai ? "" : "none";
   if (btnP) btnP.style.display = isSwai ? "" : "none";
   if (btnS) btnS.style.display = isSwai ? "" : "none";
-}
-
-function toggleToolsPanel() {
-  var panel = document.getElementById("toolsPanel");
-  var btn = document.getElementById("btnPlus");
-  if (panel.classList.contains("show")) {
-    panel.classList.remove("show");
-    btn.classList.remove("active");
-  } else {
-    panel.classList.add("show");
-    btn.classList.add("active");
-  }
 }
 
 // ===== NAVIGATION =====
@@ -1206,8 +1201,7 @@ function goBack() {
   saveMsgs();
   if (abortController) { try { abortController.abort(); } catch(e) {} abortController = null; }
   dom.chatView.classList.remove("show"); streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
-  var panel = document.getElementById("toolsPanel"); if (panel) panel.classList.remove("show");
-  var btnP = document.getElementById("btnPlus"); if (btnP) btnP.classList.remove("active");
+  var tools = document.getElementById("inputTools"); if (tools) tools.style.display = "none";
   showModelScreen(hasFullAccess);
 }
 
@@ -1466,9 +1460,7 @@ dom.btnSend.addEventListener("click", function() { var t = dom.userInput.value.t
 dom.userInput.addEventListener("keydown", function(e) { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); var t = dom.userInput.value.trim(); if (!t && pendingFiles.length === 0) return; if (streaming) return; dom.userInput.value = ""; dom.userInput.style.height = "auto"; sendMsg(t); } });
 dom.userInput.addEventListener("input", function() { this.style.height = "auto"; this.style.height = Math.min(this.scrollHeight, 110) + "px"; });
 
-document.getElementById("btnPlus").addEventListener("click", function() { toggleToolsPanel(); });
-// File upload: long-press + button or use file button in tools panel
-document.getElementById("btnPlus").addEventListener("dblclick", function() { document.getElementById("fileInput").click(); });
+document.getElementById("btnPlus").addEventListener("click", function() { document.getElementById("fileInput").click(); });
 document.getElementById("fileInput").addEventListener("change", function(e) {
   var files = e.target.files; if (!files || files.length === 0) return;
   for (var i = 0; i < files.length; i++) {
