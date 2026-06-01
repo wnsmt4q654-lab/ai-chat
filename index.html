@@ -420,7 +420,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.5</p>
+    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.6</p>
   </footer>
 </div>
 
@@ -1357,7 +1357,7 @@ function sendMsg(text) {
       reader.read().then(function(result) {
         if (resolved || chatSessionId !== sessionId) return;
         if (result.done) {
-          resolved = true; abortController = null; var finalText = fullContent || "…";
+          resolved = true; abortController = null; var finalText = autoAppendXiaojiqiImage(fullContent || "…");
           if (chatSessionId === sessionId) { chatArray.push({role:"assistant", content:finalText, _time: Date.now()}); saveMsgsKey(capturedKey); addPoints(3); }
           contentDiv.innerHTML = renderMD(finalText); hl();
           var mt = document.createElement("div"); mt.className = "msg-time"; mt.textContent = getTimeStr(); msgDiv.querySelector(".msg-body").appendChild(mt);
@@ -1373,7 +1373,7 @@ function sendMsg(text) {
         pump();
       }).catch(function(e) {
         if (resolved || chatSessionId !== sessionId) return; resolved = true; abortController = null;
-        if (fullContent && chatSessionId === sessionId) { chatArray.push({role:"assistant", content:fullContent, _time: Date.now()}); saveMsgsKey(capturedKey); addPoints(3); var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>'; msgDiv.querySelector(".msg-body").appendChild(act); }
+        if (fullContent && chatSessionId === sessionId) { var ft2 = autoAppendXiaojiqiImage(fullContent); chatArray.push({role:"assistant", content:ft2, _time: Date.now()}); saveMsgsKey(capturedKey); addPoints(3); var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>'; msgDiv.querySelector(".msg-body").appendChild(act); }
         else if (!fullContent && !(e && e.name === "AbortError")) msgDiv.remove();
         streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
       });
@@ -1381,13 +1381,25 @@ function sendMsg(text) {
     pump();
   }).catch(function(e) {
     if (resolved || chatSessionId !== sessionId) return; resolved = true; abortController = null;
-    if (fullContent && chatSessionId === sessionId) { chatArray.push({role:"assistant", content:fullContent, _time: Date.now()}); saveMsgsKey(capturedKey); addPoints(3); contentDiv.innerHTML = renderMD(fullContent); hl(); var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>'; msgDiv.querySelector(".msg-body").appendChild(act); }
+    if (fullContent && chatSessionId === sessionId) { var ft3 = autoAppendXiaojiqiImage(fullContent); chatArray.push({role:"assistant", content:ft3, _time: Date.now()}); saveMsgsKey(capturedKey); addPoints(3); contentDiv.innerHTML = renderMD(ft3); hl(); var act = document.createElement("div"); act.className = "msg-actions"; act.innerHTML = '<button class="btn-copy" onclick="copyMsg(this)">复制</button>'; msgDiv.querySelector(".msg-body").appendChild(act); }
     else if (!fullContent && !(e && e.name === "AbortError")) { showErr(e.message); msgDiv.remove(); }
     streaming = false; dom.btnSend.disabled = false; dom.typing.style.display = "none";
   });
 }
 
 function showErr(msg) { var d = document.createElement("div"); d.className = "error"; d.textContent = "⚠ "+msg; dom.messages.appendChild(d); scrollBottom(); }
+
+// ===== AUTO-APPEND IMAGE FOR XIAOJIQI =====
+var WH_PICS = ["IMG_4922.JPG","IMG_4923.JPG","IMG_4924.JPG","IMG_4925.JPG","IMG_4926.JPG","IMG_4974.JPG","IMG_6742.JPG","IMG_6744.JPG","IMG_6746.JPG","IMG_6750.JPG","IMG_6751.JPG","IMG_6752.JPG","IMG_6759.JPG","IMG_6760.JPG","IMG_6761.JPG","IMG_7262.JPG","IMG_7358.JPG","IMG_7359.JPG","IMG_7483.jpg","IMG_7503.JPG","IMG_7505.JPG","IMG_7506.JPG","IMG_7987.JPG","IMG_7988.JPG","IMG_7989.JPG","IMG_7990.JPG","IMG_8020.jpg","IMG_6766.PNG","IMG_7976.PNG","IMG_7986.PNG","IMG_4976.PNG","IMG_4977.PNG","0179CCC4-A97B-4C86-B561-AD41A7D41A96.PNG","36874.JPG","401B7A4B-11B6-46D7-8667-7BEE8FE9713E.PNG","57A8A04A-50F7-4993-B6D7-FF8F7FD38A1D.PNG","68CE538A-4375-49E3-98E2-0C294122D0A7.PNG","B1350E2E-DCA7-456B-9E44-9C03B1376B61.PNG","D2B09C0F-C659-4814-8195-37C03FA694F7.PNG","IMG_7263.JPG"];
+function autoAppendXiaojiqiImage(text) {
+  if (currentModel !== "xiaojiqi") return text;
+  if (!text) return text;
+  // If AI already included an image, keep it
+  if (/\[img:wh\//i.test(text)) return text;
+  // Auto-append a random photo
+  var pic = WH_PICS[Math.floor(Math.random() * WH_PICS.length)];
+  return text + '\n\n[img:wh/' + pic + ']';
+}
 function saveMsgs() {
   if (!msgsKey || messages.length === 0) return;
   try { var clone = messages.map(function(m){return {role:m.role, content:m.content, _time:m._time}}); localStorage.setItem(msgsKey, JSON.stringify(clone)); try { sessionStorage.setItem(msgsKey, JSON.stringify(clone)); } catch(e) {} } catch(e) {}
