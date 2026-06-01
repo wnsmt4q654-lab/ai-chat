@@ -77,6 +77,8 @@
     .mc-badge.premium{background:linear-gradient(135deg,rgba(245,166,35,0.2),rgba(212,160,23,0.12));color:#C7920A;border:1px solid rgba(212,160,23,0.25)}
     .mc-badge.naiwa-tag{background:rgba(76,175,80,0.15);color:#388E3C;border:1px solid rgba(76,175,80,0.2)}
     .mc-badge.custom{background:rgba(0,0,0,0.05);color:var(--text2)}
+    .mc-del{position:absolute;top:8px;right:10px;width:24px;height:24px;border-radius:50%;border:none;background:rgba(231,76,60,0.1);color:#e74c3c;font-size:14px;cursor:pointer;z-index:2;display:flex;align-items:center;justify-content:center;transition:all .15s}
+    .mc-del:active{background:rgba(231,76,60,0.25);transform:scale(.9)}
     .mc-limited{position:absolute;top:2px;left:12px;background:linear-gradient(135deg,#E74C3C,#C0392B);color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:10px;line-height:1;box-shadow:0 2px 8px rgba(231,76,60,0.35);letter-spacing:.5px;z-index:1;animation:limitedPulse 2s ease-in-out infinite}
     @keyframes limitedPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
     .model-section-title{font-size:12px;font-weight:700;color:var(--text);text-align:left;padding:18px 0 4px 4px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
@@ -126,6 +128,33 @@
     .modal-box .btn-secondary{background:var(--input-bg);color:var(--text);border:1px solid var(--card-border)}
     .modal-box .btn-primary:active,.modal-box .btn-secondary:active{transform:scale(.97);opacity:.9}
     .modal-box .share-result{background:var(--input-bg);border:1px solid var(--card-border);border-radius:12px;padding:12px;font-size:11px;color:var(--text2);word-break:break-all;max-height:120px;overflow-y:auto;margin:8px 0;line-height:1.5;white-space:pre-wrap}
+
+    /* ===== ABOUT MODAL ===== */
+    .about-logo{width:56px;height:56px;border-radius:50%;margin:0 auto 12px;display:block;object-fit:cover}
+    .about-name{font-size:20px;font-weight:800;text-align:center;margin-bottom:2px}
+    .about-ver{font-size:12px;color:var(--text2);text-align:center;margin-bottom:10px}
+    .about-dev{font-size:13px;color:var(--text);text-align:center;margin-bottom:4px}
+    .about-dev span{color:var(--accent);font-weight:600}
+    .about-links{display:flex;gap:8px;margin-top:14px}
+    .about-links button{flex:1;padding:10px;border-radius:14px;border:1px solid var(--card-border);background:var(--input-bg);color:var(--text);font-size:13px;cursor:pointer;font-family:inherit;transition:all .15s}
+    .about-links button:active{background:var(--accent-light)}
+    .about-links button.primary{background:var(--accent);color:#fff;border:none}
+    .support-img{width:200px;max-width:70%;display:block;margin:12px auto;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.1)}
+
+    /* ===== POINTS SHOP ===== */
+    .shop-item{display:flex;align-items:center;gap:10px;padding:12px;background:var(--input-bg);border:1px solid var(--card-border);border-radius:14px;margin-bottom:8px}
+    .shop-item .si-icon{font-size:24px;flex-shrink:0}
+    .shop-item .si-info{flex:1;min-width:0}
+    .shop-item .si-name{font-size:13px;font-weight:600}
+    .shop-item .si-desc{font-size:10px;color:var(--text2);margin-top:1px}
+    .shop-item .si-btn{padding:6px 14px;border-radius:14px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .15s;background:var(--accent);color:#fff}
+    .shop-item .si-btn:disabled{background:#ccc;color:#999;cursor:not-allowed}
+    .shop-item .si-btn.owned{background:rgba(76,175,80,0.15);color:#388E3C}
+
+    /* ===== PERSONALITY SETTINGS ===== */
+    .pref-row{display:flex;gap:4px;margin-top:4px}
+    .pref-opt{padding:5px 10px;border-radius:12px;border:1px solid var(--card-border);background:var(--input-bg);color:var(--text2);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+    .pref-opt.active{background:var(--accent);color:#fff;border-color:var(--accent)}
 
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes zoomIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
@@ -219,7 +248,8 @@
     .error{background:rgba(231,76,60,0.08);color:#e74c3c;padding:10px 14px;border-radius:14px;font-size:12px;margin:6px 0}
 
     .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:6px 10px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
-    .input-tools{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px;align-items:center;justify-content:center}
+    .input-tools{display:flex;gap:3px;flex-wrap:nowrap;margin-bottom:6px;align-items:center;justify-content:flex-start;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px;mask-image:linear-gradient(to right,transparent 0,#000 8px,#000 calc(100% - 24px),transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 8px,#000 calc(100% - 24px),transparent 100%)}
+    .input-tools::-webkit-scrollbar{display:none}
     .input-tool{display:flex;align-items:center;gap:3px;padding:4px 9px;border:none;border-radius:14px;background:rgba(0,0,0,0.04);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap;transition:all .15s}
     .input-tool:active{transform:scale(.95)}
     .input-tool.on{background:var(--accent);color:#fff}
@@ -285,7 +315,11 @@
   <div class="model-cards" id="modelCards"></div>
   <div style="text-align:center;margin-top:12px">
     <button class="plaza-link" onclick="showCreator()" style="margin-right:8px">✨ 创建角色</button>
-    <button class="plaza-link" onclick="showPlaza()">🌟 AI广场</button>
+    <button class="plaza-link" onclick="showPlaza()" style="margin-right:8px">🌟 AI广场</button>
+    <button class="plaza-link" onclick="showShop()">🏪 积分商城</button>
+  </div>
+  <div style="text-align:center;margin-top:6px">
+    <button class="plaza-link" onclick="showAbout()">ℹ️ 关于我们</button>
   </div>
 </div>
 
@@ -314,6 +348,23 @@
         <div class="s-row">
           <button class="s-btn active" onclick="setTheme('light',this)">☀️ 浅色</button>
           <button class="s-btn" onclick="setTheme('dark',this)">🌙 深色</button>
+        </div>
+        <div class="s-label" style="margin-top:8px" id="prefLabel">🎚 Swai个性偏好</div>
+        <div id="prefLength" style="margin-bottom:6px">
+          <span style="font-size:10px;color:var(--text2)">回复长度</span>
+          <div class="pref-row">
+            <button class="pref-opt" onclick="setPref('length','short',this)">📝 简短</button>
+            <button class="pref-opt active" onclick="setPref('length','normal',this)">📄 标准</button>
+            <button class="pref-opt" onclick="setPref('length','long',this)">📚 详细</button>
+          </div>
+        </div>
+        <div id="prefTone" style="margin-bottom:8px">
+          <span style="font-size:10px;color:var(--text2)">额外语气</span>
+          <div class="pref-row">
+            <button class="pref-opt" onclick="setPref('tone','creative',this)">🎨 创意</button>
+            <button class="pref-opt" onclick="setPref('tone','professional',this)">💼 专业</button>
+            <button class="pref-opt active" onclick="setPref('tone','none',this)">✨ 默认</button>
+          </div>
         </div>
         <div class="s-label" style="margin-top:8px">👤 用户</div>
         <div class="s-row">
@@ -364,7 +415,7 @@
       <button class="btn-send" id="btnSend">↑</button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v1.7.2</p>
+    <p class="input-hint">🐋 SeaWhy AI · 深潜信息海洋 · 网页由ccy制作 · v2.0.1</p>
   </footer>
 </div>
 
@@ -425,6 +476,37 @@
     <div class="btn-row">
       <button class="btn-secondary" onclick="closeCreator()">取消</button>
       <button class="btn-primary" onclick="createCharacter()">✨ 创建</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ABOUT MODAL ===== -->
+<div class="modal-overlay hide" id="aboutModal">
+  <div class="modal-box">
+    <img src="swai-avatar.jpg" class="about-logo" alt="SeaWhy AI">
+    <div class="about-name">SeaWhy AI</div>
+    <div class="about-ver">v2.0.1</div>
+    <div class="about-dev">开发者：<span>ccy</span></div>
+    <p style="font-size:11px;color:var(--text2);text-align:center;margin-top:4px;line-height:1.5">像鲸鱼在信息海洋中深潜<br>寻找问题背后的Why 🐋</p>
+    <div class="about-links">
+      <button onclick="showSupport()">❤️ 支持我们</button>
+      <button class="primary" onclick="closeAbout()">关闭</button>
+    </div>
+    <div id="supportImgArea" style="display:none">
+      <img src="support-qr.png" class="support-img" alt="支持我们">
+      <p style="font-size:10px;color:var(--text2);text-align:center">感谢你的支持！扫描二维码 💕</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== POINTS SHOP MODAL ===== -->
+<div class="modal-overlay hide" id="shopModal">
+  <div class="modal-box">
+    <h3>🏪 积分商城</h3>
+    <p class="modal-sub">当前积分：<span id="shopPts" style="color:var(--accent);font-weight:700">0</span> · 兑换专属奖励</p>
+    <div id="shopItems"></div>
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="closeShop()">关闭</button>
     </div>
   </div>
 </div>
@@ -542,7 +624,7 @@ var NAIWA_MOOD_IMAGES = {
 
 // ===== MODELS (personal models: no descriptions) =====
 var MODELS = {
-  swai: { name: "Swai v1.5", avatar: '<img src="swai-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v1.5", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "严谨分析 · 法律学习 · 论文辅导 · 代码开发", caps: ["严谨分析","论文辅导","代码开发","法律学习","知识问答","逻辑推理"], tag:"official" },
+  swai: { name: "Swai v2.0", avatar: '<img src="swai-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Swai v2.0", sysPrompt: SWAI_PROMPT, gentlePrompt: SWAI_GENTLE_PROMPT, desc: "严谨分析 · 法律学习 · 论文辅导 · 代码开发", caps: ["严谨分析","论文辅导","代码开发","法律学习","知识问答","逻辑推理"], tag:"official" },
   ahy: { name: "Ahy", avatar: '<img src="ahy-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "Ahy", sysPrompt: AHY_PROMPT, desc: "", caps: [], tag:"personal" },
   kute: { name: "kute", avatar: '<img src="kute-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "kute", sysPrompt: KUTE_PROMPT, desc: "", caps: [], tag:"personal" },
   nuanri: { name: "暖日蓝恬", avatar: '<img src="nuanri-avatar.jpg" style="width:100%;height:100%;object-fit:cover">', title: "暖日蓝恬", sysPrompt: NUANRI_PROMPT, desc: "", caps: [], tag:"personal" },
@@ -617,12 +699,14 @@ dom.inviteCode.addEventListener("keydown", function(e) { if (e.key === "Enter") 
 function modelCard(id, badge) {
   var M = MODELS[id] || CUSTOM_CHARS[id];
   if (!M) return '';
+  var isCustomChar = !!CUSTOM_CHARS[id];
   var extra = id === "naiwa" ? '<span class="mc-limited">限时免费</span>' : '';
   var bg = badge || '';
   var descText = M.desc || "";
   var desc = descText ? '<div class="mc-desc">'+escHtml(descText)+'</div>' : '';
+  var delBtn = isCustomChar ? '<button class="mc-del" onclick="deleteCharacter(\''+id+'\',event)" title="删除角色">×</button>' : '';
   var avatarSrc = M._avatarSrc || (id + '-avatar.jpg');
-  return '<div class="model-card" onclick="enterChat(\''+id+'\')">'+extra+
+  return '<div class="model-card" onclick="enterChat(\''+id+'\')">'+extra+delBtn+
     '<div class="mc-avatar"><img src="'+avatarSrc+'" onerror="this.style.display=\'none\';this.parentElement.textContent=\''+(M._avatarEmoji||'🤖')+'\';this.parentElement.style.fontSize=\'30px\'"></div>'+
     '<div class="mc-info"><div class="mc-name">'+escHtml(M.name)+'</div>'+desc+'</div>'+bg+'</div>';
 }
@@ -704,6 +788,8 @@ function rgbToHex(rgb) { if (!rgb) return ""; var m = rgb.match(/\d+/g); if (!m)
 function toggleSettings() {
   dom.settingsDrop.classList.toggle("show");
   updatePointsUI();
+  updatePrefUI();
+  if (currentModel) updatePrefVisibility(currentModel);
   setTimeout(function() {
     document.addEventListener("click", function close(e) {
       if (!e.target.closest("#btnSettings")) { dom.settingsDrop.classList.remove("show"); document.removeEventListener("click", close); }
@@ -760,6 +846,21 @@ function pickCreatorEmoji(emoji, el) {
   el.classList.add("active"); window._creatorEmoji = emoji;
 }
 function closeCreator() { document.getElementById("creatorModal").classList.add("hide"); }
+function deleteCharacter(id, e) {
+  e.stopPropagation();
+  var M = CUSTOM_CHARS[id];
+  if (!M) return;
+  if (!confirm("确定删除角色「" + M.name + "」吗？此操作不可撤销。")) return;
+  delete CUSTOM_CHARS[id];
+  saveCustomChars();
+  // Also clean up chat history
+  try { localStorage.removeItem("chat-msgs-" + id); sessionStorage.removeItem("chat-msgs-" + id); } catch(e) {}
+  delete messageCache[id];
+  delete MODEL_STATS[id];
+  try { localStorage.setItem("ai-model-stats", JSON.stringify(MODEL_STATS)); } catch(e) {}
+  showToast("角色「" + M.name + "」已删除");
+  showModelScreen(hasFullAccess);
+}
 function createCharacter() {
   var name = document.getElementById("creatorName").value.trim();
   if (!name) { showToast("请输入角色名称"); return; }
@@ -774,6 +875,102 @@ function createCharacter() {
 
 // ===== TOAST =====
 function showToast(msg) { var t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(function(){t.remove()}, 2200); }
+
+// ===== ABOUT / SUPPORT / SHOP =====
+function showAbout() { document.getElementById("supportImgArea").style.display = "none"; document.getElementById("aboutModal").classList.remove("hide"); }
+function closeAbout() { document.getElementById("aboutModal").classList.add("hide"); }
+function showSupport() { document.getElementById("supportImgArea").style.display = "block"; }
+function showShop() {
+  document.getElementById("shopPts").textContent = userPoints;
+  renderShopItems();
+  document.getElementById("shopModal").classList.remove("hide");
+}
+function closeShop() { document.getElementById("shopModal").classList.add("hide"); }
+
+// Shop items (cosmetic unlocks)
+var SHOP_ITEMS = [
+  { id:"goldBubble", name:"金色气泡", desc:"解锁金色聊天气泡", icon:"🌟", cost:100, apply:function(){ userBubble="#F5A623"; savePrefs(); applyAppearance(); } },
+  { id:"purpleBubble", name:"紫色气泡", desc:"解锁紫色聊天气泡", icon:"💜", cost:100, apply:function(){ userBubble="#A78BFA"; savePrefs(); applyAppearance(); } },
+  { id:"pinkBubble", name:"粉色气泡", desc:"解锁粉色聊天气泡", icon:"💗", cost:100, apply:function(){ userBubble="#FF6B6B"; savePrefs(); applyAppearance(); } },
+  { id:"darkAccent", name:"暗夜蓝主题", desc:"解锁暗夜蓝强调色", icon:"🌙", cost:200, apply:function(){ document.documentElement.style.setProperty("--accent","#6366f1"); document.documentElement.style.setProperty("--accent-light","rgba(99,102,241,0.18)"); showToast("暗夜蓝主题已应用 ✅"); } },
+  { id:"vipBadge", name:"VIP徽章", desc:"在名字旁显示VIP标识", icon:"👑", cost:300, apply:function(){ showToast("VIP徽章已激活 👑"); } },
+  { id:"customAccent", name:"自定义强调色", desc:"重置为默认蓝色强调色", icon:"🎨", cost:50, apply:function(){ document.documentElement.style.setProperty("--accent","#4A90D9"); document.documentElement.style.setProperty("--accent-light","rgba(74,144,217,0.18)"); showToast("强调色已重置 ✅"); } }
+];
+var OWNED_ITEMS = {};
+try { OWNED_ITEMS = JSON.parse(localStorage.getItem("ai-owned-items") || "{}"); } catch(e) {}
+function saveOwned() { try { localStorage.setItem("ai-owned-items", JSON.stringify(OWNED_ITEMS)); } catch(e) {} }
+function renderShopItems() {
+  var h = '';
+  for (var i = 0; i < SHOP_ITEMS.length; i++) {
+    var item = SHOP_ITEMS[i], owned = OWNED_ITEMS[item.id], canBuy = userPoints >= item.cost && !owned;
+    h += '<div class="shop-item"><div class="si-icon">'+item.icon+'</div><div class="si-info"><div class="si-name">'+item.name+'</div><div class="si-desc">'+item.desc+' · '+item.cost+'积分</div></div>';
+    h += '<button class="si-btn'+(owned?' owned':'')+'" '+(canBuy?'onclick="buyItem(\''+item.id+'\')"':'disabled')+'>'+(owned?'已拥有':(canBuy?'兑换':'积分不足'))+'</button></div>';
+  }
+  document.getElementById("shopItems").innerHTML = h;
+}
+function buyItem(id) {
+  var item = SHOP_ITEMS.find(function(x){return x.id===id});
+  if (!item || OWNED_ITEMS[id]) return;
+  if (userPoints < item.cost) { showToast("积分不足"); return; }
+  userPoints -= item.cost;
+  try { localStorage.setItem("ai-points", String(userPoints)); } catch(e) {}
+  OWNED_ITEMS[id] = true;
+  saveOwned();
+  item.apply();
+  updatePointsUI();
+  renderShopItems();
+  document.getElementById("shopPts").textContent = userPoints;
+  showToast("兑换成功！"+item.name+"已解锁 ✅");
+}
+
+// ===== PERSONALITY PREFERENCES =====
+var userPrefs = { length:"normal", tone:"none" };
+try { var savedP = JSON.parse(localStorage.getItem("ai-prefs-personality") || "{}"); if (savedP.length) userPrefs.length = savedP.length; if (savedP.tone) userPrefs.tone = savedP.tone; } catch(e) {}
+function savePersonality() { try { localStorage.setItem("ai-prefs-personality", JSON.stringify(userPrefs)); } catch(e) {} }
+function setPref(type, val, btn) {
+  userPrefs[type] = val;
+  savePersonality();
+  var btns = btn.parentElement.querySelectorAll(".pref-opt");
+  for (var i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+  btn.classList.add("active");
+  showToast(type==="length"?"回复长度已更新":"语气偏好已更新");
+}
+function applyPersonalityToPrompt(sysP) {
+  // Modify system prompt based on preferences
+  var mod = "";
+  if (userPrefs.length === "short") mod += "\n\n【回复长度要求】请保持回复简短精炼，控制在3-5句话以内。";
+  else if (userPrefs.length === "long") mod += "\n\n【回复长度要求】请给出详细全面的回复，充分展开论述。";
+  if (userPrefs.tone === "creative") mod += "\n\n【语气要求】请发挥创意和想象力，可以适当使用比喻、故事等生动表达。";
+  else if (userPrefs.tone === "professional") mod += "\n\n【语气要求】请保持专业严谨的表达风格，使用规范术语。";
+  return sysP + mod;
+}
+function updatePrefUI() {
+  // Update active states in settings dropdown
+  var allPrefs = document.querySelectorAll(".pref-opt");
+  for (var i = 0; i < allPrefs.length; i++) {
+    allPrefs[i].classList.remove("active");
+  }
+  // Find and activate the right ones
+  var lengthBtns = document.querySelectorAll("#prefLength .pref-opt");
+  var lengthVals = ["short","normal","long"];
+  for (var j = 0; j < lengthBtns.length; j++) {
+    if (lengthVals[j] === userPrefs.length) lengthBtns[j].classList.add("active");
+  }
+  var toneBtns = document.querySelectorAll("#prefTone .pref-opt");
+  var toneVals = ["creative","professional","none"];
+  for (var k = 0; k < toneBtns.length; k++) {
+    if (toneVals[k] === userPrefs.tone) toneBtns[k].classList.add("active");
+  }
+}
+function updatePrefVisibility(modelId) {
+  var isSwai = modelId === "swai";
+  var label = document.getElementById("prefLabel");
+  var length = document.getElementById("prefLength");
+  var tone = document.getElementById("prefTone");
+  if (label) label.style.display = isSwai ? "" : "none";
+  if (length) length.style.display = isSwai ? "" : "none";
+  if (tone) tone.style.display = isSwai ? "" : "none";
+}
 
 // ===== TOOLBAR VISIBILITY =====
 function updateToolbarVisibility(modelId) {
@@ -796,6 +993,7 @@ function enterChat(modelId) {
   dom.chatTitle.textContent = M ? M.title : modelId;
   hideAllScreens(); dom.chatView.classList.add("show");
   updateToolbarVisibility(modelId);
+  updatePrefVisibility(modelId);
   if (modelId === "swai") dom.typing.classList.add("no-avatar"); else dom.typing.classList.remove("no-avatar");
   updateModeBtn(); trackModelUse(modelId); addPoints(1); renderAllMessages();
   var expectedCount = messages.length;
@@ -962,6 +1160,7 @@ function sendMsg(text) {
   var fullContent = "", resolved = false, apiMsgs = [];
   for (var i = 0; i < messages.length; i++) apiMsgs.push({role:messages[i].role, content:messages[i].rawContent||messages[i].content});
   var sysP = (currentModel==="swai"&&swaiMode==="gentle") ? (M?M.gentlePrompt:SWAI_GENTLE_PROMPT) : (M?M.sysPrompt:"");
+  if (currentModel === "swai" && sysP) sysP = applyPersonalityToPrompt(sysP);
   if (webSearch && sysP) sysP += "\n\n[知识增强模式] 请调用你训练数据中最新的知识，尽可能给出准确、详尽、有时效性的回答。";
   if (sysP) apiMsgs.unshift({role:"system", content:sysP});
 
@@ -1122,6 +1321,7 @@ if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js").ca
 // ===== INIT =====
 applyAppearance();
 updatePointsUI();
+updatePrefUI();
 </script>
 </body>
 </html>
