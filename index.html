@@ -435,7 +435,7 @@
       </button>
     </div>
     <input type="file" id="fileInput" style="display:none" accept="image/*,.txt,.md,.json,.csv,.py,.js,.html,.css,.xml,.log,.pdf,.docx,.doc" multiple>
-    <p class="input-hint">🐋 SeaWhy AI · 网页由ccy制作 · v2.0.16</p>
+    <p class="input-hint">🐋 SeaWhy AI · 网页由ccy制作 · v2.0.17</p>
   </footer>
 </div>
 
@@ -1076,13 +1076,9 @@ var OWNED_ITEMS = {};
 try { OWNED_ITEMS = JSON.parse(localStorage.getItem("ai-owned-items") || "{}"); } catch(e) {}
 function saveOwned() { try { localStorage.setItem("ai-owned-items", JSON.stringify(OWNED_ITEMS)); } catch(e) {} }
 
-// Apply purchased effects on startup
+// Apply purchased effects on startup (only accent, not bubble — user can switch)
 function applyOwnedEffects() {
-  if (OWNED_ITEMS["goldBubble"]) { userBubble = "#F5A623"; savePrefs(); }
-  if (OWNED_ITEMS["purpleBubble"]) { userBubble = "#A78BFA"; savePrefs(); }
-  if (OWNED_ITEMS["pinkBubble"]) { userBubble = "#FF6B6B"; savePrefs(); }
   if (OWNED_ITEMS["darkAccent"]) { document.documentElement.style.setProperty("--accent","#6366f1"); document.documentElement.style.setProperty("--accent-light","rgba(99,102,241,0.18)"); }
-  // Show VIP badge in settings
   if (OWNED_ITEMS["vipBadge"]) {
     var ptsEl = document.getElementById("ptsDisplay");
     if (ptsEl && !document.getElementById("vipMark")) {
