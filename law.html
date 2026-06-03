@@ -21,10 +21,11 @@
     html,body{height:100dvh;height:-webkit-fill-available;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Noto Serif SC",serif;background:var(--bg);color:var(--text);-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased;-webkit-user-select:none;user-select:none}
     :root{
       --bg:#fff;--nav-bg:#fff;--card-bg:#fff;--card-border:rgba(0,0,0,0.08);
-      --text:#111;--text2:#888;--input-bg:#fff;--input-border:rgba(0,0,0,0.12);
+      --text:#111;--text2:#888;--input-bg:#f5f5f7;--input-border:rgba(0,0,0,0.1);
       --ai-bubble:#fff;--user-bubble:#C5DFF8;--bubble-shadow:0 1px 4px rgba(0,0,0,0.06);
-      --invite-bg:#fff;--accent:#1a5276;--accent-light:rgba(26,82,118,0.1);
+      --invite-bg:#f8f9fa;--accent:#1a5276;--accent-light:rgba(26,82,118,0.08);
       --modal-overlay:rgba(0,0,0,0.5);--toast-bg:#333;--toast-text:#fff;
+      --safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px);
     }
     body.dark{
       --bg:#111;--nav-bg:#1a1a1a;--card-bg:#1a1a1a;--card-border:#333;
@@ -36,45 +37,36 @@
     body{display:flex;flex-direction:column;background:var(--bg)}
 
     /* ===== SCREENS ===== */
-    .screen{flex:1;display:none!important;flex-direction:column;overflow-y:auto;background:var(--invite-bg)}
+    .screen{flex:1;display:none!important;flex-direction:column;overflow-y:auto;background:var(--invite-bg);-webkit-overflow-scrolling:touch}
     .screen.show{display:flex!important}
-    #homeScreen{align-items:center;justify-content:center;padding:max(30px,env(safe-area-inset-top)) 24px max(30px,env(safe-area-inset-bottom));text-align:center}
+    #homeScreen{align-items:center;justify-content:center;padding:calc(40px + var(--safe-top)) 20px calc(40px + var(--safe-bottom));text-align:center;min-height:100dvh;min-height:-webkit-fill-available}
     #homeScreen.hide{display:none!important}
 
     /* ===== HOME SCREEN ===== */
-    #homeScreen .logo{font-size:48px;margin-bottom:10px;display:flex;align-items:center;justify-content:center}
-    #homeScreen .logo img{width:56px;height:56px;border-radius:50%;object-fit:cover;box-shadow:0 4px 20px rgba(26,82,118,0.25)}
-    #homeScreen .logo .logo-emoji{font-size:56px}
-    #homeScreen h2{font-size:26px;font-weight:800;margin-bottom:4px;letter-spacing:-0.5px}
-    #homeScreen .brand-tagline{font-size:13px;color:var(--text2);margin-bottom:8px;line-height:1.6;max-width:300px;margin-left:auto;margin-right:auto}
+    #homeScreen .logo{margin-bottom:12px;display:flex;align-items:center;justify-content:center}
+    #homeScreen .logo .ico{color:var(--accent)}
+    #homeScreen h2{font-size:clamp(22px,5vw,28px);font-weight:800;margin-bottom:4px;letter-spacing:-0.5px}
+    #homeScreen .brand-tagline{font-size:clamp(12px,2.8vw,14px);color:var(--text2);margin-bottom:10px;line-height:1.6;max-width:300px;margin-left:auto;margin-right:auto;padding:0 8px}
     #homeScreen .brand-tagline em{font-style:normal;color:var(--accent);font-weight:600}
-    #homeScreen .sub{font-size:12px;color:var(--text2);margin-bottom:12px}
-    .cta-btn{display:block;width:100%;max-width:300px;margin:0 auto 18px;padding:16px 24px;border:none;border-radius:16px;font-size:16px;font-weight:700;cursor:pointer;color:#fff;background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 4px 20px rgba(26,82,118,0.35);transition:all .15s;font-family:inherit;letter-spacing:.5px}
+    #homeScreen .sub{font-size:12px;color:var(--text2);margin-bottom:14px}
+    .cta-btn{display:flex;align-items:center;justify-content:center;gap:4px;width:100%;max-width:320px;margin:0 auto 20px;padding:15px 24px;border:none;border-radius:16px;font-size:clamp(15px,3.5vw,17px);font-weight:700;cursor:pointer;color:#fff;background:linear-gradient(135deg,#1a5276,#2980b9);box-shadow:0 4px 20px rgba(26,82,118,0.3);transition:all .15s;font-family:inherit;letter-spacing:.5px;min-height:50px}
     .cta-btn:active{transform:scale(.97);opacity:.9}
 
     /* ---- model cards ---- */
-    .model-cards{max-width:340px;margin:0 auto;display:flex;flex-direction:column;gap:10px}
-    .model-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:14px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;position:relative;overflow:visible}
+    .model-cards{max-width:380px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:10px;padding:0 4px}
+    .model-card{background:var(--card-bg);border:1px solid var(--card-border);border-radius:18px;padding:15px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .15s;position:relative;overflow:visible;min-height:64px}
     .model-card:active{background:var(--input-bg);transform:scale(.98)}
-    .mc-icon{width:46px;height:46px;border-radius:50%;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:28px;background:var(--accent-light)}
+    .mc-icon{width:48px;height:48px;border-radius:12px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--accent-light);color:var(--accent)}
+    .mc-icon svg{width:24px;height:24px}
     .mc-info{flex:1;min-width:0;text-align:left}
-    .mc-name{font-size:16px;font-weight:600;line-height:1.3}
-    .mc-desc{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.5}
-    .mc-arrow{font-size:14px;color:var(--text2);flex-shrink:0}
-    .model-section-title{font-size:12px;font-weight:700;color:var(--text);text-align:left;padding:18px 0 4px 4px;letter-spacing:1px;display:flex;align-items:center;gap:6px}
-    .model-section-title:first-child{padding-top:0}
-
-    /* ===== BOTTOM NAV ===== */
-    .bottom-nav{flex-shrink:0;display:flex;justify-content:stretch;align-items:center;padding:8px 4px calc(8px + env(safe-area-inset-bottom));background:var(--nav-bg);border-top:1px solid var(--card-border);margin-top:auto;position:sticky;bottom:0;z-index:10}
-    .bottom-nav .nav-item{display:flex;flex:1;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:6px 4px;border:none;background:none;color:var(--text2);font-family:inherit;font-size:10px;transition:all .15s}
-    .bottom-nav .nav-item:active{color:var(--accent);opacity:.8}
-    .bottom-nav .nav-item.active{color:var(--accent);font-weight:600}
-    .bottom-nav .nav-item svg{width:22px;height:22px}
+    .mc-name{font-size:clamp(14px,3.5vw,17px);font-weight:600;line-height:1.3}
+    .mc-desc{font-size:clamp(10px,2.5vw,12px);color:var(--text2);margin-top:2px;line-height:1.5}
+    .mc-arrow{font-size:18px;color:var(--text2);flex-shrink:0;font-weight:300}
 
     /* ===== CHAT VIEW ===== */
     #chatView{flex:1;display:none!important;flex-direction:column;overflow:hidden;overscroll-behavior:none;background:var(--bg)}
     #chatView.show{display:flex!important}
-    .wx-nav{display:flex;align-items:center;padding:env(safe-area-inset-top) 12px 0;height:calc(46px + env(safe-area-inset-top));background:var(--nav-bg);flex-shrink:0;border-bottom:1px solid var(--card-border)}
+    .wx-nav{display:flex;align-items:center;padding:var(--safe-top) 8px 0;height:calc(48px + var(--safe-top));background:var(--nav-bg);flex-shrink:0;border-bottom:1px solid var(--card-border);min-height:48px}
     .wx-nav .back{font-size:16px;color:var(--accent);cursor:pointer;padding:8px 4px;flex-shrink:0;white-space:nowrap;border:none;background:none;font-family:inherit;width:44px;display:flex;align-items:center;justify-content:center}
     .wx-nav .title{flex:1;text-align:center;font-size:17px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 4px}
     .wx-nav .right-btn{font-size:20px;color:var(--text);cursor:pointer;padding:8px;width:44px;text-align:center;flex-shrink:0;border:none;background:none;position:relative;display:flex;align-items:center;justify-content:center}
@@ -90,7 +82,7 @@
     .settings-drop .s-input{width:100%;background:var(--input-bg);border:1px solid var(--card-border);color:var(--text);padding:8px 10px;border-radius:10px;font-size:12px;font-family:monospace;outline:none;margin-bottom:6px;transition:border-color .15s}
     .settings-drop .s-input:focus{border-color:var(--accent)}
 
-    .chat-area{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:12px 14px;-webkit-overflow-scrolling:touch;background:var(--bg);touch-action:pan-y}
+    .chat-area{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:10px 10px;-webkit-overflow-scrolling:touch;background:var(--bg);touch-action:pan-y;-webkit-overflow-scrolling:touch}
     .messages{display:flex;flex-direction:column;gap:4px;padding-bottom:8px}
 
     .welcome{text-align:center;padding:40px 16px 24px}
@@ -151,7 +143,7 @@
     .input-tool{display:flex;align-items:center;gap:3px;padding:5px 10px;border:none;border-radius:14px;background:rgba(0,0,0,0.04);color:var(--text2);cursor:pointer;font-size:11px;font-family:inherit;white-space:nowrap;transition:all .15s}
     .input-tool:active{transform:scale(.95)}
     .input-tool.on{background:var(--accent);color:#fff}
-    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:8px 12px calc(8px + env(safe-area-inset-bottom));box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
+    .input-bar{flex-shrink:0;background:var(--nav-bg);border-top:1px solid var(--card-border);padding:8px 10px calc(8px + var(--safe-bottom));box-shadow:0 -4px 24px rgba(0,0,0,0.08)}
     .input-row{display:flex;align-items:flex-end;gap:8px}
     .input-field-wrap{flex:1;background:var(--input-bg);border:2px solid var(--input-border);border-radius:22px;padding:2px 14px;transition:border-color .2s}
     .input-field-wrap:focus-within{border-color:var(--accent)}
@@ -266,18 +258,6 @@
       </div>
       <span class="mc-arrow">›</span>
     </div>
-  </div>
-
-  <div class="bottom-nav">
-    <button class="nav-item" onclick="enterChat()">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>咨询
-    </button>
-    <button class="nav-item" onclick="showDatabase()">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>数据库
-    </button>
-    <button class="nav-item" onclick="showAbout()">
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>关于
-    </button>
   </div>
 </div>
 
@@ -479,7 +459,6 @@ function showDatabase() {
   hideAllViews();
   document.getElementById("dbView").classList.add("show");
   renderDatabase();
-  updateNav("db");
 }
 
 function renderDatabase(filter) {
@@ -517,8 +496,8 @@ function filterLaws() {
 
 function previewLaw(file, name) {
   document.getElementById("lawModalTitle").textContent = name;
-  document.getElementById("lawModalMeta").textContent = "正在加载全文…";
-  document.getElementById("lawModalText").textContent = "正在提取文本…";
+  document.getElementById("lawModalMeta").textContent = "正在加载预览引擎…";
+  document.getElementById("lawModalText").textContent = "⏳ 正在加载文档预览…";
   document.getElementById("lawModalDownload").onclick = function() {
     var a = document.createElement("a");
     a.href = "laws/" + encodeURI(file);
@@ -527,26 +506,36 @@ function previewLaw(file, name) {
   };
   document.getElementById("lawModal").classList.remove("hide");
 
-  // Try to read and preview docx
-  if (typeof mammoth !== "undefined") {
-    fetch("laws/" + encodeURI(file)).then(function(r) { return r.arrayBuffer(); }).then(function(buf) {
+  function doPreview() {
+    fetch("laws/" + encodeURI(file)).then(function(r) {
+      document.getElementById("lawModalMeta").textContent = "正在下载文档…";
+      return r.arrayBuffer();
+    }).then(function(buf) {
+      document.getElementById("lawModalMeta").textContent = "正在解析文本…";
       return mammoth.extractRawText({ arrayBuffer: buf });
     }).then(function(result) {
-      var text = result.value || "(无法提取文本)";
-      document.getElementById("lawModalText").textContent = text.substring(0, 15000);
-      document.getElementById("lawModalMeta").textContent = "全文预览（前15000字） · 点击下载获取完整文档";
+      var text = (result.value || "").trim();
+      if (!text) throw new Error("empty");
+      var maxLen = 30000;
+      var truncated = text.length > maxLen;
+      document.getElementById("lawModalText").textContent = text.substring(0, maxLen);
+      document.getElementById("lawModalMeta").textContent = "全文预览" + (truncated ? "（前30000字，共约" + Math.round(text.length/1000) + "千字）" : "") + " · 点击下方按钮下载完整文档";
     }).catch(function() {
-      document.getElementById("lawModalText").textContent = "无法在线预览此文件。请点击下方「下载全文」按钮下载后查阅。";
+      document.getElementById("lawModalText").textContent = "无法在线预览此 .docx 文件。请点击下方「下载全文」按钮，下载后用 Word 或 WPS 打开查阅。";
       document.getElementById("lawModalMeta").textContent = file;
     });
+  }
+
+  if (typeof mammoth !== "undefined") {
+    doPreview();
   } else {
     loadScript("https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js", function(err) {
       if (err) {
-        document.getElementById("lawModalText").textContent = "文档预览引擎加载失败。请点击下方「下载全文」按钮下载后查阅。";
+        document.getElementById("lawModalText").textContent = "预览引擎加载失败。请点击下方「下载全文」按钮下载后查阅。";
         document.getElementById("lawModalMeta").textContent = file;
         return;
       }
-      previewLaw(file, name); // retry
+      doPreview();
     });
   }
 }
@@ -554,6 +543,10 @@ function previewLaw(file, name) {
 function closeLawModal() {
   document.getElementById("lawModal").classList.add("hide");
 }
+// Close law modal on overlay click
+document.getElementById("lawModal").addEventListener("click", function(e) {
+  if (e.target === this) closeLawModal();
+});
 
 // ============================================================
 // ABOUT
@@ -561,7 +554,6 @@ function closeLawModal() {
 function showAbout() {
   hideAllViews();
   document.getElementById("aboutView").classList.add("show");
-  updateNav("about");
 }
 
 // ============================================================
@@ -577,21 +569,11 @@ function hideAllViews() {
 function goHome() {
   hideAllViews();
   document.getElementById("homeScreen").classList.add("show");
-  updateNav("home");
-}
-
-function updateNav(view) {
-  var items = document.querySelectorAll("#homeScreen .nav-item");
-  var labels = { home: 0, chat: 0, db: 1, about: 2 };
-  items.forEach(function(item, i) {
-    item.classList.toggle("active", i === (labels[view] || 0));
-  });
 }
 
 function enterChat() {
   hideAllViews();
   document.getElementById("chatView").classList.add("show");
-  updateNav("chat");
   updateOptUI();
   renderAllMessages();
 }
