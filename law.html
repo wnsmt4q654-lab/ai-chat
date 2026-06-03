@@ -8,7 +8,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   <meta name="description" content="LexPilot · 法学生AI学习助手 — 基于法学实证研究的智能辅助工具" />
   <link rel="apple-touch-icon" href="swai-avatar.jpg" />
-  <link rel="manifest" href="manifest.json" />
+  <link rel="manifest" href="law-manifest.json" />
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
@@ -1036,7 +1036,31 @@ function loadScript(url, cb) { var s = document.createElement("script"); s.src =
   bindEvents();
   renderAllMessages();
   renderDatabase();
+  // Register service worker for offline/PWA support
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js").catch(function(){});
+  }
+  // Show install prompt for PWA
+  window.addEventListener("beforeinstallprompt", function(e) {
+    e.preventDefault();
+    window._installPrompt = e;
+    var banner = document.createElement("div");
+    banner.id = "installBanner";
+    banner.style.cssText = "position:fixed;top:0;left:0;right:0;background:var(--accent);color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;z-index:500;font-size:13px;font-weight:600;gap:8px;padding-top:calc(12px + env(safe-area-inset-top,0px))";
+    banner.innerHTML = '<span>📲 安装 LexPilot 到桌面</span><span style="display:flex;gap:6px;flex-shrink:0"><button onclick="installApp()" style="background:#fff;color:var(--accent);border:none;padding:6px 14px;border-radius:14px;font-weight:700;cursor:pointer;font-size:12px;font-family:inherit">安装</button><button onclick="this.parentElement.parentElement.remove()" style="background:transparent;border:none;color:#fff;cursor:pointer;font-size:16px;padding:2px 6px;font-family:inherit">×</button></span>';
+    document.body.prepend(banner);
+  });
 })();
+function installApp() {
+  if (window._installPrompt) {
+    window._installPrompt.prompt();
+    window._installPrompt.userChoice.then(function(r) {
+      var b = document.getElementById("installBanner");
+      if (b) b.remove();
+      window._installPrompt = null;
+    });
+  }
+}
 </script>
 </body>
 </html>
