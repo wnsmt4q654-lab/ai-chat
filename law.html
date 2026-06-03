@@ -222,22 +222,36 @@
     .law-preview-text{background:var(--input-bg);border:1px solid var(--card-border);border-radius:12px;padding:14px;max-height:50vh;overflow-y:auto;font-size:13px;line-height:1.7;white-space:pre-wrap;word-break:break-word;margin:8px 0}
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes zoomIn{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+
+    /* ===== SVG ICONS ===== */
+    .ico{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1}
+    .ico svg{display:block}
+
+    /* ===== HELP MODAL ===== */
+    #helpModal .modal-box{max-width:420px}
+    .help-section{margin-bottom:14px;padding:12px 14px;background:var(--input-bg);border-radius:12px;border:1px solid var(--card-border)}
+    .help-section h4{font-size:13px;font-weight:700;margin-bottom:3px;display:flex;align-items:center;gap:6px}
+    .help-section h4 .ico svg{width:16px;height:16px}
+    .help-section p{font-size:11px;color:var(--text2);line-height:1.55;margin:0}
+    .help-section .help-example{font-size:10px;color:var(--accent);margin-top:4px;font-style:italic}
   </style>
 </head>
 <body>
 
 <!-- ===== HOME SCREEN ===== -->
 <div class="screen show" id="homeScreen">
-  <div class="logo"><span class="logo-emoji">⚖️</span></div>
+  <div class="logo"><span class="ico" style="width:56px;height:56px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 21"/><path d="M5 3 L5 21"/><path d="M19 3 L19 21"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg></span></div>
   <h2>LexPilot</h2>
   <p class="brand-tagline">法学生<em>AI学习助手</em><br>基于法学实证研究优化</p>
   <p class="sub">选择功能开始使用</p>
 
-  <button class="cta-btn" onclick="enterChat()">💬 开始法律咨询</button>
+  <button class="cta-btn" onclick="enterChat()">
+    <span class="ico" style="margin-right:6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>开始法律咨询
+  </button>
 
   <div class="model-cards">
     <div class="model-card" onclick="showDatabase()">
-      <div class="mc-icon">📚</div>
+      <div class="mc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="14" y2="11"/></svg></div>
       <div class="mc-info">
         <div class="mc-name">法律数据库</div>
         <div class="mc-desc">7部核心法律 · 全文检索 · 下载查阅</div>
@@ -245,7 +259,7 @@
       <span class="mc-arrow">›</span>
     </div>
     <div class="model-card" onclick="showAbout()">
-      <div class="mc-icon">ℹ️</div>
+      <div class="mc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.5" fill="currentColor"/></svg></div>
       <div class="mc-info">
         <div class="mc-name">关于我们</div>
         <div class="mc-desc">了解 LexPilot · 法学AI研究背景</div>
@@ -272,27 +286,26 @@
   <div class="wx-nav">
     <button class="back" onclick="goHome()" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
     <span class="title">LexPilot · 法律咨询</span>
+    <button class="right-btn" id="btnHelp" onclick="showHelp()" title="帮助">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    </button>
     <div class="right-btn" id="btnSettings" onclick="toggleSettings()">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       <div class="settings-drop" id="settingsDrop">
-        <div class="s-label">🌓 主题</div>
+        <div class="s-label">主题</div>
         <div class="s-row">
-          <button class="s-btn active" onclick="setTheme('light',this)">☀️ 浅色</button>
-          <button class="s-btn" onclick="setTheme('dark',this)">🌙 深色</button>
+          <button class="s-btn active" onclick="setTheme('light',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> 浅色</button>
+          <button class="s-btn" onclick="setTheme('dark',this)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> 深色</button>
         </div>
-        <div class="s-label" style="margin-top:8px">🔧 分析增强</div>
+        <div class="s-label" style="margin-top:8px">分析增强</div>
         <div class="s-row" style="flex-wrap:wrap;gap:4px">
           <button class="s-btn active" id="sDeep" onclick="toggleOptBtn('deep','sDeep')">深度</button>
           <button class="s-btn" id="sMulti" onclick="toggleOptBtn('multi','sMulti')">多视角</button>
           <button class="s-btn" id="sPractical" onclick="toggleOptBtn('practical','sPractical')">实务</button>
           <button class="s-btn" id="sCompare" onclick="toggleOptBtn('compare','sCompare')">比较法</button>
         </div>
-        <div class="s-label" style="margin-top:8px">🔑 API Key</div>
-        <input type="password" class="s-input" id="cfgApiKey" placeholder="sk-..." />
-        <input type="text" class="s-input" id="cfgModel" placeholder="deepseek-chat" style="font-family:inherit" />
-        <div class="s-row">
-          <button class="s-btn active" onclick="saveConfig()">💾 保存</button>
-          <button class="s-btn danger" onclick="clearHistory()">🗑 清空</button>
+        <div class="s-row" style="margin-top:8px">
+          <button class="s-btn danger" onclick="clearHistory()">清空对话</button>
         </div>
       </div>
     </div>
@@ -303,26 +316,57 @@
   </main>
   <footer class="input-bar" id="inputBar">
     <div class="input-tools" id="inputTools">
-      <button class="input-tool on" id="tDeep" onclick="toggleOptBtn('deep','tDeep')">🔬 深度</button>
-      <button class="input-tool" id="tMulti" onclick="toggleOptBtn('multi','tMulti')">👁 多视角</button>
-      <button class="input-tool" id="tPractical" onclick="toggleOptBtn('practical','tPractical')">📋 实务</button>
-      <button class="input-tool" id="tCompare" onclick="toggleOptBtn('compare','tCompare')">🌐 比较法</button>
+      <button class="input-tool on" id="tDeep" onclick="toggleOptBtn('deep','tDeep')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 深度</button>
+      <button class="input-tool" id="tMulti" onclick="toggleOptBtn('multi','tMulti')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> 多视角</button>
+      <button class="input-tool" id="tPractical" onclick="toggleOptBtn('practical','tPractical')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg> 实务</button>
+      <button class="input-tool" id="tCompare" onclick="toggleOptBtn('compare','tCompare')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> 比较法</button>
     </div>
     <div class="input-row">
       <div class="input-field-wrap">
         <textarea id="userInput" class="input-field" placeholder="输入法律问题…" rows="1"></textarea>
       </div>
-      <button class="btn-send" id="btnSend">➤</button>
+      <button class="btn-send" id="btnSend"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2" fill="currentColor" stroke="none"/></svg></button>
     </div>
     <p class="input-hint">LexPilot · AI可能出错 · 请交叉验证 · 仅供学习辅助</p>
   </footer>
+</div>
+
+<!-- ===== HELP MODAL ===== -->
+<div class="modal-overlay hide" id="helpModal">
+  <div class="modal-box">
+    <h3>分析增强功能说明</h3>
+    <p class="modal-sub">开启后，系统提示词会自动追加对应指令</p>
+    <div class="help-section">
+      <h4><span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span> 深度分析</h4>
+      <p>对每个关键问题追问三层"为什么"，穿透法理底层。不满足于结论正确，要求AI展开学说对比和立法目的分析。</p>
+      <div class="help-example">例：不仅回答"合同有效"，还要分析有效要件、无效情形、可撤销事由的边界</div>
+    </div>
+    <div class="help-section">
+      <h4><span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></span> 多视角分析</h4>
+      <p>从原告、被告、法官、立法者、学者五个立场分别切入，全面覆盖诉讼各方的论证逻辑。</p>
+      <div class="help-example">例：同一违约行为，分别分析守约方主张、违约方抗辩、法官裁判思路</div>
+    </div>
+    <div class="help-section">
+      <h4><span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></span> 实务指引</h4>
+      <p>补充证据收集清单、诉讼策略建议、类案检索关键词、文书写作要点。弥补AI"知道问题但不知道怎么解决"的短板。</p>
+      <div class="help-example">例：分析案件后，自动建议需要收集哪些证据、如何设计质证策略</div>
+    </div>
+    <div class="help-section">
+      <h4><span class="ico"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> 比较法视野</h4>
+      <p>引入德国法、日本法、英美法等相关素材，避免分析局限于国内法。对法学科研和比较法论文尤其有用。</p>
+      <div class="help-example">例：分析正当防卫时，对比德国法"法秩序维护"理论与我国刑法第20条</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="closeHelp()">知道了</button>
+    </div>
+  </div>
 </div>
 
 <!-- ===== DATABASE VIEW ===== -->
 <div id="dbView">
   <div class="wx-nav">
     <button class="back" onclick="goHome()" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-    <span class="title">📚 法律数据库</span>
+    <span class="title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-4px;margin-right:4px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>法律数据库</span>
     <span style="width:44px;flex-shrink:0"></span>
   </div>
   <div class="db-body">
@@ -341,17 +385,17 @@
 <div id="aboutView">
   <div class="wx-nav">
     <button class="back" onclick="goHome()" aria-label="返回"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
-    <span class="title">ℹ️ 关于我们</span>
+    <span class="title"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-4px;margin-right:4px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><circle cx="12" cy="8" r="0.5" fill="currentColor"/></svg>关于我们</span>
     <span style="width:44px;flex-shrink:0"></span>
   </div>
   <div class="about-body">
-    <div class="about-logo">⚖️</div>
+    <div class="about-logo"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 21"/><path d="M5 3 L5 21"/><path d="M19 3 L19 21"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg></div>
     <div class="about-name">LexPilot</div>
     <div class="about-ver">v1.0 · 法学生AI学习助手</div>
     <div class="about-desc">专为法学生打造的深度学习辅助工具<br>基于<strong>AI法律工具失效模式与规制路径研究</strong>（2026）优化</div>
 
     <div class="about-section">
-      <h3>🔬 研究背景</h3>
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-4px;margin-right:4px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>研究背景</h3>
       <p>LexPilot的系统提示词基于对DeepSeek和千问两款主流AI的实证测试结果进行优化。研究涵盖8类法律案例×2轮测试×4维测评，归纳出AI法律工具的10大通用失效模式：</p>
       <ul style="margin-top:6px">
         <li>F1 法条幻视 — 接受虚构法律为真实</li>
@@ -368,12 +412,12 @@
     </div>
 
     <div class="about-section">
-      <h3>🛡️ 使用须知</h3>
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-4px;margin-right:4px"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>使用须知</h3>
       <p>LexPilot是法学学习辅助工具，不构成法律意见。AI输出可能存在错误，请始终保持批判性思维，交叉验证关键信息。实务操作请咨询执业律师。</p>
     </div>
 
     <div class="about-section">
-      <h3>📚 数据来源</h3>
+      <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-4px;margin-right:4px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>数据来源</h3>
       <p>法律数据库收录的法律文本来自公开渠道，仅供学习参考。如发现文本有误，请以全国人大官网公布的最新版本为准。</p>
     </div>
 
@@ -422,13 +466,13 @@ function $(s){return document.querySelector(s)}
 // LAW DATABASE
 // ============================================================
 var LAWS = [
-  { name:"中华人民共和国民法典", file:"civil-code-2020.docx", date:"2021-01-01", cat:"民事", icon:"📕", desc:"7编1260条 — 总则、物权、合同、人格权、婚姻家庭、继承、侵权责任" },
-  { name:"中华人民共和国刑法", file:"criminal-law-2020.docx", date:"2021-03-01", cat:"刑事", icon:"📕", desc:"452条 — 总则+分则，含修正案(十一)" },
-  { name:"中华人民共和国民事诉讼法", file:"civil-procedure-law-2023.docx", date:"2024-01-01", cat:"程序", icon:"📘", desc:"306条 — 含2023年修正案" },
-  { name:"中华人民共和国劳动合同法", file:"labor-contract-law-2012.docx", date:"2013-07-01", cat:"社会", icon:"📙", desc:"98条 — 劳动合同订立、履行、解除" },
-  { name:"中华人民共和国安全生产法", file:"work-safety-law-2021.docx", date:"2021-09-01", cat:"行政", icon:"📗", desc:"119条 — 2021修正版" },
-  { name:"中华人民共和国治安管理处罚法", file:"public-security-law-2025.docx", date:"2026-01-01", cat:"行政", icon:"📗", desc:"119条 — 2025修订版" },
-  { name:"中华人民共和国危险化学品安全法", file:"hazardous-chemicals-safety-law-2025.docx", date:"2026-01-01", cat:"行政", icon:"📗", desc:"新法 — 2025年通过" }
+  { name:"中华人民共和国民法典", file:"civil-code-2020.docx", date:"2021-01-01", cat:"民事", icon:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>', desc:"7编1260条 — 总则、物权、合同、人格权、婚姻家庭、继承、侵权责任" },
+  { name:"中华人民共和国刑法", file:"criminal-law-2020.docx", date:"2021-03-01", cat:"刑事", icon:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>', desc:"452条 — 总则+分则，含修正案(十一)" },
+  { name:"中华人民共和国民事诉讼法", file:"civil-procedure-law-2023.docx", date:"2024-01-01", cat:"程序", icon:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>', desc:"306条 — 含2023年修正案" },
+  { name:"中华人民共和国劳动合同法", file:"labor-contract-law-2012.docx", date:"2013-07-01", cat:"社会", icon:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>', desc:"98条 — 劳动合同订立、履行、解除" },
+  { name:"中华人民共和国安全生产法", file:"work-safety-law-2021.docx", date:"2021-09-01", cat:"行政", icon:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>', desc:"119条 — 2021修正版" },
+  { name:"中华人民共和国治安管理处罚法", file:"public-security-law-2025.docx", date:"2026-01-01", cat:"行政", icon:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>', desc:"119条 — 2025修订版" },
+  { name:"中华人民共和国危险化学品安全法", file:"hazardous-chemicals-safety-law-2025.docx", date:"2026-01-01", cat:"行政", icon:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>', desc:"新法 — 2025年通过" }
 ];
 
 function showDatabase() {
@@ -450,7 +494,7 @@ function renderDatabase(filter) {
   });
 
   var h = "";
-  var catNames = { "民事":"⚖️ 民事法律", "刑事":"🔒 刑事法律", "程序":"📋 程序法律", "社会":"🏛 社会法律", "行政":"📊 行政法律" };
+  var catNames = { "民事":'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;margin-right:3px"><path d="M12 3 L12 21"/><path d="M5 3 L5 21"/><path d="M19 3 L19 21"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>民事法律', "刑事":'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-3px;margin-right:3px"><path d="M12 2 L12 22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>刑事法律', "程序":'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-3px;margin-right:3px"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>程序法律', "社会":'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-3px;margin-right:3px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>社会法律', "行政":'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-3px;margin-right:3px"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>行政法律' };
   Object.keys(cats).forEach(function(cat) {
     h += '<div class="db-category">' + (catNames[cat] || cat) + '</div>';
     cats[cat].forEach(function(law) {
@@ -636,13 +680,13 @@ function renderAllMessages() {
   if (!dom.messages) bindDom();
   dom.messages.innerHTML = "";
   if (messages.length === 0) {
-    dom.messages.innerHTML = '<div class="welcome"><div class="wicon">⚖️</div><h2>LexPilot 法律咨询</h2><p class="welcome-model-desc">专为法学生打造的AI学习助手<br>深度分析 · 法条精准 · 多视角论证</p>' +
+    dom.messages.innerHTML = '<div class="welcome"><div class="wicon"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 21"/><path d="M5 3 L5 21"/><path d="M19 3 L19 21"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg></div><h2>LexPilot 法律咨询</h2><p class="welcome-model-desc">专为法学生打造的AI学习助手<br>深度分析 · 法条精准 · 多视角论证</p>' +
       '<div class="capability-row"><span class="capability-chip highlight">案例分析</span><span class="capability-chip">法条检索</span><span class="capability-chip">论文辅导</span><span class="capability-chip">量刑参考</span><span class="capability-chip">实务指导</span><span class="capability-chip">比较法研究</span></div>' +
       '<div class="section-label">试试这些</div><div class="quick-prompts" id="quickPrompts">' +
-      '<button class="quick-btn" onclick="sendMsg(\'分析民间借贷利息计算的法律规则：列出有效法条、LPR四倍规则演变、完整计算示例、标注争议点\')">⚖️ 民间借贷利息计算</button>' +
-      '<button class="quick-btn" onclick="sendMsg(\'请分析正当防卫的认定要件，包括刑法第20条三款结构、时间判断标准学说争议、特殊防卫适用条件，并引入比较法视角\')">🔍 正当防卫认定分析</button>' +
-      '<button class="quick-btn" onclick="sendMsg(\'请给出一个系统化的法学生案例分析框架，包括审查步骤、相关法条、常见陷阱和思维方法，涵盖刑事、民事、行政三类案件的异同\')">📝 案例分析框架</button>' +
-      '<button class="quick-btn" onclick="sendMsg(\'请设计一篇关于人工智能法律责任的法学论文大纲，包括问题提出、文献综述、核心论点、章节结构和推荐参考文献\')">📚 论文大纲思路</button>' +
+      '<button class="quick-btn" onclick="sendMsg(\'分析民间借贷利息计算的法律规则：列出有效法条、LPR四倍规则演变、完整计算示例、标注争议点\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:3px"><path d="M12 3 L12 21"/><path d="M5 3 L5 21"/><path d="M19 3 L19 21"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>民间借贷利息计算</button>' +
+      '<button class="quick-btn" onclick="sendMsg(\'请分析正当防卫的认定要件，包括刑法第20条三款结构、时间判断标准学说争议、特殊防卫适用条件，并引入比较法视角\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-2px;margin-right:3px"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>正当防卫认定分析</button>' +
+      '<button class="quick-btn" onclick="sendMsg(\'请给出一个系统化的法学生案例分析框架，包括审查步骤、相关法条、常见陷阱和思维方法，涵盖刑事、民事、行政三类案件的异同\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-2px;margin-right:3px"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>案例分析框架</button>' +
+      '<button class="quick-btn" onclick="sendMsg(\'请设计一篇关于人工智能法律责任的法学论文大纲，包括问题提出、文献综述、核心论点、章节结构和推荐参考文献\')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="vertical-align:-2px;margin-right:3px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15z"/></svg>论文大纲思路</button>' +
       '</div></div>';
     dom.inputBar.style.display = ""; dom.typing.style.display = "none";
     return;
@@ -652,7 +696,7 @@ function renderAllMessages() {
   var h = "";
   for (var i = 0; i < messages.length; i++) {
     var msg = messages[i], role = msg.role === "assistant" ? "ai" : "user";
-    var avatar = role === "user" ? "📖" : "⚖️";
+    var avatar = role === "user" ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 21"/><path d="M5 3 L5 21"/><path d="M19 3 L19 21"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>';
     h += '<div class="msg ' + role + ' show no-avatar"><div class="msg-avatar">' + avatar + '</div>' +
       '<div class="msg-body"><div class="msg-content">' + renderMD(msg.content) + '</div>' +
       (msg._time ? '<div class="msg-time">' + fmtTime(msg._time) + '</div>' : '') +
@@ -664,7 +708,7 @@ function renderAllMessages() {
 
 function renderMsg(role, content) {
   var w = dom.messages.querySelector(".welcome"); if (w) { w.remove(); dom.inputBar.style.display = ""; }
-  var avatar = role === "user" ? "📖" : "⚖️";
+  var avatar = role === "user" ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>' : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 21"/><path d="M5 3 L5 21"/><path d="M19 3 L19 21"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg>';
   var div = document.createElement("div"); div.className = "msg " + role + " no-avatar";
   div.innerHTML = '<div class="msg-avatar">' + avatar + '</div><div class="msg-body">' +
     '<div class="msg-content">' + renderMD(content) + '</div>' +
@@ -713,7 +757,7 @@ function sendMsg(text) {
 
   var msgDiv = document.createElement("div"); msgDiv.className = "msg ai no-avatar";
   var contentDiv = document.createElement("div"); contentDiv.className = "msg-content"; contentDiv.textContent = " ";
-  msgDiv.innerHTML = '<div class="msg-avatar">⚖️</div><div class="msg-body"></div>';
+  msgDiv.innerHTML = '<div class="msg-avatar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L12 21"/><path d="M5 3 L5 21"/><path d="M19 3 L19 21"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><circle cx="5" cy="12" r="1.5" fill="currentColor"/><circle cx="19" cy="12" r="1.5" fill="currentColor"/></svg></div><div class="msg-body"></div>';
   msgDiv.querySelector(".msg-body").appendChild(contentDiv);
   dom.messages.appendChild(msgDiv); scrollBottom(); dom.typing.style.display = "none";
   requestAnimationFrame(function() { requestAnimationFrame(function() { msgDiv.classList.add("show"); }); });
@@ -771,11 +815,7 @@ function sendMsg(text) {
 // ============================================================
 function toggleSettings() {
   var drop = document.getElementById("settingsDrop");
-  if (!drop.classList.contains("show")) {
-    document.getElementById("cfgApiKey").value = SETTINGS.apiKey;
-    document.getElementById("cfgModel").value = SETTINGS.model;
-    updateOptUI();
-  }
+  if (!drop.classList.contains("show")) { updateOptUI(); }
   drop.classList.toggle("show");
   setTimeout(function() {
     document.addEventListener("click", function close(e) {
@@ -784,13 +824,14 @@ function toggleSettings() {
   }, 10);
 }
 
-function saveConfig() {
-  SETTINGS.apiKey = document.getElementById("cfgApiKey").value.trim() || DEFAULTS.apiKey;
-  SETTINGS.model = document.getElementById("cfgModel").value.trim() || DEFAULTS.model;
-  try { localStorage.setItem("lexpilot-config", JSON.stringify(SETTINGS)); } catch(e) {}
-  document.getElementById("settingsDrop").classList.remove("show");
-  showToast("✅ 设置已保存");
-}
+// ============================================================
+// HELP MODAL
+// ============================================================
+function showHelp() { document.getElementById("helpModal").classList.remove("hide"); }
+function closeHelp() { document.getElementById("helpModal").classList.add("hide"); }
+document.getElementById("helpModal").addEventListener("click", function(e) {
+  if (e.target === this) closeHelp();
+});
 
 function toggleOptBtn(key, id) {
   options[key] = !options[key];
